@@ -1,0 +1,73 @@
+<div class="dashboard">
+
+  <div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Xush kelibsiz! Bugungi holat — 07.05.2026</p>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card" *ngFor="let s of stats">
+      <mat-card-content class="stat-card__content">
+        <div class="stat-card__icon" [style.background]="s.bg">
+          <svg *ngIf="s.type==='chemicals'" width="20" height="20" viewBox="0 0 24 24" fill="none" [style.stroke]="s.color" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 3h6"/><path d="M9 3v5.5L5 15a2 2 0 001.8 2.9h10.4A2 2 0 0019 15l-4-6.5V3"/><line x1="7" y1="13" x2="17" y2="13"/>
+          </svg>
+          <svg *ngIf="s.type==='orders'" width="20" height="20" viewBox="0 0 24 24" fill="none" [style.stroke]="s.color" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/>
+          </svg>
+          <svg *ngIf="s.type==='customers'" width="20" height="20" viewBox="0 0 24 24" fill="none" [style.stroke]="s.color" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+          <svg *ngIf="s.type==='stock'" width="20" height="20" viewBox="0 0 24 24" fill="none" [style.stroke]="s.color" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+        </div>
+        <div class="stat-card__info">
+          <span class="stat-card__value">{{ s.value }}</span>
+          <span class="stat-card__label">{{ s.label }}</span>
+        </div>
+        <span class="stat-card__trend" [class.up]="s.trend.startsWith('+')" [class.down]="s.trend.startsWith('-')">
+          {{ s.trend }}
+        </span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Recent orders -->
+  <mat-card class="table-card">
+    <mat-card-header class="table-card__header">
+      <mat-card-title class="table-card__title">So'nggi buyurtmalar</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content class="table-card__content">
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Mijoz</th><th>Mahsulot</th><th>Miqdor</th><th>Sana</th><th>Holat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let o of orders">
+              <td class="table__id">{{ o.id }}</td>
+              <td>{{ o.mijoz }}</td>
+              <td>{{ o.mahsulot }}</td>
+              <td>{{ o.miqdor }}</td>
+              <td class="table__date">{{ o.date }}</td>
+              <td>
+                <span class="badge"
+                  [class.badge--green]="o.status === 'Bajarildi'"
+                  [class.badge--blue]="o.status === 'Jarayonda'"
+                  [class.badge--yellow]="o.status === 'Kutmoqda'">
+                  {{ o.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+</div>

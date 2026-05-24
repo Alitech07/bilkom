@@ -1,0 +1,49 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+
+  &__body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px;
+    background: #F4F6F9;
+
+    @media (max-width: 1023px) {
+      padding: 24px 20px;
+    }
+
+    @media (max-width: 767px) {
+      padding: 16px;
+    }
+  }
+
+  /* Dark overlay — only on mobile when drawer is open */
+  &__overlay {
+    display: none;
+
+    @media (max-width: 767px) {
+      display: block;
+      position: fixed;
+      inset: 0;
+      top: 64px;
+      background: transparent;
+      z-index: 150;
+      pointer-events: none;
+      transition: background 0.28s;
+
+      &--visible {
+        background: rgba(0, 0, 0, 0.48);
+        pointer-events: auto;
+      }
+    }
+  }
+}

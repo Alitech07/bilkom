@@ -1,0 +1,124 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border: 1px solid #F0F2F5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  flex-wrap: wrap;
+
+  @media (max-width: 600px) {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  /* ── Left ── */
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Right ── */
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+  }
+
+  /* ── Search ── */
+  &__search {
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: width 0.22s ease;
+
+    &--open {
+      background: #F4F6F9;
+      padding-left: 10px;
+      border: 1.5px solid #E2E8F0;
+    }
+  }
+
+  &__search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13.5px;
+    color: #1A2332;
+    font-family: inherit;
+    width: 180px;
+    padding: 2px 0;
+
+    &::placeholder { color: #A0AEC0; }
+
+    @media (max-width: 480px) { width: 120px; }
+  }
+
+  /* ── Icon button ── */
+  &__icon-btn {
+    color: #6B7A8E !important;
+    width: 34px !important;
+    height: 34px !important;
+    line-height: 34px !important;
+
+    &:hover { background: #F4F6F9 !important; color: #1A2332 !important; }
+
+    &--active {
+      color: #1D9E75 !important;
+      background: rgba(29, 158, 117, 0.08) !important;
+    }
+  }
+
+  &__sep {
+    height: 22px !important;
+    margin: 0 4px;
+    opacity: 0.5;
+  }
+
+  /* ── Stroked buttons ── */
+  &__btn {
+    height: 34px !important;
+    line-height: 34px !important;
+    font-size: 13px !important;
+    font-family: inherit !important;
+    border-color: #E2E8F0 !important;
+    color: #4A5568 !important;
+    padding: 0 12px !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    letter-spacing: 0 !important;
+
+    &:hover {
+      background: #F4F6F9 !important;
+      border-color: #CBD5E0 !important;
+    }
+
+    &--excel {
+      color: #1D7A45 !important;
+      border-color: #b7dfc8 !important;
+      background: rgba(29, 158, 117, 0.06) !important;
+
+      &:hover {
+        background: rgba(29, 158, 117, 0.12) !important;
+        border-color: #1D9E75 !important;
+      }
+    }
+
+
+  /* On small screens — hide button labels, show only icons */
+  @media (max-width: 480px) {
+    &__btn-label { display: none; }
+    &__btn { padding: 0 8px !important; }
+  }
+}
+}

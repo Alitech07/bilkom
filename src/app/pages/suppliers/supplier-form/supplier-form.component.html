@@ -1,0 +1,57 @@
+<h2 class="dialog-title">
+  {{ isEdit ? 'Yetkazib beruvchini tahrirlash' : 'Yangi yetkazib beruvchi' }}
+</h2>
+
+<mat-dialog-content class="dialog-body">
+  <form [formGroup]="form" class="supplier-form">
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Kompaniya nomi</mat-label>
+        <input matInput formControlName="name" placeholder="Masalan: Alfa Kimyo LLC">
+        <mat-error *ngIf="form.get('name')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Mas'ul shaxs</mat-label>
+        <input matInput formControlName="contactPerson" placeholder="To'liq ismi">
+        <mat-error *ngIf="form.get('contactPerson')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Telefon</mat-label>
+        <input matInput formControlName="phone" placeholder="+998 90 123 45 67">
+        <mat-error *ngIf="form.get('phone')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="info@example.com">
+        <mat-error *ngIf="form.get('email')?.hasError('email')">Noto'g'ri email format</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Manzil</mat-label>
+      <input matInput formControlName="address" placeholder="Shahar, ko'cha, uy">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Holati</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="Faol">Faol</mat-option>
+        <mat-option value="Nofaol">Nofaol</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="submit()">
+    {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>

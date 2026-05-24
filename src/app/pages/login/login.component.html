@@ -1,0 +1,98 @@
+<div class="login">
+
+  <!-- Left branding panel -->
+  <div class="login__brand">
+    <div class="login__brand-content">
+      <div class="login__brand-logo">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 3h6"/>
+          <path d="M9 3v5.5L5 15a2 2 0 001.8 2.9h10.4A2 2 0 0019 15l-4-6.5V3"/>
+          <line x1="7" y1="13" x2="17" y2="13"/>
+        </svg>
+      </div>
+      <h1 class="login__brand-name">BilkomChem</h1>
+      <p class="login__brand-tag">Kimyoviy mahsulotlar uchun<br>zamonaviy boshqaruv tizimi</p>
+      <ul class="login__brand-features">
+        <li>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Ombor va mahsulot boshqaruvi
+        </li>
+        <li>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Buyurtma va mijoz hisobi
+        </li>
+        <li>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Real vaqtda tahlil va hisobotlar
+        </li>
+      </ul>
+    </div>
+    <div class="login__deco login__deco--1"></div>
+    <div class="login__deco login__deco--2"></div>
+    <div class="login__deco login__deco--3"></div>
+  </div>
+
+  <!-- Right form panel -->
+  <div class="login__form-panel">
+    <mat-card class="login__card">
+
+      <div class="login__form-header">
+        <h2 class="login__form-title">Tizimga kirish</h2>
+        <p class="login__form-subtitle">Davom etish uchun hisob ma'lumotlaringizni kiriting</p>
+      </div>
+
+      <mat-card-content>
+        <form (ngSubmit)="onSubmit()" #f="ngForm">
+
+          <!-- Username -->
+          <mat-form-field appearance="outline">
+            <mat-label>Foydalanuvchi nomi</mat-label>
+            <input matInput type="text" [(ngModel)]="username" name="username" autocomplete="username" placeholder="admin@chemcrm.uz">
+            <span matPrefix class="field-prefix">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </span>
+          </mat-form-field>
+
+          <!-- Password -->
+          <mat-form-field appearance="outline">
+            <mat-label>Parol</mat-label>
+            <input matInput [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" autocomplete="current-password" placeholder="••••••••">
+            <span matPrefix class="field-prefix">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+              </svg>
+            </span>
+            <button mat-icon-button matSuffix type="button" (click)="showPassword = !showPassword" tabindex="-1">
+              <svg *ngIf="!showPassword" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg *ngIf="showPassword" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </mat-form-field>
+
+          <!-- Submit -->
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="login__btn"
+            [disabled]="isLoading || !username || !password"
+          >
+            <mat-spinner *ngIf="isLoading" diameter="20" class="login__spinner"></mat-spinner>
+            <span *ngIf="!isLoading">Kirish</span>
+          </button>
+
+        </form>
+      </mat-card-content>
+
+      <p class="login__copy">© 2026 BilkomChem</p>
+
+    </mat-card>
+  </div>
+
+</div>

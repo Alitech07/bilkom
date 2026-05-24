@@ -1,0 +1,61 @@
+<div class="toolbar">
+
+  <!-- ── Left: custom buttons via ng-content ── -->
+  <div class="toolbar__left">
+    <ng-content></ng-content>
+  </div>
+
+  <!-- ── Right: search, filter, excel ── -->
+  <div class="toolbar__right">
+
+    <!-- Search (expandable) -->
+    <div class="toolbar__search" [class.toolbar__search--open]="searchOpen">
+      <input
+        *ngIf="searchOpen"
+        class="toolbar__search-input"
+        type="text"
+        placeholder="Qidirish..."
+        [value]="searchValue"
+        (input)="onSearch($any($event.target).value)"
+        autofocus
+      >
+      <button
+        mat-icon-button
+        class="toolbar__icon-btn"
+        [class.toolbar__icon-btn--active]="searchOpen"
+        (click)="toggleSearch()"
+        matTooltip="Qidirish"
+      >
+        <svg *ngIf="!searchOpen" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <svg *ngIf="searchOpen" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <mat-divider vertical class="toolbar__sep"></mat-divider>
+
+    <!-- Filter -->
+    <button mat-stroked-button class="toolbar__btn" (click)="filterClick.emit()" matTooltip="Filter">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+      </svg>
+      <span class="toolbar__btn-label">Filter</span>
+    </button>
+
+    <!-- Excel -->
+    <button mat-stroked-button class="toolbar__btn toolbar__btn--excel" (click)="excelClick.emit()" matTooltip="Excel yuklab olish">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <polyline points="10 9 9 9 8 9"/>
+      </svg>
+      <span class="toolbar__btn-label">Excel</span>
+    </button>
+
+  </div>
+</div>

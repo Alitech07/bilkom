@@ -1,0 +1,48 @@
+<h2 class="dialog-title">
+  {{ isEdit ? 'Xaridni tahrirlash' : 'Yangi xarid' }}
+</h2>
+
+<mat-dialog-content class="dialog-body">
+  <form [formGroup]="form" class="purchase-form">
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Kompaniya nomi</mat-label>
+        <mat-select formControlName="name">
+          <mat-option *ngFor="let supplier of supplieres" [value]="supplier">{{ supplier }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('name')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" >
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Price</mat-label>
+        <input matInput formControlName="price">
+        <mat-error *ngIf="form.get('price')?.hasError('number')">Narx Noldan kichik bo'lishi mumkin emas</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Track</mat-label>
+      <mat-select formControlName="track">
+        <mat-option value="s">Yuboruvchida</mat-option>
+        <mat-option value="b">Bojxonada</mat-option>
+        <mat-option value="o">Omborda</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="submit()">
+    {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>

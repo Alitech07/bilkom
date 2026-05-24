@@ -1,1 +1,80 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@include mat.core();
+
+// ── Custom green palette (#1D9E75) ──────────────────────
+$bilkom-green: (
+  50:  #e4f6f0, 100: #bce8da, 200: #91d9c2, 300: #65caaa,
+  400: #43be97, 500: #1D9E75, 600: #1a9169, 700: #15815b,
+  800: #11714e, 900: #095337,
+  A100: #8dffd5, A200: #5affc2, A400: #27ffaf, A700: #0dffa8,
+  contrast: (
+    50: #000, 100: #000, 200: #000, 300: #000, 400: #000,
+    500: #fff, 600: #fff, 700: #fff, 800: #fff, 900: #fff,
+    A100: #000, A200: #000, A400: #000, A700: #000,
+  )
+);
+
+$bilkom-primary : mat.define-palette($bilkom-green);
+$bilkom-accent  : mat.define-palette(mat.$blue-palette, A200, A100, A400);
+$bilkom-warn    : mat.define-palette(mat.$red-palette);
+
+$bilkom-theme: mat.define-light-theme((
+  color: (
+    primary : $bilkom-primary,
+    accent  : $bilkom-accent,
+    warn    : $bilkom-warn,
+  )
+));
+
+@include mat.all-component-themes($bilkom-theme);
+
+// ── Reset ────────────────────────────────────────────────
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #F4F6F9;
+  color: #1A2332;
+  -webkit-font-smoothing: antialiased;
+}
+
+:root {
+  --primary: #1D9E75;
+  --primary-light: rgba(29, 158, 117, 0.12);
+  --sidebar-bg: #1A2332;
+}
+
+a { text-decoration: none; color: inherit; }
+
+// ── Shared page styles ───────────────────────────────────
+.page-header { margin-bottom: 24px; }
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1A2332;
+  margin-bottom: 4px;
+  @media (max-width: 767px) { font-size: 18px; }
+}
+
+.page-subtitle { font-size: 13.5px; color: #6B7A8E; }
+
+.placeholder-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  color: #8B9CB3;
+  font-size: 14px;
+  border: 1.5px dashed #E2E8F0;
+  @media (max-width: 480px) { padding: 36px 16px; }
+}
+
+// ── Material overrides ───────────────────────────────────
+.mat-form-field { width: 100%; }
+
+.mat-raised-button.mat-primary { letter-spacing: 0; font-family: 'Inter', sans-serif; }
+
+.mat-card { border-radius: 12px !important; }
