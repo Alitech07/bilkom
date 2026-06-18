@@ -47,7 +47,7 @@
           <!-- Username -->
           <mat-form-field appearance="outline">
             <mat-label>Foydalanuvchi nomi</mat-label>
-            <input matInput type="text" [(ngModel)]="username" name="username" autocomplete="username" placeholder="admin@chemcrm.uz">
+            <input matInput type="text" [(ngModel)]="login" name="login" autocomplete="login" placeholder="admin@chemcrm.uz">
             <span matPrefix class="field-prefix">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -75,13 +75,16 @@
             </button>
           </mat-form-field>
 
+          <!-- Error -->
+          <div *ngIf="errorMessage" class="login__error">{{ errorMessage }}</div>
+
           <!-- Submit -->
           <button
             mat-raised-button
             color="primary"
             type="submit"
             class="login__btn"
-            [disabled]="isLoading || !username || !password"
+            [disabled]="isLoading || !login || !password"
           >
             <mat-spinner *ngIf="isLoading" diameter="20" class="login__spinner"></mat-spinner>
             <span *ngIf="!isLoading">Kirish</span>

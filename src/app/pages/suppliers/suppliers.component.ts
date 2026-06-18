@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Supplier, SupplierFormComponent } from './supplier-form/supplier-form.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SupplierDto, SupplierService } from '../../services/supplier.service';
+import { GridComponent } from '../../components/grid/grid.component';
+import { GridPage } from '../../services/grid.service';
+import { SupplierFormComponent } from './supplier-form/supplier-form.component';
 
 @Component({
   selector: 'app-suppliers',
@@ -8,48 +12,68 @@ import { Supplier, SupplierFormComponent } from './supplier-form/supplier-form.c
   styleUrls: ['./suppliers.component.scss']
 })
 export class SuppliersComponent {
-  private nextId = 4;
-  private allSuppliers: Supplier[] = [
-    ];
+  // core.grids jadvalidagi suppliers uchun grid_id qiymati bilan almashtirilsin
+  readonly gridId = 6;
 
-  constructor(private dialog: MatDialog) {}
+  @ViewChild(GridComponent) grid!: GridComponent;
+  pageConfig: GridPage | null = null;
 
-  onSearch(value: string) {
-    const q = value.toLowerCase();
-    const filtered = this.allSuppliers.filter(s =>
-      s.name.toLowerCase().includes(q) ||
-      s.contactPerson.toLowerCase().includes(q) ||
-      s.phone.includes(q)
-    );
-  }
+  get cfgSearch(): boolean { return this.pageConfig?.gridConfig.search ?? false; }
+  get cfgFilter(): boolean { return this.pageConfig?.gridConfig.filter ?? false; }
+  get cfgExcel(): boolean  { return !!this.pageConfig?.gridColumns?.some(c => c.exportable); }
 
-  onFilter() {}
-  onExcel() {}
+  onSearch(text: string): void { this.grid?.applyFilter(text); }
 
-  openAdd() {
-    const ref = this.dialog.open(SupplierFormComponent, {
+  constructor(
+    private supplierService: SupplierService,
+    private dialog: MatDialog,
+    private snack: MatSnackBar,
+  ) {}
+
+  onExcel(): void { this.grid?.exportToExcel(); }
+
+  openAdd(): void {
+    this.dialog.open(SupplierFormComponent, {
       data: null, width: '560px', disableClose: true,
-    });
-    ref.afterClosed().subscribe((result: Supplier | undefined) => {
-      if (!result) return;
-      this.allSuppliers.push({ ...result, id: this.nextId++ });
-    });
-  }
-
-  onEdit(row: Record<string, any>) {
-    const supplier = this.allSuppliers.find(s => s.id === row['id'])!;
-    const ref = this.dialog.open(SupplierFormComponent, {
-      data: { ...supplier }, width: '560px', disableClose: true,
-    });
-    ref.afterClosed().subscribe((result: Supplier | undefined) => {
-      if (!result) return;
-      const idx = this.allSuppliers.findIndex(s => s.id === result.id);
-      if (idx !== -1) this.allSuppliers[idx] = result;
+    }).afterClosed().subscribe((dto: SupplierDto | undefined) => {
+      if (!dto) return;
+      this.supplierService.add(dto).subscribe({
+        next: (res) => {
+          this.snack.open(res.message ?? 'Qo\'shildi', 'OK', { duration: 3000 });
+          this.grid.load();
+        },
+        error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+      });
     });
   }
 
-  onDelete(row: Record<string, any>) {
-    this.allSuppliers = this.allSuppliers.filter(s => s.id !== row['id']);
+  onEdit(row: Record<string, any>): void {
+    this.supplierService.getById(row['id']).subscribe({
+      next: (supplier) => {
+        this.dialog.open(SupplierFormComponent, {
+          data: supplier, width: '560px', disableClose: true,
+        }).afterClosed().subscribe((dto: SupplierDto | undefined) => {
+          if (!dto) return;
+          this.supplierService.edit(supplier.id, dto).subscribe({
+            next: (res) => {
+              this.snack.open(res.message ?? 'Yangilandi', 'OK', { duration: 3000 });
+              this.grid.load();
+            },
+            error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+          });
+        });
+      },
+      error: () => this.snack.open('Ma\'lumotlarni yuklashda xato', 'OK', { duration: 3000 }),
+    });
   }
 
+  onDelete(row: Record<string, any>): void {
+    this.supplierService.delete(row['id']).subscribe({
+      next: (res) => {
+        this.snack.open(res.message ?? 'O\'chirildi', 'OK', { duration: 3000 });
+        this.grid.load();
+      },
+      error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+    });
+  }
 }

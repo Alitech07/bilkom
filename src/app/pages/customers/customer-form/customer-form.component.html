@@ -1,0 +1,63 @@
+<h2 class="dialog-title">
+  {{ isEdit ? 'Mijozni tahrirlash' : 'Yangi mijoz' }}
+</h2>
+
+<mat-dialog-content class="dialog-body">
+  <form [formGroup]="form" class="supplier-form">
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Mijoz nomi</mat-label>
+        <input matInput formControlName="clientName" placeholder="Masalan: Karimov Sardor">
+        <mat-error *ngIf="form.get('clientName')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>INN</mat-label>
+        <input matInput formControlName="inn" placeholder="123456789">
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Telefon</mat-label>
+        <input matInput formControlName="phone" placeholder="+998 90 123 45 67">
+        <mat-error *ngIf="form.get('phone')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="info@example.com">
+        <mat-error *ngIf="form.get('email')?.hasError('email')">Noto'g'ri email format</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Viloyat / Shahar</mat-label>
+        <input matInput formControlName="region" placeholder="Toshkent">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Holati</mat-label>
+        <mat-select formControlName="state">
+          <mat-option value="ACTIVE">Faol</mat-option>
+          <mat-option value="INACTIVE">Nofaol</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Manzil</mat-label>
+      <input matInput formControlName="address" placeholder="Ko'cha, uy raqami">
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="submit()">
+    {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>

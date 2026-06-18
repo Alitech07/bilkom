@@ -9,7 +9,7 @@
   <div class="toolbar__right">
 
     <!-- Search (expandable) -->
-    <div class="toolbar__search" [class.toolbar__search--open]="searchOpen">
+    <div *ngIf="showSearch" class="toolbar__search" [class.toolbar__search--open]="searchOpen">
       <input
         *ngIf="searchOpen"
         class="toolbar__search-input"
@@ -35,10 +35,10 @@
       </button>
     </div>
 
-    <mat-divider vertical class="toolbar__sep"></mat-divider>
+    <mat-divider *ngIf="showSearch && (showFilter || showExcel)" vertical class="toolbar__sep"></mat-divider>
 
     <!-- Filter -->
-    <button mat-stroked-button class="toolbar__btn" (click)="filterClick.emit()" matTooltip="Filter">
+    <button *ngIf="showFilter" mat-stroked-button class="toolbar__btn" (click)="filterClick.emit()" matTooltip="Filter">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
       </svg>
@@ -46,7 +46,7 @@
     </button>
 
     <!-- Excel -->
-    <button mat-stroked-button class="toolbar__btn toolbar__btn--excel" (click)="excelClick.emit()" matTooltip="Excel yuklab olish">
+    <button *ngIf="showExcel" mat-stroked-button class="toolbar__btn toolbar__btn--excel" (click)="excelClick.emit()" matTooltip="Excel yuklab olish">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
         <polyline points="14 2 14 8 20 8"/>

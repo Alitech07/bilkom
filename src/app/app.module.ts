@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 // Angular Material
 import { MatToolbarModule }         from '@angular/material/toolbar';
@@ -19,6 +21,8 @@ import { MatListModule }            from '@angular/material/list';
 import { MatTooltipModule }         from '@angular/material/tooltip';
 import { MatDialogModule }          from '@angular/material/dialog';
 import { MatSelectModule }          from '@angular/material/select';
+import { MatSnackBarModule }        from '@angular/material/snack-bar';
+import { MatCheckboxModule }        from '@angular/material/checkbox';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -41,12 +45,18 @@ import { SuppliersComponent } from './pages/suppliers/suppliers.component';
 import { SupplierFormComponent } from './pages/suppliers/supplier-form/supplier-form.component';
 import { PurchasesComponent } from './pages/purchases/purchases.component';
 import { AddEditPurchaseFormComponent } from './pages/purchases/add-edit-purchase-form/add-edit-purchase-form.component';
+import { RoleFormComponent } from './pages/roles/role-form/role-form.component';
+import { PermissionsComponent } from './pages/permissions/permissions.component';
+import { CustomerFormComponent } from './pages/customers/customer-form/customer-form.component';
+import { ProductFormComponent } from './pages/products/product-form/product-form.component';
 
 const MATERIAL = [
   MatToolbarModule, MatButtonModule, MatIconModule, MatBadgeModule,
   MatCardModule, MatFormFieldModule, MatInputModule,
   MatProgressSpinnerModule, MatDividerModule, MatRippleModule,
   MatListModule, MatTooltipModule, MatDialogModule, MatSelectModule,
+  MatSnackBarModule,
+  MatCheckboxModule,
 ];
 
 @NgModule({
@@ -58,14 +68,18 @@ const MATERIAL = [
     InvoiceComponent, GridComponent, GridToolbarComponent,
     EmployeesComponent, RolesComponent, ModulesComponent,
     SuppliersComponent, SupplierFormComponent, PurchasesComponent, AddEditPurchaseFormComponent,
+    RoleFormComponent, PermissionsComponent, CustomerFormComponent, ProductFormComponent,
   ],
   imports: [
     BrowserModule, BrowserAnimationsModule,
     CommonModule, FormsModule, ReactiveFormsModule,
+    HttpClientModule,
     AppRoutingModule,
     ...MATERIAL,
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

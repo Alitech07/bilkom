@@ -1,38 +1,49 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {AddEditPurchaseFormComponent, Purchase} from "./add-edit-purchase-form/add-edit-purchase-form.component";
+import { GridComponent } from '../../components/grid/grid.component';
+import { GridPage } from '../../services/grid.service';
+import { AddEditPurchaseFormComponent, Purchase } from './add-edit-purchase-form/add-edit-purchase-form.component';
+
 @Component({
   selector: 'app-purchases',
   templateUrl: './purchases.component.html',
   styleUrls: ['./purchases.component.scss']
 })
 export class PurchasesComponent {
-  onSearch(value: string) {
-  }
-  onFilter() {}
-  onExcel() {}
+  // core.grids jadvalidagi purchases uchun grid_id qiymati bilan almashtirilsin
+  readonly gridId = 4;
 
-  constructor(public dialog: MatDialog) {
-  }
+  @ViewChild(GridComponent) grid!: GridComponent;
+  pageConfig: GridPage | null = null;
 
-  openAdd() {
-    const ref = this.dialog.open(AddEditPurchaseFormComponent, {
+  get cfgSearch(): boolean { return this.pageConfig?.gridConfig.search ?? false; }
+  get cfgFilter(): boolean { return this.pageConfig?.gridConfig.filter ?? false; }
+  get cfgExcel(): boolean  { return !!this.pageConfig?.gridColumns?.some(c => c.exportable); }
+
+  onSearch(text: string): void { this.grid?.applyFilter(text); }
+
+  constructor(public dialog: MatDialog) {}
+
+  onExcel(): void { this.grid?.exportToExcel(); }
+  onFilter(): void {}
+
+  openAdd(): void {
+    this.dialog.open(AddEditPurchaseFormComponent, {
       data: null, width: '560px', disableClose: true,
-    });
-    ref.afterClosed().subscribe((result: Purchase | undefined) => {
+    }).afterClosed().subscribe((result: Purchase | undefined) => {
       if (!result) return;
+      this.grid?.load();
     });
   }
 
-  onEdit(row: Record<string, any>) {
-    const ref = this.dialog.open(AddEditPurchaseFormComponent, {
-    });
-    ref.afterClosed().subscribe((result: Purchase | undefined) => {
+  onEdit(row: Record<string, any>): void {
+    this.dialog.open(AddEditPurchaseFormComponent, {
+      data: row, width: '560px', disableClose: true,
+    }).afterClosed().subscribe((result: Purchase | undefined) => {
       if (!result) return;
-
+      this.grid?.load();
     });
   }
 
-  onDelete() {
-  }
+  onDelete(): void {}
 }

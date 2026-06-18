@@ -117,7 +117,10 @@ tr:last-child .grid-td { border-bottom: none; }
 }
 
 /* ── Actions ── */
-.grid-th--actions { width: 80px; pointer-events: none; }
+.grid-th--actions  { width: 80px; pointer-events: none; }
+.grid-th--checkbox { width: 40px; pointer-events: none; text-align: center; }
+.grid-td--checkbox { text-align: center; }
+.grid-checkbox     { cursor: pointer; accent-color: #5B7CF6; width: 15px; height: 15px; }
 
 .grid-td--actions { white-space: nowrap; width: 80px; }
 

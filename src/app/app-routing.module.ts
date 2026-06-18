@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
@@ -13,6 +14,7 @@ import { RolesComponent } from './pages/roles/roles.component';
 import { ModulesComponent } from './pages/modules/modules.component';
 import { SuppliersComponent } from './pages/suppliers/suppliers.component';
 import { PurchasesComponent } from './pages/purchases/purchases.component';
+import { PermissionsComponent } from './pages/permissions/permissions.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -20,6 +22,7 @@ const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: 'dashboard',      component: DashboardComponent },
       { path: 'products',        component: ProductsComponent },
@@ -29,9 +32,10 @@ const routes: Routes = [
       { path: 'invoice',         component: InvoiceComponent },
       { path: 'suppliers',       component: SuppliersComponent },
       { path: 'purchases',       component: PurchasesComponent },
-      { path: 'employees', component: EmployeesComponent },
-      { path: 'roles',     component: RolesComponent },
-      { path: 'modules',   component: ModulesComponent },
+      { path: 'employees',   component: EmployeesComponent },
+      { path: 'roles',       component: RolesComponent },
+      { path: 'modules',     component: ModulesComponent },
+      { path: 'permissions', component: PermissionsComponent },
     ]
   },
   { path: '**', redirectTo: 'login' }

@@ -1,16 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
-export interface Supplier {
-  id: number;
-  name: string;
-  contactPerson: string;
-  phone: string;
-  email: string;
-  address: string;
-  status: 'Faol' | 'Nofaol';
-}
+import { Supplier, SupplierDto } from '../../../services/supplier.service';
 
 @Component({
   selector: 'app-supplier-form',
@@ -28,12 +19,15 @@ export class SupplierFormComponent {
   ) {
     this.isEdit = !!data;
     this.form = this.fb.group({
-      name:          [data?.name          ?? '', Validators.required],
-      contactPerson: [data?.contactPerson ?? '', Validators.required],
-      phone:         [data?.phone         ?? '', Validators.required],
-      email:         [data?.email         ?? '', Validators.email],
-      address:       [data?.address       ?? ''],
-      status:        [data?.status        ?? 'Faol', Validators.required],
+      freightForwarder: [data?.freightForwarder ?? ''],
+      legalName:        [data?.legalName        ?? '', Validators.required],
+      brandName:        [data?.brandName        ?? ''],
+      typeOfActivity:   [data?.typeOfActivity   ?? ''],
+      contactPerson:    [data?.contactPerson    ?? ''],
+      phone:            [data?.phone            ?? '', Validators.required],
+      email:            [data?.email            ?? '', Validators.email],
+      address:          [data?.address          ?? ''],
+      isActive:         [data?.isActive ?? true],
     });
   }
 
@@ -42,7 +36,8 @@ export class SupplierFormComponent {
       this.form.markAllAsTouched();
       return;
     }
-    this.dialogRef.close({ ...this.data, ...this.form.value });
+    const dto: SupplierDto = this.form.value;
+    this.dialogRef.close(dto);
   }
 
   cancel() {

@@ -1,6 +1,101 @@
 <div class="page-header">
   <h1 class="page-title">Modullar</h1>
-  <p class="page-subtitle">Tizim modullari va sozlamalar</p>
+  <p class="page-subtitle">Rollarga modullar biriktirish</p>
 </div>
 
-<div class="placeholder-card">Modullar bo'limi ishlab chiqilmoqda...</div>
+<!-- Controls -->
+<div class="mod-controls">
+  <mat-form-field appearance="outline" class="mod-select">
+    <mat-label>Rolni tanlang</mat-label>
+    <mat-select
+      [(ngModel)]="selectedRoleId"
+      (ngModelChange)="onRoleChange($event)"
+      [disabled]="loading"
+    >
+      <mat-option *ngFor="let role of roles" [value]="role.id">
+        {{ role.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    color="primary"
+    class="mod-save-btn"
+    [disabled]="!selectedRoleId || saving"
+    (click)="save()"
+  >
+    <mat-spinner *ngIf="saving" diameter="18" class="mod-spinner"></mat-spinner>
+    <svg *ngIf="!saving" width="16" height="16" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+         stroke-linejoin="round" style="margin-right:6px">
+      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+      <polyline points="17 21 17 13 7 13 7 21"/>
+      <polyline points="7 3 7 8 15 8"/>
+    </svg>
+    Saqlash
+  </button>
+</div>
+
+<!-- Loading -->
+<div *ngIf="loading" class="mod-loading">
+  <mat-spinner diameter="36" color="primary"></mat-spinner>
+  <span>Yuklanmoqda...</span>
+</div>
+
+<!-- Empty -->
+<div *ngIf="!loading && moduleCards.length === 0" class="mod-empty">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#C1C9D2"
+       stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="3" width="7" height="7" rx="1"/>
+    <rect x="14" y="3" width="7" height="7" rx="1"/>
+    <rect x="3" y="14" width="7" height="7" rx="1"/>
+    <path d="M17.5 14v7M14 17.5h7"/>
+  </svg>
+  <p>Modullar topilmadi. Avval permission qo'shing.</p>
+</div>
+
+<!-- Hint -->
+<div *ngIf="!loading && moduleCards.length > 0 && !selectedRoleId" class="mod-hint">
+  Modullarni biriktirish uchun avval rol tanlang
+</div>
+
+<!-- Module cards grid -->
+<div *ngIf="!loading && moduleCards.length > 0" class="mod-grid">
+  <div
+    *ngFor="let card of moduleCards"
+    class="mod-card"
+    [class.mod-card--active]="card.checked"
+    [class.mod-card--partial]="card.indeterminate"
+    [class.mod-card--disabled]="!selectedRoleId"
+    (click)="toggleCard(card)"
+  >
+    <div class="mod-card__check">
+      <span class="mod-check-icon" *ngIf="card.checked">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </span>
+      <span class="mod-check-icon mod-check-icon--partial" *ngIf="card.indeterminate">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </span>
+      <span class="mod-check-icon mod-check-icon--empty" *ngIf="!card.checked && !card.indeterminate">
+      </span>
+    </div>
+
+    <div class="mod-card__body">
+      <div class="mod-card__name">{{ card.name }}</div>
+      <div class="mod-card__count">{{ card.permissions.length }} ta ruxsat</div>
+    </div>
+
+    <div class="mod-card__status">
+      <span *ngIf="card.checked"      class="mod-badge mod-badge--on">Faol</span>
+      <span *ngIf="card.indeterminate" class="mod-badge mod-badge--partial">Qisman</span>
+      <span *ngIf="!card.checked && !card.indeterminate" class="mod-badge mod-badge--off">Faol emas</span>
+    </div>
+  </div>
+</div>

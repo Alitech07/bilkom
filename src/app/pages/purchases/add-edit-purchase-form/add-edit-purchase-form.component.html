@@ -9,7 +9,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Kompaniya nomi</mat-label>
         <mat-select formControlName="name">
-          <mat-option *ngFor="let supplier of supplieres" [value]="supplier">{{ supplier }}</mat-option>
+          <mat-option *ngFor="let supplier of supplierNames" [value]="supplier">{{ supplier }}</mat-option>
         </mat-select>
         <mat-error *ngIf="form.get('name')?.hasError('required')">Majburiy maydon</mat-error>
       </mat-form-field>

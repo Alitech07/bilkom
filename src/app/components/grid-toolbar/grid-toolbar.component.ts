@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-grid-toolbar',
@@ -6,6 +6,10 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./grid-toolbar.component.scss']
 })
 export class GridToolbarComponent {
+  @Input() showSearch = true;
+  @Input() showFilter = true;
+  @Input() showExcel  = true;
+
   @Output() searchChange = new EventEmitter<string>();
   @Output() filterClick  = new EventEmitter<void>();
   @Output() excelClick   = new EventEmitter<void>();

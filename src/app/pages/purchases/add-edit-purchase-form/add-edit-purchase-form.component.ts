@@ -1,7 +1,7 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { GridService } from '../../../services/grid.service';
+import { SupplierService } from '../../../services/supplier.service';
 
 export interface Purchase {
   id: number;
@@ -17,25 +17,32 @@ export interface Purchase {
   templateUrl: './add-edit-purchase-form.component.html',
   styleUrls: ['./add-edit-purchase-form.component.scss']
 })
-export class AddEditPurchaseFormComponent {
+export class AddEditPurchaseFormComponent implements OnInit {
   isEdit: boolean;
   form: FormGroup;
-  supplieres: string[];
+  supplierNames: string[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private gridService: GridService,
+    private supplierService: SupplierService,
     private dialogRef: MatDialogRef<AddEditPurchaseFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Purchase | null
   ) {
-    this.isEdit   = !!data;
-    this.supplieres = this.gridService.getSupplierNames();
+    this.isEdit = !!data;
     this.form = this.fb.group({
       name:        [data?.name        ?? '', Validators.required],
       description: [data?.description ?? ''],
       price:       [data?.price       ?? null, [Validators.required, Validators.min(0)]],
       amount:      [data?.amount      ?? null, [Validators.required, Validators.min(1)]],
-      track:       [data?.track       ?? 's',  Validators.required],
+      track:       [data?.track       ?? '',   Validators.required],
+    });
+  }
+
+  ngOnInit() {
+    this.supplierService.getAll().subscribe({
+      next: (suppliers) => {
+        this.supplierNames = suppliers.map(s => s.legalName);
+      },
     });
   }
 

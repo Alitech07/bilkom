@@ -7,43 +7,61 @@
 
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Kompaniya nomi</mat-label>
-        <input matInput formControlName="name" placeholder="Masalan: Alfa Kimyo LLC">
-        <mat-error *ngIf="form.get('name')?.hasError('required')">Majburiy maydon</mat-error>
+        <mat-label>Yuridik nomi (Legal Name)</mat-label>
+        <input matInput formControlName="legalName" placeholder="Masalan: Alfa Kimyo LLC">
+        <mat-error *ngIf="form.get('legalName')?.hasError('required')">Majburiy maydon</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Mas'ul shaxs</mat-label>
-        <input matInput formControlName="contactPerson" placeholder="To'liq ismi">
-        <mat-error *ngIf="form.get('contactPerson')?.hasError('required')">Majburiy maydon</mat-error>
+        <mat-label>Brend nomi (Brand Name)</mat-label>
+        <input matInput formControlName="brandName" placeholder="Masalan: AlfaChem">
       </mat-form-field>
     </div>
 
     <div class="form-row">
       <mat-form-field appearance="outline">
+        <mat-label>Freight Forwarder</mat-label>
+        <input matInput formControlName="freightForwarder" placeholder="Masalan: DHL, FedEx">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Faoliyat turi (Type of Activity)</mat-label>
+        <input matInput formControlName="typeOfActivity" placeholder="Masalan: Import, Ishlab chiqarish">
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Mas'ul shaxs</mat-label>
+        <input matInput formControlName="contactPerson" placeholder="To'liq ismi">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
         <mat-label>Telefon</mat-label>
         <input matInput formControlName="phone" placeholder="+998 90 123 45 67">
         <mat-error *ngIf="form.get('phone')?.hasError('required')">Majburiy maydon</mat-error>
       </mat-form-field>
+    </div>
 
+    <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput formControlName="email" placeholder="info@example.com">
         <mat-error *ngIf="form.get('email')?.hasError('email')">Noto'g'ri email format</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Holati</mat-label>
+        <mat-select formControlName="isActive">
+          <mat-option [value]="true">Faol</mat-option>
+          <mat-option [value]="false">Nofaol</mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
 
     <mat-form-field appearance="outline">
       <mat-label>Manzil</mat-label>
       <input matInput formControlName="address" placeholder="Shahar, ko'cha, uy">
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Holati</mat-label>
-      <mat-select formControlName="status">
-        <mat-option value="Faol">Faol</mat-option>
-        <mat-option value="Nofaol">Nofaol</mat-option>
-      </mat-select>
     </mat-form-field>
 
   </form>

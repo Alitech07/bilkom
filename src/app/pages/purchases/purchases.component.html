@@ -3,6 +3,9 @@
   <p class="page-subtitle">Barcha xaridlar ro'yxati</p>
 </div>
 <app-grid-toolbar
+  [showSearch]="cfgSearch"
+  [showFilter]="cfgFilter"
+  [showExcel]="cfgExcel"
   (searchChange)="onSearch($event)"
   (filterClick)="onFilter()"
   (excelClick)="onExcel()"
@@ -15,8 +18,9 @@
   </button>
 </app-grid-toolbar>
 <app-grid
-  gridId="purchases"
+  [gridId]="gridId"
   [showActions]="true"
+  (configLoaded)="pageConfig = $event"
   (editClick)="onEdit($event)"
   (deleteClick)="onDelete()"
 ></app-grid>

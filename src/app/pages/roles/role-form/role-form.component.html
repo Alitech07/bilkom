@@ -1,0 +1,32 @@
+<h2 class="dialog-title">
+  {{ isEdit ? 'Rolni tahrirlash' : 'Yangi rol qo\'shish' }}
+</h2>
+
+<mat-dialog-content class="dialog-body">
+  <form [formGroup]="form" class="role-form">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Rol nomi</mat-label>
+      <input matInput formControlName="name" placeholder="Masalan: ADMIN, MANAGER">
+      <mat-error *ngIf="form.get('name')?.hasError('required')">Majburiy maydon</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tavsif</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="Rol vazifalari haqida qisqacha..."
+        rows="3"
+      ></textarea>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="submit()">
+    {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>
