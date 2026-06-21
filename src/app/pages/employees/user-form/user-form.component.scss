@@ -11,16 +11,18 @@
   max-height: 70vh;
 }
 
-.supplier-form {
+.user-form {
   display: flex;
   flex-direction: column;
   gap: 4px;
   min-width: 480px;
 
-  @media (max-width: 560px) {
+  @media (max-width: 540px) {
     min-width: unset;
     width: 100%;
   }
+
+  mat-form-field { width: 100%; }
 }
 
 .form-row {
@@ -28,7 +30,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 0 16px;
 
-  @media (max-width: 560px) {
+  @media (max-width: 540px) {
     grid-template-columns: 1fr;
   }
 }
@@ -43,7 +45,6 @@
 .toggle-label {
   font-size: 13px;
   color: #6B7280;
-  white-space: nowrap;
 }
 
 .dialog-actions {

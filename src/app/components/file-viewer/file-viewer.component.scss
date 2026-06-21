@@ -1,0 +1,56 @@
+.fv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 14px 20px;
+  border-bottom: 1px solid #F0F2F5;
+}
+
+.fv-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A2332;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 400px;
+}
+
+.fv-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.fv-body {
+  width: 100%;
+  height: calc(85vh - 60px);
+  overflow: hidden;
+}
+
+.fv-pdf {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.fv-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+  object-fit: contain;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.fv-unsupported {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+  color: #8B9CB3;
+  font-size: 14px;
+}

@@ -78,3 +78,9 @@ a { text-decoration: none; color: inherit; }
 .mat-raised-button.mat-primary { letter-spacing: 0; font-family: 'Inter', sans-serif; }
 
 .mat-card { border-radius: 12px !important; }
+
+.file-viewer-dialog .mat-dialog-container {
+  padding: 0 !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}

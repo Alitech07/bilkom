@@ -1,0 +1,46 @@
+<div class="fv-header">
+  <span class="fv-title">{{ data.fileName }}</span>
+  <div class="fv-actions">
+    <button mat-icon-button matTooltip="Yuklab olish" (click)="download()" [disabled]="!objectUrl">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+    </button>
+    <button mat-icon-button matTooltip="Yopish" (click)="close()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<div class="fv-body">
+
+  <div *ngIf="loading" class="fv-state">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Yuklanmoqda...</span>
+  </div>
+
+  <div *ngIf="error" class="fv-state">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span>Faylni yuklashda xato</span>
+  </div>
+
+  <ng-container *ngIf="!loading && !error && objectUrl">
+    <iframe *ngIf="isPdf" [src]="objectUrl | safeUrl" class="fv-pdf"></iframe>
+    <img *ngIf="isImage" [src]="objectUrl" class="fv-image" alt="fayl">
+    <div *ngIf="!isPdf && !isImage" class="fv-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#C1C9D2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      <span>Bu fayl turi ko'rsatilmaydi</span>
+      <button mat-raised-button color="primary" (click)="download()">Yuklab olish</button>
+    </div>
+  </ng-container>
+
+</div>

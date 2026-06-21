@@ -21,6 +21,15 @@
       ></textarea>
     </mat-form-field>
 
+    <mat-form-field appearance="outline">
+      <mat-label>Modullar</mat-label>
+      <mat-select formControlName="moduleIds" multiple>
+        <mat-option *ngFor="let mod of allModules" [value]="mod.id">
+          {{ mod.label }} <span style="color:#999;font-size:12px">({{ mod.section }})</span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
   </form>
 </mat-dialog-content>
 

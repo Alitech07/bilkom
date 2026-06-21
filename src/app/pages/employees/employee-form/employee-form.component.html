@@ -1,0 +1,80 @@
+<h2 class="dialog-title">
+  {{ isEdit ? 'Xodimni tahrirlash' : 'Yangi xodim' }}
+</h2>
+
+<mat-dialog-content class="dialog-body">
+  <form [formGroup]="form" class="employee-form">
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Familiya</mat-label>
+        <input matInput formControlName="lastName" placeholder="Rahimov">
+        <mat-error *ngIf="form.get('lastName')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Ismi</mat-label>
+        <input matInput formControlName="firstName" placeholder="Alisher">
+        <mat-error *ngIf="form.get('firstName')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Otasining ismi</mat-label>
+        <input matInput formControlName="middleName" placeholder="Bahodir o'g'li">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefon raqam</mat-label>
+        <input matInput formControlName="phoneNumber" placeholder="+998 90 123 45 67">
+        <mat-error *ngIf="form.get('phoneNumber')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="xodim@example.com">
+        <mat-error *ngIf="form.get('email')?.hasError('email')">Noto'g'ri email</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>INPS</mat-label>
+        <input matInput formControlName="inps" placeholder="14 xonali raqam">
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Pasport seriya va raqami</mat-label>
+        <input matInput formControlName="pasportCode" placeholder="AA 1234567">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Rasm URL</mat-label>
+        <input matInput formControlName="photo" placeholder="https://...">
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Manzil</mat-label>
+      <input matInput formControlName="address" placeholder="Toshkent, Chilonzor tumani">
+    </mat-form-field>
+
+    <div class="toggle-field">
+      <span class="toggle-label">Holati</span>
+      <mat-slide-toggle formControlName="state" color="primary">
+        {{ form.get('state')?.value ? 'Faol' : 'Nofaol' }}
+      </mat-slide-toggle>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="submit()">
+    {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,146 @@
+/* ── Controls bar ── */
+.perm-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.perm-select {
+  width: 260px;
+  margin-bottom: -1.25em;
+}
+
+.perm-save-btn {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 20px;
+}
+
+.perm-spinner {
+  display: inline-block;
+  margin-right: 6px;
+  ::ng-deep circle { stroke: #fff; }
+}
+
+/* ── Loading / empty / hint ── */
+.perm-loading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #8A96A3;
+  padding: 40px 0;
+  font-size: 14px;
+}
+
+.perm-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 0;
+  color: #8A96A3;
+  font-size: 14px;
+  text-align: center;
+}
+
+.perm-hint {
+  padding: 14px 18px;
+  background: #F0F9FF;
+  border: 1px solid #BAE6FD;
+  border-radius: 10px;
+  color: #0369A1;
+  font-size: 13.5px;
+  margin-bottom: 20px;
+}
+
+/* ── Module grid: 2 columns ── */
+.perm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Module box ── */
+.perm-module {
+  background: #fff;
+  border: 1px solid #E8EDF2;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+
+.perm-module__header {
+  padding: 12px 16px;
+  background: #F7F9FC;
+  border-bottom: 1px solid #E8EDF2;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1A2332;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+}
+
+.perm-module__body {
+  padding: 8px 0;
+}
+
+/* ── Permission row ── */
+.perm-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  transition: background .15s;
+
+  &:hover {
+    background: #F7F9FC;
+  }
+}
+
+.perm-row__left {
+  flex: 1;
+  min-width: 0;
+
+  ::ng-deep .mat-checkbox-label {
+    font-size: 13.5px;
+    color: #374151;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.perm-row__right {
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+/* ── Action badge ── */
+.perm-action {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: lowercase;
+  letter-spacing: .2px;
+
+  &--view   { background: #EFF6FF; color: #1D4ED8; }
+  &--create { background: #F0FDF4; color: #15803D; }
+  &--edit   { background: #FFFBEB; color: #B45309; }
+  &--delete { background: #FEF2F2; color: #B91C1C; }
+
+  /* fallback for other action names */
+  &:not([class*="--view"]):not([class*="--create"]):not([class*="--edit"]):not([class*="--delete"]) {
+    background: #F3F4F6;
+    color: #374151;
+  }
+}

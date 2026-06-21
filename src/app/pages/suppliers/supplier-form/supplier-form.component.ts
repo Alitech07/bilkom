@@ -27,7 +27,7 @@ export class SupplierFormComponent {
       phone:            [data?.phone            ?? '', Validators.required],
       email:            [data?.email            ?? '', Validators.email],
       address:          [data?.address          ?? ''],
-      isActive:         [data?.isActive ?? true],
+      isActive:         [data?.isActive !== 'P'],
     });
   }
 
@@ -36,7 +36,10 @@ export class SupplierFormComponent {
       this.form.markAllAsTouched();
       return;
     }
-    const dto: SupplierDto = this.form.value;
+    const dto: SupplierDto = {
+      ...this.form.value,
+      isActive: this.form.value.isActive ? 'A' : 'P',
+    };
     this.dialogRef.close(dto);
   }
 

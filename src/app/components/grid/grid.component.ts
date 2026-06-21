@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+
 import { GridColumn, GridConfig, GridPage, GridService } from '../../services/grid.service';
 import * as XLSX from 'xlsx';
 
@@ -17,9 +18,12 @@ export class GridComponent implements OnChanges {
   @Input() externalLoading = false;
 
   @Input() showActions = false;
-  @Output() editClick     = new EventEmitter<Record<string, any>>();
-  @Output() deleteClick   = new EventEmitter<Record<string, any>>();
-  @Output() configLoaded  = new EventEmitter<GridPage>();
+  @Input() selectable  = false;
+  @Output() editClick    = new EventEmitter<Record<string, any>>();
+  @Output() deleteClick  = new EventEmitter<Record<string, any>>();
+  @Output() fileClick    = new EventEmitter<Record<string, any>>();
+  @Output() rowClick     = new EventEmitter<Record<string, any>>();
+  @Output() configLoaded = new EventEmitter<GridPage>();
 
   gridPage: GridPage | null = null;
   loading = false;
@@ -102,7 +106,7 @@ export class GridComponent implements OnChanges {
 
   get activeColumns(): GridColumn[] {
     if (this.externalConfig) return this.externalConfig.columns;
-    return this.gridPage?.gridColumns ?? [];
+    return (this.gridPage?.gridColumns ?? []).filter(col => col.visible !== false);
   }
 
   get activeData(): Record<string, any>[] {
@@ -116,6 +120,10 @@ export class GridComponent implements OnChanges {
 
   get showCheckbox(): boolean {
     return !!this.gridPage?.gridConfig.checkbox;
+  }
+
+  get showFileBtnColumn(): boolean {
+    return !!this.gridPage?.gridConfig.showFile;
   }
 
   applyFilter(text: string): void {

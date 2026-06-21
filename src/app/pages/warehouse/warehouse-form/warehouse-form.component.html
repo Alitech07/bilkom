@@ -1,0 +1,53 @@
+<h2 class="dialog-title">
+  {{ isEdit ? 'Ombor yozuvini tahrirlash' : 'Yangi ombor yozuvi' }}
+</h2>
+
+<mat-dialog-content class="dialog-body">
+  <form [formGroup]="form" class="warehouse-form">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Mahsulot</mat-label>
+      <mat-select formControlName="productId">
+        <mat-option *ngFor="let p of products" [value]="p.id">{{ p.productName }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('productId')?.hasError('required')">Majburiy maydon</mat-error>
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Qoldiq miqdori</mat-label>
+        <input matInput type="number" formControlName="residual" placeholder="0">
+        <mat-error *ngIf="form.get('residual')?.hasError('required')">Majburiy maydon</mat-error>
+        <mat-error *ngIf="form.get('residual')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>O'lchov birligi</mat-label>
+        <mat-select formControlName="measure">
+          <mat-option *ngFor="let m of measures" [value]="m">{{ m }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('measure')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Saqlash joyi</mat-label>
+      <input matInput formControlName="storageSpace" placeholder="Masalan: A-1 sektor, 3-qator">
+    </mat-form-field>
+
+    <div class="toggle-field">
+      <span class="toggle-label">Holati</span>
+      <mat-slide-toggle formControlName="state" color="primary">
+        {{ form.get('state')?.value ? 'Faol' : 'Nofaol' }}
+      </mat-slide-toggle>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="submit()">
+    {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>

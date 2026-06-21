@@ -122,13 +122,14 @@ tr:last-child .grid-td { border-bottom: none; }
 .grid-td--checkbox { text-align: center; }
 .grid-checkbox     { cursor: pointer; accent-color: #5B7CF6; width: 15px; height: 15px; }
 
-.grid-td--actions { white-space: nowrap; width: 80px; }
+.grid-td--actions { white-space: nowrap; width: 96px; }
 
 .action-btn {
   width: 30px !important;
   height: 30px !important;
   line-height: 30px !important;
 
+  &--file { color: #3B82F6; }
   &--edit { color: #1D9E75; }
   &--del  { color: #EF4444; }
 }

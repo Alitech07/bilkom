@@ -1,0 +1,57 @@
+<h2 class="dialog-title">
+  {{ isEdit ? 'Foydalanuvchini tahrirlash' : 'Yangi foydalanuvchi' }}
+</h2>
+
+<mat-dialog-content class="dialog-body">
+  <form [formGroup]="form" class="user-form">
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>To'liq ismi (xodimdan tanlang)</mat-label>
+        <mat-select formControlName="fullName">
+          <mat-option *ngFor="let e of employees" [value]="employeeFullName(e)">
+            {{ employeeFullName(e) }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('fullName')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Login</mat-label>
+        <input matInput formControlName="login" placeholder="alisher_r">
+        <mat-error *ngIf="form.get('login')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ isEdit ? 'Yangi parol (ixtiyoriy)' : 'Parol' }}</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Kamida 6 ta belgi">
+        <mat-error *ngIf="form.get('password')?.hasError('required')">Majburiy maydon</mat-error>
+        <mat-error *ngIf="form.get('password')?.hasError('minlength')">Kamida 6 ta belgi</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Rollar</mat-label>
+        <mat-select formControlName="roleIds" multiple>
+          <mat-option *ngFor="let r of roles" [value]="r.id">{{ r.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="toggle-field">
+      <span class="toggle-label">Holati</span>
+      <mat-slide-toggle formControlName="isActive" color="primary">
+        {{ form.get('isActive')?.value =='A'? 'Faol' : 'Nofaol' }}
+      </mat-slide-toggle>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="submit()">
+    {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>

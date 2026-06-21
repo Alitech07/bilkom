@@ -22,5 +22,6 @@
   [showActions]="true"
   (configLoaded)="pageConfig = $event"
   (editClick)="onEdit($event)"
-  (deleteClick)="onDelete()"
+  (deleteClick)="onDelete($event)"
+  (fileClick)="onFileClick($event)"
 ></app-grid>

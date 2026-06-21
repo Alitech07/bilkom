@@ -8,6 +8,7 @@ export interface GridColumn {
   label: string;
   type?: 'text' | 'badge' | 'number' | 'date';
   exportable?: boolean;
+  visible?: boolean;
   width?: string;
   badgeMap?: Record<string, 'green' | 'blue' | 'yellow' | 'red' | 'gray'>;
 }
@@ -25,6 +26,7 @@ export interface GridPageConfig {
   search: boolean;
   filter: boolean;
   checkbox: boolean;
+  showFile: boolean;
 }
 
 export interface GridPage {

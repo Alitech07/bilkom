@@ -5,44 +5,70 @@
 <mat-dialog-content class="dialog-body">
   <form [formGroup]="form" class="purchase-form">
 
+    <mat-form-field appearance="outline">
+      <mat-label>Yetkazib beruvchi kompaniya</mat-label>
+      <mat-select formControlName="supplierId">
+        <mat-option *ngFor="let s of suppliers" [value]="s.id">{{ s.legalName }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('supplierId')?.hasError('required')">Majburiy maydon</mat-error>
+    </mat-form-field>
+
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Kompaniya nomi</mat-label>
-        <mat-select formControlName="name">
-          <mat-option *ngFor="let supplier of supplierNames" [value]="supplier">{{ supplier }}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="form.get('name')?.hasError('required')">Majburiy maydon</mat-error>
+        <mat-label>Mahsulot nomi</mat-label>
+        <input matInput formControlName="productName" placeholder="Masalan: Sulfat kislota">
+        <mat-error *ngIf="form.get('productName')?.hasError('required')">Majburiy maydon</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Brend</mat-label>
+        <input matInput formControlName="brand" placeholder="Masalan: BASF">
       </mat-form-field>
     </div>
 
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Description</mat-label>
-        <input matInput formControlName="description" >
+        <mat-label>Davlat</mat-label>
+        <input matInput formControlName="country" placeholder="Masalan: Germaniya">
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Price</mat-label>
-        <input matInput formControlName="price">
-        <mat-error *ngIf="form.get('price')?.hasError('number')">Narx Noldan kichik bo'lishi mumkin emas</mat-error>
+        <mat-label>Yetkazib berish turi</mat-label>
+        <mat-select formControlName="deliveryType">
+          <mat-option *ngFor="let t of deliveryTypes" [value]="t.value">{{ t.label }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('deliveryType')?.hasError('required')">Majburiy maydon</mat-error>
       </mat-form-field>
     </div>
 
     <mat-form-field appearance="outline">
-      <mat-label>Track</mat-label>
-      <mat-select formControlName="track">
-        <mat-option value="s">Yuboruvchida</mat-option>
-        <mat-option value="b">Bojxonada</mat-option>
-        <mat-option value="o">Omborda</mat-option>
-      </mat-select>
+      <mat-label>Narxi (USD)</mat-label>
+      <input matInput type="number" formControlName="price" placeholder="0.00">
+      <mat-error *ngIf="form.get('price')?.hasError('required')">Majburiy maydon</mat-error>
+      <mat-error *ngIf="form.get('price')?.hasError('min')">Narx 0 dan kichik bo'lishi mumkin emas</mat-error>
     </mat-form-field>
+
+    <div class="file-field">
+      <span class="file-label">Sertifikat</span>
+      <label class="file-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Fayl tanlash
+        <input type="file" accept=".pdf,.jpg,.jpeg,.png" (change)="onFileChange($event)" hidden>
+      </label>
+      <span class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</span>
+      <span class="file-uploading" *ngIf="uploading">Yuklanmoqda...</span>
+    </div>
 
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions class="dialog-actions">
   <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
-  <button mat-raised-button color="primary" (click)="submit()">
+  <button mat-raised-button color="primary" (click)="submit()" [disabled]="uploading">
     {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
   </button>
 </mat-dialog-actions>

@@ -1,0 +1,21 @@
+.employees-tabs {
+  background: transparent;
+
+  ::ng-deep .mat-tab-label {
+    font-weight: 600;
+    font-size: 14px;
+    opacity: 0.65;
+
+    &.mat-tab-label-active {
+      opacity: 1;
+    }
+  }
+
+  ::ng-deep .mat-ink-bar {
+    background-color: var(--primary);
+  }
+}
+
+.tab-content {
+  padding-top: 20px;
+}

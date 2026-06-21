@@ -23,6 +23,8 @@ import { MatDialogModule }          from '@angular/material/dialog';
 import { MatSelectModule }          from '@angular/material/select';
 import { MatSnackBarModule }        from '@angular/material/snack-bar';
 import { MatCheckboxModule }        from '@angular/material/checkbox';
+import { MatSlideToggleModule }    from '@angular/material/slide-toggle';
+import { MatTabsModule }          from '@angular/material/tabs';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -49,6 +51,11 @@ import { RoleFormComponent } from './pages/roles/role-form/role-form.component';
 import { PermissionsComponent } from './pages/permissions/permissions.component';
 import { CustomerFormComponent } from './pages/customers/customer-form/customer-form.component';
 import { ProductFormComponent } from './pages/products/product-form/product-form.component';
+import { FileViewerComponent } from './components/file-viewer/file-viewer.component';
+import { SafeUrlPipe } from './pipes/safe-url.pipe';
+import { WarehouseFormComponent } from './pages/warehouse/warehouse-form/warehouse-form.component';
+import { EmployeeFormComponent } from './pages/employees/employee-form/employee-form.component';
+import { UserFormComponent } from './pages/employees/user-form/user-form.component';
 
 const MATERIAL = [
   MatToolbarModule, MatButtonModule, MatIconModule, MatBadgeModule,
@@ -57,6 +64,8 @@ const MATERIAL = [
   MatListModule, MatTooltipModule, MatDialogModule, MatSelectModule,
   MatSnackBarModule,
   MatCheckboxModule,
+  MatSlideToggleModule,
+  MatTabsModule,
 ];
 
 @NgModule({
@@ -69,6 +78,9 @@ const MATERIAL = [
     EmployeesComponent, RolesComponent, ModulesComponent,
     SuppliersComponent, SupplierFormComponent, PurchasesComponent, AddEditPurchaseFormComponent,
     RoleFormComponent, PermissionsComponent, CustomerFormComponent, ProductFormComponent,
+    FileViewerComponent, SafeUrlPipe,
+    WarehouseFormComponent,
+    EmployeeFormComponent, UserFormComponent,
   ],
   imports: [
     BrowserModule, BrowserAnimationsModule,

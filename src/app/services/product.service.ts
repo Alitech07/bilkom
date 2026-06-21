@@ -36,6 +36,12 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
+  getAll(): Observable<Product[]> {
+    return this.http.get<ApiResult<Product[]>>(`${this.base}/list`).pipe(
+      map(res => res.object ?? [])
+    );
+  }
+
   getById(id: number): Observable<Product> {
     return this.http.get<ApiResult<Product>>(`${this.base}/${id}`).pipe(
       map(res => res.object)

@@ -13,7 +13,7 @@ export interface Supplier {
   phone: string;
   email: string;
   address: string;
-  isActive: boolean;
+  isActive: string;
 }
 
 export interface SupplierDto {
@@ -25,7 +25,7 @@ export interface SupplierDto {
   phone: string;
   email: string;
   address: string;
-  isActive: boolean;
+  isActive: string;
 }
 
 interface ApiResult<T> {
