@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Product } from './product.service';
 
 export interface WarehouseDto {
   productId: number;
@@ -26,6 +27,12 @@ export class WarehouseService {
   getById(id: number): Observable<any> {
     return this.http.get<ApiResult<any>>(`${this.base}/${id}`).pipe(
       map(res => res.object)
+    );
+  }
+
+  getFreeProducts(): Observable<Product[]> {
+    return this.http.get<ApiResult<Product[]>>(`${this.base}/free-products`).pipe(
+      map(res => res.object ?? [])
     );
   }
 

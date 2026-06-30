@@ -27,7 +27,7 @@ export class WarehouseFormComponent implements OnInit {
     private dialogRef: MatDialogRef<WarehouseFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Record<string, any> | null,
   ) {
-    this.isEdit = !!data;
+    this.isEdit = !!data && !data['freeOnly'];
     this.form = this.fb.group({
       productId:    [data?.['product_id']    ?? null, Validators.required],
       residual:     [data?.['residual']      ?? null, [Validators.required, Validators.min(0)]],
@@ -38,9 +38,13 @@ export class WarehouseFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.productService.getAll().subscribe({
-      next: products => this.products = products.filter(p => p.state === 'ACTIVE'),
-    });
+    if (this.data?.['freeOnly'] && Array.isArray(this.data['products'])) {
+      this.products = this.data['products'];
+    } else {
+      this.productService.getAll().subscribe({
+        next: products => this.products = products,
+      });
+    }
   }
 
   submit(): void {

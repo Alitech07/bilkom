@@ -45,6 +45,32 @@ export class WarehouseComponent {
     });
   }
 
+  openAddNew(): void {
+    this.warehouseService.getFreeProducts().subscribe({
+      next: products => {
+        if (products.length === 0) {
+          this.snack.open('Barcha mahsulotlar allaqachon omborga kiritilgan', 'OK', { duration: 3000 });
+          return;
+        }
+        this.dialog.open(WarehouseFormComponent, {
+          data: { freeOnly: true, products },
+          width: '560px',
+          disableClose: true,
+        }).afterClosed().subscribe((result: WarehouseFormResult | undefined) => {
+          if (!result) return;
+          this.warehouseService.add(result.dto).subscribe({
+            next: res => {
+              this.snack.open(res.message ?? 'Qo\'shildi', 'OK', { duration: 3000 });
+              this.grid.load();
+            },
+            error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+          });
+        });
+      },
+      error: () => this.snack.open('Mahsulotlarni yuklashda xato', 'OK', { duration: 3000 }),
+    });
+  }
+
   onEdit(row: Record<string, any>): void {
     this.dialog.open(WarehouseFormComponent, {
       data: row, width: '560px', disableClose: true,
