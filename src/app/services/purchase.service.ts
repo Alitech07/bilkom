@@ -3,6 +3,24 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export interface PurchaseSupplier {
+  id: number;
+  legalName: string;
+  brandName: string;
+}
+
+export interface Purchase {
+  id: number;
+  productName: string;
+  brand: string;
+  country: string;
+  deliveryType: string;
+  price: number;
+  status: string;
+  state: string;
+  supplier: PurchaseSupplier;
+}
+
 export interface PurchaseDto {
   supplierId: number;
   productName: string;
@@ -24,6 +42,12 @@ export class PurchaseService {
   private readonly base = `${environment.apiUrl}/purchases`;
 
   constructor(private http: HttpClient) {}
+
+  getAll(): Observable<Purchase[]> {
+    return this.http.get<ApiResult<Purchase[]>>(`${this.base}/list`).pipe(
+      map(res => res.object ?? [])
+    );
+  }
 
   add(dto: PurchaseDto): Observable<ApiResult<null>> {
     return this.http.post<ApiResult<null>>(`${this.base}/add`, dto);

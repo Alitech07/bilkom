@@ -47,6 +47,34 @@
   color: #6B7280;
 }
 
+.purchase-info {
+  background: #F8F9FB;
+  border: 1px solid #EEF0F3;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-row {
+  display: flex;
+  gap: 8px;
+  font-size: 13.5px;
+}
+
+.info-label {
+  color: #6B7A8E;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.info-value {
+  color: #1A2332;
+  font-weight: 500;
+}
+
 .dialog-actions {
   padding: 8px 24px 20px !important;
   gap: 10px;

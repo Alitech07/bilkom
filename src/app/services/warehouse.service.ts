@@ -5,7 +5,8 @@ import { environment } from '../../environments/environment';
 import { Product } from './product.service';
 
 export interface WarehouseDto {
-  productId: number;
+  productId?: number;
+  purchaseId?: number;
   residual: number;
   measure: string;
   storageSpace: string;

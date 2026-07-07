@@ -30,59 +30,37 @@ export class WarehouseComponent {
   onSearch(text: string): void { this.grid?.applyFilter(text); }
   onExcel(): void { this.grid?.exportToExcel(); }
 
-  openAdd(): void {
+  private openForm(data: Record<string, any> | null, width = '560px'): void {
     this.dialog.open(WarehouseFormComponent, {
-      data: null, width: '560px', disableClose: true,
+      data, width, disableClose: true,
     }).afterClosed().subscribe((result: WarehouseFormResult | undefined) => {
       if (!result) return;
-      this.warehouseService.add(result.dto).subscribe({
+      const req = result.id
+        ? this.warehouseService.edit(result.id, result.dto)
+        : this.warehouseService.add(result.dto);
+      req.subscribe({
         next: res => {
-          this.snack.open(res.message ?? 'Qo\'shildi', 'OK', { duration: 3000 });
+          this.snack.open(res.message ?? 'Saqlandi', 'OK', { duration: 3000 });
           this.grid.load();
         },
         error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
       });
     });
+  }
+
+  openAdd(): void {
+    this.openForm({ purchaseMode: true });
   }
 
   openAddNew(): void {
-    this.warehouseService.getFreeProducts().subscribe({
-      next: products => {
-        if (products.length === 0) {
-          this.snack.open('Barcha mahsulotlar allaqachon omborga kiritilgan', 'OK', { duration: 3000 });
-          return;
-        }
-        this.dialog.open(WarehouseFormComponent, {
-          data: { freeOnly: true, products },
-          width: '560px',
-          disableClose: true,
-        }).afterClosed().subscribe((result: WarehouseFormResult | undefined) => {
-          if (!result) return;
-          this.warehouseService.add(result.dto).subscribe({
-            next: res => {
-              this.snack.open(res.message ?? 'Qo\'shildi', 'OK', { duration: 3000 });
-              this.grid.load();
-            },
-            error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
-          });
-        });
-      },
-      error: () => this.snack.open('Mahsulotlarni yuklashda xato', 'OK', { duration: 3000 }),
-    });
+    this.openForm(null);
   }
 
   onEdit(row: Record<string, any>): void {
-    this.dialog.open(WarehouseFormComponent, {
-      data: row, width: '560px', disableClose: true,
-    }).afterClosed().subscribe((result: WarehouseFormResult | undefined) => {
-      if (!result?.id) return;
-      this.warehouseService.edit(result.id, result.dto).subscribe({
-        next: res => {
-          this.snack.open(res.message ?? 'Yangilandi', 'OK', { duration: 3000 });
-          this.grid.load();
-        },
-        error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
-      });
+    const isPurchaseRow = !!row['purchase_id'];
+    this.openForm({
+      ...row,
+      purchaseMode: isPurchaseRow,
     });
   }
 
