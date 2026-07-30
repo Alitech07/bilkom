@@ -23,6 +23,7 @@ export class LoginComponent {
 
     this.auth.login(this.login, this.password).subscribe({
       next: () => {
+        this.auth.loadCurrentUser().subscribe();
         this.auth.loadModules().subscribe({
           complete: () => { this.isLoading = false; this.router.navigate(['/dashboard']); },
           error:    () => { this.isLoading = false; this.router.navigate(['/dashboard']); },

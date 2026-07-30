@@ -25,6 +25,7 @@ import { MatSnackBarModule }        from '@angular/material/snack-bar';
 import { MatCheckboxModule }        from '@angular/material/checkbox';
 import { MatSlideToggleModule }    from '@angular/material/slide-toggle';
 import { MatTabsModule }          from '@angular/material/tabs';
+import { MatMenuModule }          from '@angular/material/menu';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -66,6 +67,7 @@ const MATERIAL = [
   MatCheckboxModule,
   MatSlideToggleModule,
   MatTabsModule,
+  MatMenuModule,
 ];
 
 @NgModule({
