@@ -11,6 +11,9 @@ export interface GridColumn {
   visible?: boolean;
   width?: string;
   badgeMap?: Record<string, 'green' | 'blue' | 'yellow' | 'red' | 'gray'>;
+  group?: string;
+  footer?: 'sum' | 'avg' | 'count' | 'label';
+  footerLabel?: string;
 }
 
 // externalConfig rejimi uchun (Suppliers, Roles sahifalari)
@@ -20,6 +23,11 @@ export interface GridConfig {
   data: Record<string, any>[];
 }
 
+export interface GridGroup {
+  key: string;
+  label: string;
+}
+
 // API rejimi uchun (gridId orqali yuklanadigan sahifalar)
 export interface GridPageConfig {
   page: number;
@@ -27,6 +35,8 @@ export interface GridPageConfig {
   filter: boolean;
   checkbox: boolean;
   showFile: boolean;
+  showFooter?: boolean;
+  groups?: GridGroup[];
 }
 
 export interface GridPage {

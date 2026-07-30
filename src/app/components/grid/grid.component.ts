@@ -1,6 +1,14 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 import { GridColumn, GridConfig, GridPage, GridService } from '../../services/grid.service';
+
+interface HeaderCell {
+  isGroup: boolean;
+  label: string;
+  span: number;
+  colKey: string;
+  colWidth: string | undefined;
+}
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -150,6 +158,59 @@ export class GridComponent implements OnChanges {
       const cmp = String(a[key] ?? '').localeCompare(String(b[key] ?? ''), undefined, { numeric: true });
       return this.sortDir === 'asc' ? cmp : -cmp;
     });
+  }
+
+  get hasGroups(): boolean {
+    return this.activeColumns.some(c => !!c.group);
+  }
+
+  private get groupsMap(): Map<string, string> {
+    const map = new Map<string, string>();
+    (this.gridPage?.gridConfig.groups ?? []).forEach(g => map.set(g.key, g.label));
+    return map;
+  }
+
+  get columnGroups(): HeaderCell[] {
+    const cells: HeaderCell[] = [];
+    const cols = this.activeColumns;
+    const groups = this.groupsMap;
+    let i = 0;
+    while (i < cols.length) {
+      const col = cols[i];
+      if (!col.group) {
+        cells.push({ isGroup: false, label: col.label, span: 1, colKey: col.key, colWidth: col.width });
+        i++;
+      } else {
+        const groupKey = col.group;
+        const groupLabel = groups.get(groupKey) ?? groupKey;
+        let span = 0;
+        while (i < cols.length && cols[i].group === groupKey) { span++; i++; }
+        cells.push({ isGroup: true, label: groupLabel, span, colKey: '', colWidth: undefined });
+      }
+    }
+    return cells;
+  }
+
+  get groupedColumns(): GridColumn[] {
+    return this.activeColumns.filter(c => !!c.group);
+  }
+
+  get showFooter(): boolean {
+    return !!this.gridPage?.gridConfig.showFooter;
+  }
+
+  footerValue(col: GridColumn): string {
+    if (!col.footer) return '';
+    if (col.footer === 'label') return col.footerLabel ?? '';
+
+    const nums = this.sortedData
+      .map(row => Number(row[col.key]))
+      .filter(v => !isNaN(v));
+
+    if (col.footer === 'sum')   return this.formatNumber(nums.reduce((a, b) => a + b, 0));
+    if (col.footer === 'avg')   return nums.length ? this.formatNumber(nums.reduce((a, b) => a + b, 0) / nums.length) : '';
+    if (col.footer === 'count') return String(this.sortedData.filter(r => r[col.key] != null && r[col.key] !== '').length);
+    return '';
   }
 
   badgeClass(col: GridColumn, value: string): string {

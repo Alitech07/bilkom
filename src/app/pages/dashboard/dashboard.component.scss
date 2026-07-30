@@ -12,7 +12,7 @@
   @media (max-width: 360px)  { grid-template-columns: 1fr; }
 }
 
-/* ── Stat card (mat-card override) ── */
+/* ── Stat card ── */
 .stat-card {
   border-radius: 12px !important;
   box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
@@ -23,7 +23,6 @@
     align-items: center !important;
     gap: 14px !important;
     padding: 18px !important;
-    position: relative;
 
     @media (max-width: 480px) { padding: 14px 12px !important; gap: 10px !important; }
   }
@@ -45,68 +44,29 @@
     @media (max-width: 480px) { font-size: 18px; }
   }
 
+  &__skeleton {
+    display: block;
+    width: 60px; height: 22px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #F0F2F5 25%, #E4E7EB 50%, #F0F2F5 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+  }
+
   &__label {
     font-size: 12px; color: #6B7A8E; font-weight: 500;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     @media (max-width: 480px) { font-size: 11px; }
   }
-
-  &__trend {
-    position: absolute; top: 14px; right: 14px;
-    font-size: 11px; font-weight: 600;
-    padding: 2px 7px; border-radius: 20px;
-    @media (max-width: 480px) { display: none; }
-
-    &.up   { color: #1D9E75; background: rgba(29,158,117,0.1); }
-    &.down { color: #EF4444; background: rgba(239,68,68,0.1);  }
-  }
 }
 
-/* ── Table card ── */
-.table-card {
-  border-radius: 12px !important;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
-  border: 1px solid #F0F2F5 !important;
-  overflow: hidden;
-
-  &__header {
-    padding: 14px 20px 12px !important;
-    margin: 0 !important;
-  }
-
-  &__title {
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    color: #1A2332 !important;
-  }
-
-  &__content { padding: 0 !important; }
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-.table {
-  width: 100%; min-width: 520px; border-collapse: collapse; font-size: 13.5px;
-
-  th {
-    text-align: left; padding: 10px 20px;
-    color: #6B7A8E; font-weight: 500; font-size: 11.5px;
-    text-transform: uppercase; letter-spacing: 0.04em;
-    background: #FAFBFC; border-bottom: 1px solid #F0F2F5; white-space: nowrap;
-  }
-
-  td { padding: 12px 20px; color: #1A2332; border-bottom: 1px solid #F8F9FB; white-space: nowrap; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #FAFBFC; }
-
-  &__id   { font-weight: 600; color: #1D9E75 !important; font-size: 13px; }
-  &__date { color: #6B7A8E !important; font-size: 13px; }
-}
-
-.badge {
-  display: inline-flex; align-items: center;
-  padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500;
-  &--green  { background: rgba(29,158,117,0.1); color: #1D9E75; }
-  &--blue   { background: rgba(59,130,246,0.1);  color: #3B82F6; }
-  &--yellow { background: rgba(245,158,11,0.1);  color: #D97706; }
+/* ── Section title ── */
+.section-title {
+  font-size: 15px; font-weight: 600; color: #1A2332;
+  margin: 0 0 12px;
 }

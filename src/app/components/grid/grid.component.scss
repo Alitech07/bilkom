@@ -99,6 +99,20 @@ tr:hover .grid-td { background: #F4F9F7; }
 tr:last-child .grid-td { border-bottom: none; }
 .grid-empty-cell { border-bottom: none !important; }
 
+/* ── Footer row ── */
+.grid-row--footer .grid-tf {
+  padding: 10px 16px;
+  background: #F4F6F9;
+  border-top: 2px solid #E2E8F0;
+  border-bottom: none;
+  font-size: 13px;
+  color: #1A2332;
+  white-space: nowrap;
+
+  &--num   { font-weight: 700; font-variant-numeric: tabular-nums; color: #1D9E75; }
+  &--label { font-weight: 600; color: #4A5568; }
+}
+
 /* ── State ── */
 .grid-state {
   display: flex; flex-direction: column; align-items: center;
@@ -119,6 +133,20 @@ tr:last-child .grid-td { border-bottom: none; }
 /* ── Actions ── */
 .grid-th--actions  { width: 80px; pointer-events: none; }
 .grid-th--checkbox { width: 40px; pointer-events: none; text-align: center; }
+
+.grid-th--group {
+  text-align: center;
+  background: #EEF2F7;
+  color: #4A5568;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #DDE3ED;
+  cursor: default;
+  pointer-events: none;
+}
+
+.grid-th[rowspan="2"] { vertical-align: middle; }
 .grid-td--checkbox { text-align: center; }
 .grid-checkbox     { cursor: pointer; accent-color: #5B7CF6; width: 15px; height: 15px; }
 

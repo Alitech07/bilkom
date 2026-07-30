@@ -4,6 +4,14 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Product } from './product.service';
 
+export interface Warehouse {
+  id: number;
+  residual: number;
+  measure: string;
+  storageSpace: string;
+  state: 'ACTIVE' | 'INACTIVE';
+}
+
 export interface WarehouseDto {
   productId?: number;
   purchaseId?: number;
@@ -25,8 +33,14 @@ export class WarehouseService {
 
   constructor(private http: HttpClient) {}
 
-  getById(id: number): Observable<any> {
-    return this.http.get<ApiResult<any>>(`${this.base}/${id}`).pipe(
+  getAll(): Observable<Warehouse[]> {
+    return this.http.get<ApiResult<Warehouse[]>>(`${this.base}/list`).pipe(
+      map(res => res.object ?? [])
+    );
+  }
+
+  getById(id: number): Observable<Warehouse> {
+    return this.http.get<ApiResult<Warehouse>>(`${this.base}/${id}`).pipe(
       map(res => res.object)
     );
   }

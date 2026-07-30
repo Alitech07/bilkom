@@ -2,7 +2,7 @@
 
   <div class="page-header">
     <h1 class="page-title">Dashboard</h1>
-    <p class="page-subtitle">Xush kelibsiz! Bugungi holat — 07.05.2026</p>
+    <p class="page-subtitle">Xush kelibsiz! Bugungi holat</p>
   </div>
 
   <!-- Stat cards -->
@@ -24,50 +24,16 @@
           </svg>
         </div>
         <div class="stat-card__info">
-          <span class="stat-card__value">{{ s.value }}</span>
+          <span class="stat-card__value" *ngIf="!loading">{{ s.value }}</span>
+          <span class="stat-card__skeleton" *ngIf="loading"></span>
           <span class="stat-card__label">{{ s.label }}</span>
         </div>
-        <span class="stat-card__trend" [class.up]="s.trend.startsWith('+')" [class.down]="s.trend.startsWith('-')">
-          {{ s.trend }}
-        </span>
       </mat-card-content>
     </mat-card>
   </div>
 
-  <!-- Recent orders -->
-  <mat-card class="table-card">
-    <mat-card-header class="table-card__header">
-      <mat-card-title class="table-card__title">So'nggi buyurtmalar</mat-card-title>
-    </mat-card-header>
-    <mat-divider></mat-divider>
-    <mat-card-content class="table-card__content">
-      <div class="table-wrap">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>ID</th><th>Mijoz</th><th>Mahsulot</th><th>Miqdor</th><th>Sana</th><th>Holat</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let o of orders">
-              <td class="table__id">{{ o.id }}</td>
-              <td>{{ o.mijoz }}</td>
-              <td>{{ o.mahsulot }}</td>
-              <td>{{ o.miqdor }}</td>
-              <td class="table__date">{{ o.date }}</td>
-              <td>
-                <span class="badge"
-                  [class.badge--green]="o.status === 'Bajarildi'"
-                  [class.badge--blue]="o.status === 'Jarayonda'"
-                  [class.badge--yellow]="o.status === 'Kutmoqda'">
-                  {{ o.status }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </mat-card-content>
-  </mat-card>
+  <!-- Recent purchases grid -->
+  <p class="section-title">So'nggi xaridlar</p>
+  <app-grid [gridId]="gridId" [showActions]="false"></app-grid>
 
 </div>

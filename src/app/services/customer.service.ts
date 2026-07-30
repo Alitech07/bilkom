@@ -40,6 +40,12 @@ export class CustomerService {
 
   constructor(private http: HttpClient) {}
 
+  getAll(): Observable<Client[]> {
+    return this.http.get<ApiResult<Client[]>>(`${this.base}/list`).pipe(
+      map(res => res.object ?? [])
+    );
+  }
+
   getById(id: number): Observable<Client> {
     return this.http.get<ApiResult<Client>>(`${this.base}/${id}`).pipe(
       map(res => res.object)
