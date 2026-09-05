@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Product } from './product.service';
+import { Purchase } from './purchase.service';
 
 export interface Warehouse {
   id: number;
@@ -10,6 +11,8 @@ export interface Warehouse {
   measure: string;
   storageSpace: string;
   state: 'ACTIVE' | 'INACTIVE';
+  product?: Product | null;
+  purchase?: Purchase | null;
 }
 
 export interface WarehouseDto {
@@ -19,6 +22,10 @@ export interface WarehouseDto {
   measure: string;
   storageSpace: string;
   state: 'ACTIVE' | 'INACTIVE';
+}
+
+export function warehouseProductName(w: Warehouse): string {
+  return w.product?.productName ?? w.purchase?.productName ?? 'Noma\'lum mahsulot';
 }
 
 interface ApiResult<T> {
@@ -47,6 +54,12 @@ export class WarehouseService {
 
   getFreeProducts(): Observable<Product[]> {
     return this.http.get<ApiResult<Product[]>>(`${this.base}/free-products`).pipe(
+      map(res => res.object ?? [])
+    );
+  }
+
+  getAvailableStock(): Observable<Warehouse[]> {
+    return this.http.get<ApiResult<Warehouse[]>>(`${this.base}/available`).pipe(
       map(res => res.object ?? [])
     );
   }

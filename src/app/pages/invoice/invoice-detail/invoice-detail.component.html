@@ -1,0 +1,84 @@
+<div class="invoice-page">
+
+  <div class="invoice-toolbar no-print">
+    <button mat-stroked-button routerLink="/invoice">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+      Orqaga
+    </button>
+    <button mat-raised-button color="primary" (click)="print()" [disabled]="!order">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Chop etish
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="invoice-state no-print">Yuklanmoqda...</div>
+  <div *ngIf="!loading && error" class="invoice-state no-print">{{ error }}</div>
+
+  <div class="invoice-sheet" *ngIf="!loading && order">
+    <div class="invoice-header">
+      <div class="invoice-company">
+        <h1>BILKOM</h1>
+        <p>Kimyoviy mahsulotlar savdosi</p>
+      </div>
+      <div class="invoice-meta">
+        <h2>Hisob-faktura №{{ order.id }}</h2>
+        <p>Sana: {{ order.createdOn | date:'dd.MM.yyyy' }}</p>
+        <p>Holati: {{ order.status }}</p>
+      </div>
+    </div>
+
+    <div class="invoice-client">
+      <span class="label">Mijoz:</span>
+      <div class="client-info">
+        <strong>{{ order.client.clientName }}</strong>
+        <span *ngIf="order.client.address">{{ order.client.address }}</span>
+        <span *ngIf="order.client.phone">Tel: {{ order.client.phone }}</span>
+        <span *ngIf="order.client.inn">STIR: {{ order.client.inn }}</span>
+      </div>
+    </div>
+
+    <table class="invoice-table">
+      <thead>
+        <tr>
+          <th>№</th>
+          <th>Mahsulot</th>
+          <th>Miqdor</th>
+          <th>O'lchov</th>
+          <th>Narxi</th>
+          <th>Summa</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of order.items; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ productName(item.warehouse) }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.warehouse.measure }}</td>
+          <td>{{ item.price | number:'1.0-2' }}</td>
+          <td>{{ subtotal(item.quantity, item.price) | number:'1.0-2' }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5" class="total-label">Jami</td>
+          <td class="total-value">{{ order.totalAmount | number:'1.0-2' }}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="invoice-footer">
+      <p *ngIf="order.orderDescription">Izoh: {{ order.orderDescription }}</p>
+      <div class="signatures">
+        <div class="signature">Sotuvchi: ____________________</div>
+        <div class="signature">Xaridor: ____________________</div>
+      </div>
+    </div>
+  </div>
+
+</div>

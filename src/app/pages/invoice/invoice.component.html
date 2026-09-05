@@ -1,5 +1,16 @@
 <div class="page-header">
   <h1 class="page-title">Hisob-faktura</h1>
-  <p class="page-subtitle">Barcha hisob-fakturalar ro'yxati</p>
+  <p class="page-subtitle">Buyurtma tanlab, hisob-fakturasini ko'ring va chop eting</p>
 </div>
-<div class="placeholder-card">Hisob-faktura moduli ishlab chiqilmoqda...</div>
+<app-grid-toolbar
+  [showSearch]="cfgSearch"
+  [showFilter]="false"
+  [showExcel]="false"
+  (searchChange)="onSearch($event)"
+></app-grid-toolbar>
+<app-grid
+  [gridId]="gridId"
+  [showActions]="false"
+  (configLoaded)="pageConfig = $event"
+  (fileClick)="onOpenInvoice($event)"
+></app-grid>

@@ -57,6 +57,8 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { WarehouseFormComponent } from './pages/warehouse/warehouse-form/warehouse-form.component';
 import { EmployeeFormComponent } from './pages/employees/employee-form/employee-form.component';
 import { UserFormComponent } from './pages/employees/user-form/user-form.component';
+import { OrderFormComponent } from './pages/orders/order-form/order-form.component';
+import { InvoiceDetailComponent } from './pages/invoice/invoice-detail/invoice-detail.component';
 
 const MATERIAL = [
   MatToolbarModule, MatButtonModule, MatIconModule, MatBadgeModule,
@@ -83,6 +85,7 @@ const MATERIAL = [
     FileViewerComponent, SafeUrlPipe,
     WarehouseFormComponent,
     EmployeeFormComponent, UserFormComponent,
+    OrderFormComponent, InvoiceDetailComponent,
   ],
   imports: [
     BrowserModule, BrowserAnimationsModule,

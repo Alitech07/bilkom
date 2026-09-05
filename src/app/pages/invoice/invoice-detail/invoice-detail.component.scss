@@ -1,0 +1,145 @@
+:host {
+  display: block;
+  background: #EEF1F4;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.invoice-toolbar {
+  max-width: 800px;
+  margin: 0 auto 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.invoice-state {
+  max-width: 800px;
+  margin: 40px auto;
+  text-align: center;
+  color: #6B7280;
+}
+
+.invoice-sheet {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  color: #1A2332;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #1D9E75;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+
+  h1 {
+    margin: 0;
+    font-size: 22px;
+    color: #1D9E75;
+  }
+
+  p {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #6B7280;
+  }
+
+  .invoice-meta {
+    text-align: right;
+
+    h2 {
+      margin: 0 0 4px;
+      font-size: 16px;
+    }
+
+    p {
+      margin: 2px 0;
+    }
+  }
+}
+
+.invoice-client {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+
+  .label {
+    color: #6B7280;
+    white-space: nowrap;
+  }
+
+  .client-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 24px;
+
+  th, td {
+    border: 1px solid #E5E7EB;
+    padding: 8px 10px;
+    text-align: left;
+  }
+
+  th {
+    background: #F9FAFB;
+    font-weight: 600;
+  }
+
+  td:nth-child(3), td:nth-child(5), td:nth-child(6),
+  th:nth-child(3), th:nth-child(5), th:nth-child(6) {
+    text-align: right;
+  }
+
+  .total-label {
+    text-align: right;
+    font-weight: 600;
+  }
+
+  .total-value {
+    text-align: right;
+    font-weight: 700;
+    color: #1D9E75;
+  }
+}
+
+.invoice-footer {
+  font-size: 13px;
+  color: #374151;
+
+  .signatures {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 48px;
+  }
+}
+
+@media print {
+  :host {
+    background: #fff;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .invoice-sheet {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,76 @@
+<h2 class="dialog-title">
+  {{ isEdit ? 'Buyurtmani tahrirlash' : 'Yangi buyurtma' }}
+</h2>
+
+<mat-dialog-content class="dialog-body">
+  <form [formGroup]="form" class="order-form">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Mijoz</mat-label>
+      <mat-select formControlName="clientId">
+        <mat-option *ngFor="let c of clients" [value]="c.id">{{ c.clientName }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('clientId')?.hasError('required')">Majburiy maydon</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Izoh</mat-label>
+      <textarea matInput formControlName="orderDescription" rows="2"></textarea>
+    </mat-form-field>
+
+    <div class="items-header">
+      <span>Mahsulotlar</span>
+      <button mat-stroked-button type="button" (click)="addItem()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Qator qo'shish
+      </button>
+    </div>
+
+    <div formArrayName="items" class="items-list">
+      <div class="item-row-wrap" *ngFor="let group of items.controls; let i = index">
+        <div class="item-row" [formGroupName]="i">
+          <mat-form-field appearance="outline" class="item-product">
+            <mat-label>Mahsulot (ombor)</mat-label>
+            <mat-select formControlName="warehouseId">
+              <mat-option *ngFor="let w of warehouses" [value]="w.id">
+                {{ productName(w.id) }} — mavjud: {{ availableFor(w.id) }} {{ w.measure }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="item-qty">
+            <mat-label>Miqdor</mat-label>
+            <input matInput type="number" formControlName="quantity">
+            <span matSuffix *ngIf="group.get('warehouseId')?.value">{{ measureFor(group.get('warehouseId')?.value) }}</span>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="item-price">
+            <mat-label>Narx</mat-label>
+            <input matInput type="number" formControlName="price">
+          </mat-form-field>
+
+          <span class="item-subtotal">{{ subtotal(i) | number:'1.0-2' }}</span>
+
+          <button mat-icon-button type="button" class="item-remove" (click)="removeItem(i)" [disabled]="items.length <= 1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="item-error" *ngIf="exceedsStock(i)">Omborda yetarli mahsulot yo'q</div>
+      </div>
+    </div>
+
+    <div class="order-total">Jami: <strong>{{ total | number:'1.0-2' }}</strong></div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="submit()">
+    {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>

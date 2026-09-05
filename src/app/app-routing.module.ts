@@ -15,10 +15,13 @@ import { ModulesComponent } from './pages/modules/modules.component';
 import { SuppliersComponent } from './pages/suppliers/suppliers.component';
 import { PurchasesComponent } from './pages/purchases/purchases.component';
 import { PermissionsComponent } from './pages/permissions/permissions.component';
+import { InvoiceDetailComponent } from './pages/invoice/invoice-detail/invoice-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  // Chop etish uchun navbar/sidebar'siz sahifa
+  { path: 'invoice/:id', component: InvoiceDetailComponent, canActivate: [AuthGuard] },
   {
     path: '',
     component: MainLayoutComponent,
