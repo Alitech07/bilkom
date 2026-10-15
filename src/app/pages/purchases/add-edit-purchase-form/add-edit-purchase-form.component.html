@@ -16,7 +16,9 @@
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Mahsulot nomi</mat-label>
-        <input matInput formControlName="productName" placeholder="Masalan: Sulfat kislota">
+        <mat-select formControlName="productName">
+          <mat-option *ngFor="let p of products" [value]="p.productName">{{ p.productName }}</mat-option>
+        </mat-select>
         <mat-error *ngIf="form.get('productName')?.hasError('required')">Majburiy maydon</mat-error>
       </mat-form-field>
 

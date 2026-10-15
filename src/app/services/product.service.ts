@@ -13,10 +13,12 @@ export interface Product {
   countryManufacture: string;
   manufacturerName: string;
   state: ProductState;
+  category?: { id: number; name: string };
 }
 
 export interface ProductDto {
   productName: string;
+  categoryId?: number;
   composition: string;
   measure: string;
   countryManufacture: string;

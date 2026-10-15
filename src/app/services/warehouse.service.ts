@@ -8,6 +8,7 @@ import { Purchase } from './purchase.service';
 export interface Warehouse {
   id: number;
   residual: number;
+  price?: number;
   measure: string;
   storageSpace: string;
   state: 'ACTIVE' | 'INACTIVE';
@@ -19,6 +20,7 @@ export interface WarehouseDto {
   productId?: number;
   purchaseId?: number;
   residual: number;
+  price?: number;
   measure: string;
   storageSpace: string;
   state: 'ACTIVE' | 'INACTIVE';

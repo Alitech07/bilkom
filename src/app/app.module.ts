@@ -59,6 +59,8 @@ import { EmployeeFormComponent } from './pages/employees/employee-form/employee-
 import { UserFormComponent } from './pages/employees/user-form/user-form.component';
 import { OrderFormComponent } from './pages/orders/order-form/order-form.component';
 import { InvoiceDetailComponent } from './pages/invoice/invoice-detail/invoice-detail.component';
+import { CategoriesComponent } from './pages/categories/categories.component';
+import { CategoryFormComponent } from './pages/categories/category-form/category-form.component';
 
 const MATERIAL = [
   MatToolbarModule, MatButtonModule, MatIconModule, MatBadgeModule,
@@ -86,6 +88,7 @@ const MATERIAL = [
     WarehouseFormComponent,
     EmployeeFormComponent, UserFormComponent,
     OrderFormComponent, InvoiceDetailComponent,
+    CategoriesComponent, CategoryFormComponent,
   ],
   imports: [
     BrowserModule, BrowserAnimationsModule,

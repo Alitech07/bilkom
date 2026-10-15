@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SupplierService, Supplier } from '../../../services/supplier.service';
 import { PurchaseService, PurchaseDto } from '../../../services/purchase.service';
+import { ProductService, Product } from '../../../services/product.service';
 
 export interface PurchaseFormResult {
   id?: number;
@@ -18,6 +19,7 @@ export class AddEditPurchaseFormComponent implements OnInit {
   isEdit: boolean;
   form: FormGroup;
   suppliers: Supplier[] = [];
+  products: Product[] = [];
   selectedFileName = '';
   uploading = false;
 
@@ -30,6 +32,7 @@ export class AddEditPurchaseFormComponent implements OnInit {
     private fb: FormBuilder,
     private supplierService: SupplierService,
     private purchaseService: PurchaseService,
+    private productService: ProductService,
     private dialogRef: MatDialogRef<AddEditPurchaseFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Record<string, any> | null
   ) {
@@ -48,6 +51,9 @@ export class AddEditPurchaseFormComponent implements OnInit {
   ngOnInit(): void {
     this.supplierService.getAll().subscribe({
       next: suppliers => this.suppliers = suppliers.filter(s => s.isActive === 'A'),
+    });
+    this.productService.getAll().subscribe({
+      next: products => this.products = products,
     });
   }
 

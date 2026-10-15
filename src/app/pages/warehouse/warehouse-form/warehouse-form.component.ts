@@ -40,6 +40,7 @@ export class WarehouseFormComponent implements OnInit {
       purchaseId:   [data?.['purchase_id'] ?? null],
       productId:    [data?.['product_id']  ?? null],
       residual:     [data?.['residual']    ?? null, [Validators.required, Validators.min(0)]],
+      price:        [data?.['price']       ?? null, Validators.min(0)],
       measure:      [data?.['measure']     ?? null, Validators.required],
       storageSpace: [data?.['storage_space'] ?? ''],
       state:        [data?.['state'] !== 'INACTIVE'],
@@ -84,6 +85,7 @@ export class WarehouseFormComponent implements OnInit {
       id: this.data?.['id'],
       dto: {
         residual:     v.residual,
+        price:        v.price ?? undefined,
         measure:      v.measure,
         storageSpace: v.storageSpace,
         state:        v.state ? 'ACTIVE' : 'INACTIVE',

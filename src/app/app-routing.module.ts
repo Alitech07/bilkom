@@ -16,6 +16,7 @@ import { SuppliersComponent } from './pages/suppliers/suppliers.component';
 import { PurchasesComponent } from './pages/purchases/purchases.component';
 import { PermissionsComponent } from './pages/permissions/permissions.component';
 import { InvoiceDetailComponent } from './pages/invoice/invoice-detail/invoice-detail.component';
+import { CategoriesComponent } from './pages/categories/categories.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -39,6 +40,7 @@ const routes: Routes = [
       { path: 'roles',       component: RolesComponent },
       { path: 'modules',     component: ModulesComponent },
       { path: 'permissions', component: PermissionsComponent },
+      { path: 'categories', component: CategoriesComponent },
     ]
   },
   { path: '**', redirectTo: 'login' }

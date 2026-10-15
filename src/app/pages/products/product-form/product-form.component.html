@@ -13,6 +13,16 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
+        <mat-label>Kategoriya</mat-label>
+        <mat-select formControlName="categoryId">
+          <mat-option [value]="null">— Tanlanmagan —</mat-option>
+          <mat-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
         <mat-label>O'lchov birligi</mat-label>
         <input matInput formControlName="measure" placeholder="kg, L, m³">
         <mat-error *ngIf="form.get('measure')?.hasError('required')">Majburiy maydon</mat-error>
