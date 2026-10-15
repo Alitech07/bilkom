@@ -43,11 +43,25 @@
       </mat-form-field>
     </div>
 
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Narxi (USD)</mat-label>
+        <input matInput type="number" formControlName="price" placeholder="0.00">
+        <mat-error *ngIf="form.get('price')?.hasError('required')">Majburiy maydon</mat-error>
+        <mat-error *ngIf="form.get('price')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Miqdori</mat-label>
+        <input matInput type="number" formControlName="amount" placeholder="0">
+        <mat-error *ngIf="form.get('amount')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
+      </mat-form-field>
+    </div>
+
     <mat-form-field appearance="outline">
-      <mat-label>Narxi (USD)</mat-label>
-      <input matInput type="number" formControlName="price" placeholder="0.00">
-      <mat-error *ngIf="form.get('price')?.hasError('required')">Majburiy maydon</mat-error>
-      <mat-error *ngIf="form.get('price')?.hasError('min')">Narx 0 dan kichik bo'lishi mumkin emas</mat-error>
+      <mat-label>Tannarxi (so'm)</mat-label>
+      <input matInput type="number" formControlName="costPrice" placeholder="0.00">
+      <mat-error *ngIf="form.get('costPrice')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
     </mat-form-field>
 
     <div class="file-field">

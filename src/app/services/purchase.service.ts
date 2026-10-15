@@ -16,6 +16,8 @@ export interface Purchase {
   country: string;
   deliveryType: string;
   price: number;
+  amount?: number;
+  costPrice?: number;
   status: string;
   state: string;
   supplier: PurchaseSupplier;
@@ -29,6 +31,8 @@ export interface PurchaseDto {
   deliveryType: string;
   certificatePath: string;
   price: number;
+  amount?: number;
+  costPrice?: number;
 }
 
 interface ApiResult<T> {

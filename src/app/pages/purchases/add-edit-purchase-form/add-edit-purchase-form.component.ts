@@ -44,6 +44,8 @@ export class AddEditPurchaseFormComponent implements OnInit {
       brand:            [data?.['brand']         ?? ''],
       deliveryType:     [data?.['delivery_type'] ?? null, Validators.required],
       price:            [data?.['price']         ?? null, [Validators.required, Validators.min(0)]],
+      amount:           [data?.['amount']        ?? null, Validators.min(0)],
+      costPrice:        [data?.['cost_price']    ?? null, Validators.min(0)],
       certificatePath:  [data?.['certificate_path'] ?? ''],
     });
   }
