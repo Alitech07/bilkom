@@ -23,6 +23,84 @@
 
   <span class="navbar__spacer"></span>
 
+  <!-- Ob-havo -->
+  <div class="navbar__weather"
+       *ngIf="weather$ | async as w"
+       (mouseenter)="onWeatherEnter()"
+       (mouseleave)="onWeatherLeave()">
+
+    <!-- Trigger qatori -->
+    <img [src]="'https://openweathermap.org/img/wn/' + w.icon + '@2x.png'"
+         [alt]="w.description"
+         class="weather-icon">
+    <span class="weather-temp">{{ w.temp }}°C</span>
+    <span class="weather-city">{{ w.city }}</span>
+
+    <!-- Hover panel -->
+    <div class="weather-panel"
+         *ngIf="showWeatherPanel"
+         (mouseenter)="onWeatherEnter()"
+         (mouseleave)="onWeatherLeave()">
+
+      <div class="weather-panel__header">
+        <img [src]="'https://openweathermap.org/img/wn/' + w.icon + '@2x.png'"
+             [alt]="w.description"
+             class="weather-panel__icon">
+        <div>
+          <div class="weather-panel__temp">{{ w.temp }}°C</div>
+          <div class="weather-panel__desc">{{ w.description }}</div>
+          <div class="weather-panel__location">{{ w.city }}, {{ w.country }}</div>
+        </div>
+      </div>
+
+      <div class="weather-panel__divider"></div>
+
+      <div class="weather-panel__grid">
+        <div class="weather-panel__row">
+          <span class="weather-panel__label">Sezilishi</span>
+          <span class="weather-panel__value">{{ w.feelsLike }}°C</span>
+        </div>
+        <div class="weather-panel__row">
+          <span class="weather-panel__label">Namlik</span>
+          <span class="weather-panel__value">{{ w.humidity }}%</span>
+        </div>
+        <div class="weather-panel__row">
+          <span class="weather-panel__label">Shamol</span>
+          <span class="weather-panel__value">{{ w.windSpeed }} m/s</span>
+        </div>
+        <div class="weather-panel__row">
+          <span class="weather-panel__label">Bosim</span>
+          <span class="weather-panel__value">{{ w.pressure }} hPa</span>
+        </div>
+        <div class="weather-panel__row">
+          <span class="weather-panel__label">Ko'rinish</span>
+          <span class="weather-panel__value">{{ w.visibility }} km</span>
+        </div>
+        <div class="weather-panel__row">
+          <span class="weather-panel__label">Bulutlilik</span>
+          <span class="weather-panel__value">{{ w.clouds }}%</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <mat-divider vertical class="navbar__divider" *ngIf="weather$ | async"></mat-divider>
+
+  <!-- Valyuta kurslari (CBU) -->
+  <div class="navbar__currencies" *ngIf="currencies$ | async as rates">
+    <div class="currency-chip" *ngFor="let r of rates" [matTooltip]="r.CcyNm_UZ + ' · ' + r.Date">
+      <span class="currency-chip__code">{{ r.Ccy }}</span>
+      <span class="currency-chip__rate">{{ r.Rate | number:'1.0-2' }}</span>
+      <span class="currency-chip__diff"
+            [class.up]="diff(r) > 0"
+            [class.down]="diff(r) < 0">
+        {{ diff(r) > 0 ? '▲' : diff(r) < 0 ? '▼' : '—' }}
+        {{ diff(r) | number:'1.0-2' }}
+      </span>
+    </div>
+  </div>
+
   <div class="navbar__actions">
 
     <button mat-icon-button class="navbar__action-btn--search" matTooltip="Qidirish">

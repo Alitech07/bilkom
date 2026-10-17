@@ -68,6 +68,175 @@
   @media (max-width: 479px) { display: none !important; }
 }
 
+.navbar__weather {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #F4F6F9;
+  border-radius: 8px;
+  cursor: default;
+  margin-right: 6px;
+  transition: background 0.15s;
+
+  &:hover { background: #ECF0F5; }
+
+  @media (max-width: 900px) { display: none; }
+}
+
+.weather-icon {
+  width: 28px;
+  height: 28px;
+  margin: -4px -2px;
+}
+
+.weather-temp {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1A2332;
+  font-variant-numeric: tabular-nums;
+}
+
+.weather-city {
+  font-size: 12px;
+  color: #4A5568;
+}
+
+/* ── Hover panel ── */
+.weather-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 240px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.13);
+  padding: 16px;
+  z-index: 200;
+  cursor: default;
+
+  /* Yuqoriga ko'rsatuvchi uchburchak */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 18px;
+    width: 12px;
+    height: 12px;
+    background: #ffffff;
+    transform: rotate(45deg);
+    box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.06);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  &__icon {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+  }
+
+  &__temp {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1A2332;
+    line-height: 1;
+  }
+
+  &__desc {
+    font-size: 12px;
+    color: #6B7A8E;
+    margin-top: 3px;
+    text-transform: capitalize;
+  }
+
+  &__location {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1D9E75;
+    margin-top: 2px;
+  }
+
+  &__divider {
+    height: 1px;
+    background: #E8ECF0;
+    margin-bottom: 12px;
+  }
+
+  &__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__label {
+    font-size: 12px;
+    color: #8B9CB3;
+  }
+
+  &__value {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1A2332;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.navbar__currencies {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 10px;
+
+  @media (max-width: 900px) { display: none; }
+}
+
+.currency-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: #F4F6F9;
+  border-radius: 8px;
+  cursor: default;
+  transition: background 0.15s;
+
+  &:hover { background: #ECF0F5; }
+
+  &__code {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1A2332;
+  }
+
+  &__rate {
+    font-size: 12px;
+    color: #4A5568;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__diff {
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: #8B9CB3;
+
+    &.up   { color: #1D9E75; }
+    &.down { color: #EF4444; }
+  }
+}
+
 .navbar__divider {
   height: 24px !important;
   margin: 0 8px;
