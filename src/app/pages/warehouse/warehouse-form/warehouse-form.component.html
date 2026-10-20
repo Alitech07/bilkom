@@ -12,7 +12,7 @@
         <mat-label>Xarid tanlang</mat-label>
         <mat-select formControlName="purchaseId" (selectionChange)="onPurchaseSelect($event.value)">
           <mat-option *ngFor="let p of purchases" [value]="p.id">
-            {{ p.productName }} — {{ p.supplier?.legalName }}
+            {{ p.product?.productName }} — {{ p.supplier?.legalName }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="form.get('purchaseId')?.hasError('required')">Majburiy maydon</mat-error>
@@ -23,7 +23,7 @@
         <div class="purchase-info">
           <div class="info-row">
             <span class="info-label">Mahsulot</span>
-            <span class="info-value">{{ selectedPurchase.productName }}</span>
+            <span class="info-value">{{ selectedPurchase.product?.productName }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">Yetkazuvchi</span>

@@ -61,6 +61,8 @@ import { OrderFormComponent } from './pages/orders/order-form/order-form.compone
 import { InvoiceDetailComponent } from './pages/invoice/invoice-detail/invoice-detail.component';
 import { CategoriesComponent } from './pages/categories/categories.component';
 import { CategoryFormComponent } from './pages/categories/category-form/category-form.component';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { HasPermissionDirective } from './directives/has-permission.directive';
 
 const MATERIAL = [
   MatToolbarModule, MatButtonModule, MatIconModule, MatBadgeModule,
@@ -89,6 +91,8 @@ const MATERIAL = [
     EmployeeFormComponent, UserFormComponent,
     OrderFormComponent, InvoiceDetailComponent,
     CategoriesComponent, CategoryFormComponent,
+    SettingsComponent,
+    HasPermissionDirective,
   ],
   imports: [
     BrowserModule, BrowserAnimationsModule,

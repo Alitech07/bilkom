@@ -12,8 +12,9 @@ export class MainLayoutComponent implements OnInit {
   constructor(private auth: AuthService) {}
 
   ngOnInit(): void {
-    if (this.auth.isLoggedIn() && this.auth.myModules.length === 0) {
-      this.auth.loadModules().subscribe();
+    if (this.auth.isLoggedIn()) {
+      if (this.auth.myModules.length === 0) this.auth.loadModules().subscribe();
+      if (!this.auth.permissionsLoaded) this.auth.loadPermissions().subscribe();
     }
   }
 

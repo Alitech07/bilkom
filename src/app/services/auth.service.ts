@@ -18,6 +18,7 @@ export interface CurrentUser {
 const ACCESS_KEY  = 'blk_access';
 const MODULES_KEY = 'blk_modules';
 const USER_KEY    = 'blk_user';
+const PERMS_KEY   = 'blk_perms';
 
 interface ApiResult<T> {
   success: boolean;
@@ -30,6 +31,8 @@ interface ApiResult<T> { success: boolean; object: T; }
 export class AuthService {
   private readonly base = environment.apiUrl;
   private _modules: SysModule[] = [];
+  private _permissions: string[] = [];
+  private _permissionsLoaded = false;
   private _currentUser: CurrentUser | null = null;
 
   constructor(private http: HttpClient, private router: Router) {
@@ -38,6 +41,9 @@ export class AuthService {
 
     const rawUser = localStorage.getItem(USER_KEY);
     if (rawUser) { try { this._currentUser = JSON.parse(rawUser); } catch {} }
+
+    const rawPerms = localStorage.getItem(PERMS_KEY);
+    if (rawPerms) { try { this._permissions = JSON.parse(rawPerms); this._permissionsLoaded = true; } catch {} }
   }
 
   login(login: string, password: string): Observable<LoginResponse> {
@@ -82,12 +88,37 @@ export class AuthService {
     return this._modules;
   }
 
+  loadPermissions(): Observable<void> {
+    return this.http
+      .get<ApiResult<string[]>>(`${this.base}/user/my-permissions`)
+      .pipe(
+        tap(res => {
+          this._permissions = res.object ?? [];
+          this._permissionsLoaded = true;
+          localStorage.setItem(PERMS_KEY, JSON.stringify(this._permissions));
+        }),
+        map(() => void 0)
+      );
+  }
+
+  has(code: string): boolean {
+    if (!this._permissionsLoaded) return true;
+    return this._permissions.includes(code);
+  }
+
+  get permissionsLoaded(): boolean {
+    return this._permissionsLoaded;
+  }
+
   clearTokens(): void {
     this._modules = [];
+    this._permissions = [];
+    this._permissionsLoaded = false;
     this._currentUser = null;
     localStorage.removeItem(ACCESS_KEY);
     localStorage.removeItem(MODULES_KEY);
     localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(PERMS_KEY);
   }
 
   logout(): void {

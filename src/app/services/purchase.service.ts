@@ -9,9 +9,14 @@ export interface PurchaseSupplier {
   brandName: string;
 }
 
-export interface Purchase {
+export interface PurchaseProduct {
   id: number;
   productName: string;
+}
+
+export interface Purchase {
+  id: number;
+  product: PurchaseProduct;
   brand: string;
   country: string;
   deliveryType: string;
@@ -25,14 +30,17 @@ export interface Purchase {
 
 export interface PurchaseDto {
   supplierId: number;
-  productName: string;
+  productId: number;
   country: string;
   brand: string;
   deliveryType: string;
+  paymentType: string;
   certificatePath: string;
   price: number;
   amount?: number;
   costPrice?: number;
+  transportExpenses?: number;
+  customsExpenses?: number;
 }
 
 interface ApiResult<T> {

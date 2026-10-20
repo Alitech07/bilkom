@@ -27,7 +27,7 @@ export interface WarehouseDto {
 }
 
 export function warehouseProductName(w: Warehouse): string {
-  return w.product?.productName ?? w.purchase?.productName ?? 'Noma\'lum mahsulot';
+  return w.product?.productName ?? w.purchase?.product?.productName ?? 'Noma\'lum mahsulot';
 }
 
 interface ApiResult<T> {

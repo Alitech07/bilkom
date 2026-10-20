@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SupplierService, Supplier } from '../../../services/supplier.service';
 import { PurchaseService, PurchaseDto } from '../../../services/purchase.service';
 import { ProductService, Product } from '../../../services/product.service';
+import { SettingsItem, SettingsService } from '../../../services/settings.service';
 
 export interface PurchaseFormResult {
   id?: number;
@@ -20,6 +21,7 @@ export class AddEditPurchaseFormComponent implements OnInit {
   form: FormGroup;
   suppliers: Supplier[] = [];
   products: Product[] = [];
+  paymentTypes: SettingsItem[] = [];
   selectedFileName = '';
   uploading = false;
 
@@ -33,20 +35,24 @@ export class AddEditPurchaseFormComponent implements OnInit {
     private supplierService: SupplierService,
     private purchaseService: PurchaseService,
     private productService: ProductService,
+    private settingsService: SettingsService,
     private dialogRef: MatDialogRef<AddEditPurchaseFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Record<string, any> | null
   ) {
     this.isEdit = !!data;
     this.form = this.fb.group({
-      supplierId:       [data?.['supplier_id'] ?? null, Validators.required],
-      productName:      [data?.['product_name'] ?? '',  Validators.required],
-      country:          [data?.['country']       ?? ''],
-      brand:            [data?.['brand']         ?? ''],
-      deliveryType:     [data?.['delivery_type'] ?? null, Validators.required],
-      price:            [data?.['price']         ?? null, [Validators.required, Validators.min(0)]],
-      amount:           [data?.['amount']        ?? null, Validators.min(0)],
-      costPrice:        [data?.['cost_price']    ?? null, Validators.min(0)],
-      certificatePath:  [data?.['certificate_path'] ?? ''],
+      supplierId:      [data?.['supplier']?.['id'] ?? data?.['supplier_id'] ?? null, Validators.required],
+      productId:       [data?.['product']?.['id']  ?? data?.['product_id']  ?? null, Validators.required],
+      country:         [data?.['country']       ?? ''],
+      brand:           [data?.['brand']         ?? ''],
+      deliveryType:    [data?.['delivery_type'] ?? null, Validators.required],
+      paymentType:     [data?.['payment_type']  ?? null, Validators.required],
+      price:           [data?.['price']         ?? null, [Validators.required, Validators.min(0)]],
+      amount:          [data?.['amount']        ?? null, Validators.min(0)],
+      costPrice:          [data?.['cost_price']          ?? null, Validators.min(0)],
+      transportExpenses:  [data?.['transport_expenses']  ?? null, Validators.min(0)],
+      customsExpenses:    [data?.['customs_expenses']    ?? null, Validators.min(0)],
+      certificatePath:    [data?.['certificate_path']    ?? ''],
     });
   }
 
@@ -56,6 +62,9 @@ export class AddEditPurchaseFormComponent implements OnInit {
     });
     this.productService.getAll().subscribe({
       next: products => this.products = products,
+    });
+    this.settingsService.getPaymentTypes().subscribe({
+      next: list => this.paymentTypes = list,
     });
   }
 

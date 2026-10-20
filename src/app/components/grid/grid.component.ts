@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 import { GridColumn, GridConfig, GridPage, GridService } from '../../services/grid.service';
+import { AuthService } from '../../services/auth.service';
 
 interface HeaderCell {
   isGroup: boolean;
@@ -26,6 +27,8 @@ export class GridComponent implements OnChanges {
   @Input() externalLoading = false;
 
   @Input() showActions = false;
+  @Input() editPermission?: string;
+  @Input() deletePermission?: string;
   @Input() selectable  = false;
   @Output() editClick    = new EventEmitter<Record<string, any>>();
   @Output() deleteClick  = new EventEmitter<Record<string, any>>();
@@ -45,7 +48,21 @@ export class GridComponent implements OnChanges {
   readonly skeletonRows = [1, 2, 3, 4, 5];
   readonly skeletonCols = [1, 2, 3, 4, 5];
 
-  constructor(private gridService: GridService) {}
+  constructor(private gridService: GridService, private auth: AuthService) {}
+
+  get canEdit(): boolean {
+    if (!this.showActions) return false;
+    return !this.editPermission || this.auth.has(this.editPermission);
+  }
+
+  get canDelete(): boolean {
+    if (!this.showActions) return false;
+    return !this.deletePermission || this.auth.has(this.deletePermission);
+  }
+
+  get showActionsColumn(): boolean {
+    return this.canEdit || this.canDelete || this.showFileBtnColumn;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['externalConfig'] && this.externalConfig) {
