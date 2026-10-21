@@ -5,6 +5,11 @@ import { environment } from '../../environments/environment';
 import { Product } from './product.service';
 import { Purchase } from './purchase.service';
 
+export interface WarehouseCurrency {
+  id: number;
+  name: string;
+}
+
 export interface Warehouse {
   id: number;
   residual: number;
@@ -14,11 +19,13 @@ export interface Warehouse {
   state: 'ACTIVE' | 'INACTIVE';
   product?: Product | null;
   purchase?: Purchase | null;
+  currency?: WarehouseCurrency | null;
 }
 
 export interface WarehouseDto {
   productId?: number;
   purchaseId?: number;
+  currencyId?: number;
   residual: number;
   price?: number;
   measure: string;

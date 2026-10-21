@@ -16,6 +16,12 @@ export class SettingsComponent implements OnInit {
   paymentTypes: EditableItem[] = [];
   newPaymentName = '';
 
+  deliveryTypes: EditableItem[] = [];
+  newDeliveryName = '';
+
+  currencies: EditableItem[] = [];
+  newCurrencyName = '';
+
   constructor(
     private settingsService: SettingsService,
     private snack: MatSnackBar,
@@ -23,6 +29,8 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPaymentTypes();
+    this.loadDeliveryTypes();
+    this.loadCurrencies();
   }
 
   private toEditable(items: SettingsItem[]): EditableItem[] {
@@ -72,6 +80,82 @@ export class SettingsComponent implements OnInit {
       next: res => {
         this.snack.open(res.message, 'OK', { duration: 2000 });
         this.loadPaymentTypes();
+      },
+    });
+  }
+
+  loadDeliveryTypes(): void {
+    this.settingsService.getDeliveryTypes().subscribe({
+      next: list => this.deliveryTypes = this.toEditable(list),
+    });
+  }
+
+  addDeliveryType(): void {
+    const name = this.newDeliveryName.trim();
+    if (!name) return;
+    this.settingsService.addDeliveryType(name).subscribe({
+      next: res => {
+        this.snack.open(res.message, 'OK', { duration: 2000 });
+        this.newDeliveryName = '';
+        this.loadDeliveryTypes();
+      },
+    });
+  }
+
+  saveDeliveryType(item: EditableItem): void {
+    const name = item.editName.trim();
+    if (!name) return;
+    this.settingsService.editDeliveryType(item.id, name).subscribe({
+      next: res => {
+        this.snack.open(res.message, 'OK', { duration: 2000 });
+        this.loadDeliveryTypes();
+      },
+    });
+  }
+
+  deleteDeliveryType(id: number): void {
+    this.settingsService.deleteDeliveryType(id).subscribe({
+      next: res => {
+        this.snack.open(res.message, 'OK', { duration: 2000 });
+        this.loadDeliveryTypes();
+      },
+    });
+  }
+
+  loadCurrencies(): void {
+    this.settingsService.getCurrencies().subscribe({
+      next: list => this.currencies = this.toEditable(list),
+    });
+  }
+
+  addCurrency(): void {
+    const name = this.newCurrencyName.trim();
+    if (!name) return;
+    this.settingsService.addCurrency(name).subscribe({
+      next: res => {
+        this.snack.open(res.message, 'OK', { duration: 2000 });
+        this.newCurrencyName = '';
+        this.loadCurrencies();
+      },
+    });
+  }
+
+  saveCurrency(item: EditableItem): void {
+    const name = item.editName.trim();
+    if (!name) return;
+    this.settingsService.editCurrency(item.id, name).subscribe({
+      next: res => {
+        this.snack.open(res.message, 'OK', { duration: 2000 });
+        this.loadCurrencies();
+      },
+    });
+  }
+
+  deleteCurrency(id: number): void {
+    this.settingsService.deleteCurrency(id).subscribe({
+      next: res => {
+        this.snack.open(res.message, 'OK', { duration: 2000 });
+        this.loadCurrencies();
       },
     });
   }

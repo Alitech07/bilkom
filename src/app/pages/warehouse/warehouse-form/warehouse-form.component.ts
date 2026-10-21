@@ -1,8 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Product, ProductService } from '../../../services/product.service';
 import { Purchase, PurchaseService } from '../../../services/purchase.service';
+import { SettingsItem, SettingsService } from '../../../services/settings.service';
 import { WarehouseDto } from '../../../services/warehouse.service';
 
 export interface WarehouseFormResult {
@@ -22,7 +24,9 @@ export class WarehouseFormComponent implements OnInit {
 
   products: Product[] = [];
   purchases: Purchase[] = [];
+  currencies: SettingsItem[] = [];
   selectedPurchase: Purchase | null = null;
+  rejectingId: number | null = null;
 
   readonly measures = ['kg', 'g', 'tonna', 'litr', 'ml', 'dona', 'm³'];
 
@@ -30,6 +34,8 @@ export class WarehouseFormComponent implements OnInit {
     private fb: FormBuilder,
     private productService: ProductService,
     private purchaseService: PurchaseService,
+    private settingsService: SettingsService,
+    private snack: MatSnackBar,
     private dialogRef: MatDialogRef<WarehouseFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Record<string, any> | null,
   ) {
@@ -39,6 +45,7 @@ export class WarehouseFormComponent implements OnInit {
     this.form = this.fb.group({
       purchaseId:   [data?.['purchase_id'] ?? null],
       productId:    [data?.['product_id']  ?? null],
+      currencyId:   [data?.['currency']?.['id'] ?? null],
       residual:     [data?.['residual']    ?? null, [Validators.required, Validators.min(0)]],
       price:        [data?.['price']       ?? null, Validators.min(0)],
       measure:      [data?.['measure']     ?? null, Validators.required],
@@ -54,16 +61,11 @@ export class WarehouseFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.settingsService.getCurrencies().subscribe({
+      next: list => this.currencies = list,
+    });
     if (this.purchaseMode) {
-      this.purchaseService.getAll().subscribe({
-        next: list => {
-          this.purchases = list;
-          const preselectedId = this.data?.['purchase_id'];
-          if (preselectedId) {
-            this.selectedPurchase = list.find(p => p.id === preselectedId) ?? null;
-          }
-        },
-      });
+      this.loadPurchases();
     } else {
       this.productService.getAll().subscribe({
         next: products => this.products = products,
@@ -71,8 +73,40 @@ export class WarehouseFormComponent implements OnInit {
     }
   }
 
-  onPurchaseSelect(id: number): void {
-    this.selectedPurchase = this.purchases.find(p => p.id === id) ?? null;
+  loadPurchases(): void {
+    this.purchaseService.getActive().subscribe({
+      next: list => {
+        this.purchases = list;
+        const preselectedId = this.data?.['purchase_id'];
+        if (preselectedId) {
+          this.selectedPurchase = list.find(p => p.id === preselectedId) ?? null;
+        }
+      },
+    });
+  }
+
+  selectPurchase(purchase: Purchase): void {
+    this.selectedPurchase = purchase;
+    this.form.get('purchaseId')!.setValue(purchase.id);
+  }
+
+  reject(purchase: Purchase): void {
+    this.rejectingId = purchase.id;
+    this.purchaseService.reject(purchase.id).subscribe({
+      next: res => {
+        this.snack.open(res.message ?? 'Xarid qaytarildi', 'OK', { duration: 3000 });
+        this.rejectingId = null;
+        if (this.selectedPurchase?.id === purchase.id) {
+          this.selectedPurchase = null;
+          this.form.get('purchaseId')!.setValue(null);
+        }
+        this.loadPurchases();
+      },
+      error: () => {
+        this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 });
+        this.rejectingId = null;
+      },
+    });
   }
 
   submit(): void {
@@ -89,6 +123,7 @@ export class WarehouseFormComponent implements OnInit {
         measure:      v.measure,
         storageSpace: v.storageSpace,
         state:        v.state ? 'ACTIVE' : 'INACTIVE',
+        currencyId:   v.currencyId ?? undefined,
         ...(this.purchaseMode
           ? { purchaseId: v.purchaseId }
           : { productId:  v.productId  }),

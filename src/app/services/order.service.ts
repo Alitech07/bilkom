@@ -20,6 +20,12 @@ export interface OrderItem {
   warehouse: Warehouse;
   quantity: number;
   price: number;
+  currency: OrderCurrency;
+}
+
+export interface OrderCurrency {
+  id: number;
+  name: string;
 }
 
 export interface Order {
@@ -37,6 +43,7 @@ export interface OrderItemDto {
   warehouseId: number;
   quantity: number;
   price: number;
+  currencyId: number;
 }
 
 export interface OrderDto {

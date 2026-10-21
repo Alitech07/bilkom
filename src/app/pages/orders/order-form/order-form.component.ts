@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Client, CustomerService } from '../../../services/customer.service';
 import { Warehouse, WarehouseService, warehouseProductName } from '../../../services/warehouse.service';
 import { Order, OrderDto, OrderItemDto } from '../../../services/order.service';
+import { SettingsItem, SettingsService } from '../../../services/settings.service';
 
 export interface OrderFormResult {
   id?: number;
@@ -20,6 +21,7 @@ export class OrderFormComponent implements OnInit {
   form: FormGroup;
   clients: Client[] = [];
   warehouses: Warehouse[] = [];
+  currencies: SettingsItem[] = [];
 
   private heldByOrder = new Map<number, number>();
 
@@ -27,6 +29,7 @@ export class OrderFormComponent implements OnInit {
     private fb: FormBuilder,
     private customerService: CustomerService,
     private warehouseService: WarehouseService,
+    private settingsService: SettingsService,
     private dialogRef: MatDialogRef<OrderFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { order?: Order } | null,
   ) {
@@ -38,7 +41,7 @@ export class OrderFormComponent implements OnInit {
       orderDescription: [order?.orderDescription ?? ''],
       items: this.fb.array(
         order?.items?.length
-          ? order.items.map(it => this.buildItemGroup(it.warehouse.id, it.quantity, it.price))
+          ? order.items.map(it => this.buildItemGroup(it.warehouse.id, it.quantity, it.price, it.currency?.id ?? null))
           : [this.buildItemGroup()]
       ),
     });
@@ -54,6 +57,10 @@ export class OrderFormComponent implements OnInit {
 
     this.customerService.getAll().subscribe({
       next: clients => this.clients = clients.filter(c => c.state === 'ACTIVE'),
+    });
+
+    this.settingsService.getCurrencies().subscribe({
+      next: list => this.currencies = list,
     });
 
     this.warehouseService.getAvailableStock().subscribe({
@@ -73,11 +80,12 @@ export class OrderFormComponent implements OnInit {
     return this.form.get('items') as FormArray;
   }
 
-  private buildItemGroup(warehouseId: number | null = null, quantity: number | null = null, price: number | null = null): FormGroup {
+  private buildItemGroup(warehouseId: number | null = null, quantity: number | null = null, price: number | null = null, currencyId: number | null = null): FormGroup {
     return this.fb.group({
       warehouseId: [warehouseId, Validators.required],
       quantity: [quantity, [Validators.required, Validators.min(0.001)]],
       price: [price, [Validators.required, Validators.min(0)]],
+      currencyId: [currencyId, Validators.required],
     });
   }
 

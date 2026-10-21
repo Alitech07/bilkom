@@ -49,7 +49,7 @@ export class WarehouseComponent {
   }
 
   openAdd(): void {
-    this.openForm({ purchaseMode: true });
+    this.openForm({ purchaseMode: true }, '660px');
   }
 
   openAddNew(): void {

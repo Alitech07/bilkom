@@ -31,20 +31,28 @@
     <div class="form-row">
       <mat-form-field appearance="outline">
         <mat-label>Yetkazib berish turi</mat-label>
-        <mat-select formControlName="deliveryType">
-          <mat-option *ngFor="let t of deliveryTypes" [value]="t.value">{{ t.label }}</mat-option>
+        <mat-select formControlName="deliveryTypeId">
+          <mat-option *ngFor="let t of deliveryTypes" [value]="t.id">{{ t.name }}</mat-option>
         </mat-select>
-        <mat-error *ngIf="form.get('deliveryType')?.hasError('required')">Majburiy maydon</mat-error>
+        <mat-error *ngIf="form.get('deliveryTypeId')?.hasError('required')">Majburiy maydon</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>To'lov turi</mat-label>
-        <mat-select formControlName="paymentType">
-          <mat-option *ngFor="let t of paymentTypes" [value]="t.name">{{ t.name }}</mat-option>
+        <mat-select formControlName="paymentTypeId">
+          <mat-option *ngFor="let t of paymentTypes" [value]="t.id">{{ t.name }}</mat-option>
         </mat-select>
-        <mat-error *ngIf="form.get('paymentType')?.hasError('required')">Majburiy maydon</mat-error>
+        <mat-error *ngIf="form.get('paymentTypeId')?.hasError('required')">Majburiy maydon</mat-error>
       </mat-form-field>
     </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Valyuta</mat-label>
+      <mat-select formControlName="currencyId">
+        <mat-option *ngFor="let c of currencies" [value]="c.id">{{ c.name }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('currencyId')?.hasError('required')">Majburiy maydon</mat-error>
+    </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Davlat</mat-label>
@@ -53,7 +61,7 @@
 
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Narxi (USD)</mat-label>
+        <mat-label>Narxi</mat-label>
         <input matInput type="number" formControlName="price" placeholder="0.00">
         <mat-error *ngIf="form.get('price')?.hasError('required')">Majburiy maydon</mat-error>
         <mat-error *ngIf="form.get('price')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
@@ -68,7 +76,7 @@
 
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>Tannarxi (so'm)</mat-label>
+        <mat-label>Tannarxi</mat-label>
         <input matInput type="number" formControlName="costPrice" placeholder="0.00">
         <mat-error *ngIf="form.get('costPrice')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
       </mat-form-field>

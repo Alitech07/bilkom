@@ -14,12 +14,19 @@ export interface PurchaseProduct {
   productName: string;
 }
 
+export interface PurchaseSettingsItem {
+  id: number;
+  name: string;
+}
+
 export interface Purchase {
   id: number;
   product: PurchaseProduct;
   brand: string;
   country: string;
-  deliveryType: string;
+  deliveryType: PurchaseSettingsItem;
+  paymentType: PurchaseSettingsItem;
+  currency: PurchaseSettingsItem;
   price: number;
   amount?: number;
   costPrice?: number;
@@ -33,8 +40,9 @@ export interface PurchaseDto {
   productId: number;
   country: string;
   brand: string;
-  deliveryType: string;
-  paymentType: string;
+  deliveryTypeId: number;
+  paymentTypeId: number;
+  currencyId: number;
   certificatePath: string;
   price: number;
   amount?: number;
@@ -71,6 +79,16 @@ export class PurchaseService {
 
   delete(id: number): Observable<ApiResult<null>> {
     return this.http.delete<ApiResult<null>>(`${this.base}/delete/${id}`);
+  }
+
+  getActive(): Observable<Purchase[]> {
+    return this.getAll().pipe(
+      map(list => list.filter(p => p.state === 'ACTIVE'))
+    );
+  }
+
+  reject(id: number): Observable<ApiResult<null>> {
+    return this.http.put<ApiResult<null>>(`${this.base}/edit/${id}`, { state: 'INACTIVE' });
   }
 
   uploadCertificate(file: File): Observable<string> {

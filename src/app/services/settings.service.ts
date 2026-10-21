@@ -37,4 +37,40 @@ export class SettingsService {
   deletePaymentType(id: number): Observable<ApiResult<null>> {
     return this.http.delete<ApiResult<null>>(`${this.base}/payment-types/delete/${id}`);
   }
+
+  getDeliveryTypes(): Observable<SettingsItem[]> {
+    return this.http.get<ApiResult<SettingsItem[]>>(`${this.base}/delivery-types/list`).pipe(
+      map(res => res.object ?? [])
+    );
+  }
+
+  addDeliveryType(name: string): Observable<ApiResult<null>> {
+    return this.http.post<ApiResult<null>>(`${this.base}/delivery-types/add`, { name });
+  }
+
+  editDeliveryType(id: number, name: string): Observable<ApiResult<null>> {
+    return this.http.put<ApiResult<null>>(`${this.base}/delivery-types/edit/${id}`, { name });
+  }
+
+  deleteDeliveryType(id: number): Observable<ApiResult<null>> {
+    return this.http.delete<ApiResult<null>>(`${this.base}/delivery-types/delete/${id}`);
+  }
+
+  getCurrencies(): Observable<SettingsItem[]> {
+    return this.http.get<ApiResult<SettingsItem[]>>(`${this.base}/currencies/list`).pipe(
+      map(res => res.object ?? [])
+    );
+  }
+
+  addCurrency(name: string): Observable<ApiResult<null>> {
+    return this.http.post<ApiResult<null>>(`${this.base}/currencies/add`, { name });
+  }
+
+  editCurrency(id: number, name: string): Observable<ApiResult<null>> {
+    return this.http.put<ApiResult<null>>(`${this.base}/currencies/edit/${id}`, { name });
+  }
+
+  deleteCurrency(id: number): Observable<ApiResult<null>> {
+    return this.http.delete<ApiResult<null>>(`${this.base}/currencies/delete/${id}`);
+  }
 }

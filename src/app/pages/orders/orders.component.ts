@@ -13,7 +13,6 @@ import { OrderFormComponent, OrderFormResult } from './order-form/order-form.com
   styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent {
-  // core.grids jadvalidagi order_list_v uchun grid_id qiymati
   readonly gridId = 9;
 
   @ViewChild(GridComponent) grid!: GridComponent;

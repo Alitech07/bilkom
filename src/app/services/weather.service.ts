@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Observable, from, of, timer } from 'rxjs';
-import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
+import { catchError, map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface WeatherData {
@@ -39,10 +39,10 @@ export class WeatherService {
   constructor(handler: HttpBackend) {
     this.http = new HttpClient(handler);
 
-    this.weather$ = this.position$().pipe(
-      switchMap(pos =>
+    this.weather$ = this.coords$().pipe(
+      switchMap(coords =>
         timer(0, REFRESH_MS).pipe(
-          switchMap(() => this.fetch(pos.coords.latitude, pos.coords.longitude))
+          switchMap(() => this.fetch(coords.lat, coords.lon))
         )
       ),
       catchError(() => of(null)),
@@ -50,11 +50,24 @@ export class WeatherService {
     );
   }
 
-  private position$(): Observable<GeolocationPosition> {
+  private coords$(): Observable<{ lat: number; lon: number }> {
+    const ipFallback$ = this.http.get<{ latitude: number; longitude: number }>('https://ipapi.co/json/').pipe(
+      map(r => ({ lat: r.latitude, lon: r.longitude })),
+      catchError(() => of({ lat: 41.2995, lon: 69.2401 }))
+    );
+
+    if (!navigator?.geolocation) {
+      return ipFallback$;
+    }
+
     return from(
       new Promise<GeolocationPosition>((resolve, reject) =>
-        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 })
+        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 })
       )
+    ).pipe(
+      map(pos => ({ lat: pos.coords.latitude, lon: pos.coords.longitude })),
+      catchError(() => ipFallback$),
+      take(1)
     );
   }
 

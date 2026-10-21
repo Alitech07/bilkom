@@ -22,13 +22,10 @@ export class AddEditPurchaseFormComponent implements OnInit {
   suppliers: Supplier[] = [];
   products: Product[] = [];
   paymentTypes: SettingsItem[] = [];
+  deliveryTypes: SettingsItem[] = [];
+  currencies: SettingsItem[] = [];
   selectedFileName = '';
   uploading = false;
-
-  readonly deliveryTypes = [
-    { value: 'CIP',      label: 'CIP (Carriage and Insurance Paid)' },
-    { value: 'LOGISTICS', label: 'Logistik' },
-  ];
 
   constructor(
     private fb: FormBuilder,
@@ -45,8 +42,9 @@ export class AddEditPurchaseFormComponent implements OnInit {
       productId:       [data?.['product']?.['id']  ?? data?.['product_id']  ?? null, Validators.required],
       country:         [data?.['country']       ?? ''],
       brand:           [data?.['brand']         ?? ''],
-      deliveryType:    [data?.['delivery_type'] ?? null, Validators.required],
-      paymentType:     [data?.['payment_type']  ?? null, Validators.required],
+      deliveryTypeId:  [data?.['delivery_type']?.['id'] ?? null, Validators.required],
+      paymentTypeId:   [data?.['payment_type']?.['id'] ?? null, Validators.required],
+      currencyId:      [data?.['currency']?.['id'] ?? null, Validators.required],
       price:           [data?.['price']         ?? null, [Validators.required, Validators.min(0)]],
       amount:          [data?.['amount']        ?? null, Validators.min(0)],
       costPrice:          [data?.['cost_price']          ?? null, Validators.min(0)],
@@ -65,6 +63,12 @@ export class AddEditPurchaseFormComponent implements OnInit {
     });
     this.settingsService.getPaymentTypes().subscribe({
       next: list => this.paymentTypes = list,
+    });
+    this.settingsService.getDeliveryTypes().subscribe({
+      next: list => this.deliveryTypes = list,
+    });
+    this.settingsService.getCurrencies().subscribe({
+      next: list => this.currencies = list,
     });
   }
 
