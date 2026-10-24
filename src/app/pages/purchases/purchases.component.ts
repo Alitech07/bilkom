@@ -36,7 +36,7 @@ export class PurchasesComponent {
 
   openAdd(): void {
     this.dialog.open(AddEditPurchaseFormComponent, {
-      data: null, width: '600px', disableClose: true,
+      data: null, width: '960px', maxWidth: '98vw', disableClose: true,
     }).afterClosed().subscribe((result: PurchaseFormResult | undefined) => {
       if (!result) return;
       this.purchaseService.add(result.dto).subscribe({
@@ -51,7 +51,7 @@ export class PurchasesComponent {
 
   onEdit(row: Record<string, any>): void {
     this.dialog.open(AddEditPurchaseFormComponent, {
-      data: row, width: '600px', disableClose: true,
+      data: row, width: '960px', maxWidth: '98vw', disableClose: true,
     }).afterClosed().subscribe((result: PurchaseFormResult | undefined) => {
       if (!result) return;
       const id = result.id;

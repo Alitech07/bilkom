@@ -14,6 +14,19 @@ export interface PurchaseProduct {
   productName: string;
 }
 
+export interface PurchaseItem {
+  id: number;
+  product: PurchaseProduct;
+  price: number;
+  amount?: number;
+}
+
+export interface PurchaseItemDto {
+  productId: number;
+  price: number;
+  amount?: number;
+}
+
 export interface PurchaseSettingsItem {
   id: number;
   name: string;
@@ -21,15 +34,14 @@ export interface PurchaseSettingsItem {
 
 export interface Purchase {
   id: number;
-  product: PurchaseProduct;
+  items: PurchaseItem[];
   brand: string;
   country: string;
   deliveryType: PurchaseSettingsItem;
   paymentType: PurchaseSettingsItem;
   currency: PurchaseSettingsItem;
-  price: number;
-  amount?: number;
-  costPrice?: number;
+  transportExpenses?: number;
+  customsExpenses?: number;
   status: string;
   state: string;
   supplier: PurchaseSupplier;
@@ -37,18 +49,15 @@ export interface Purchase {
 
 export interface PurchaseDto {
   supplierId: number;
-  productId: number;
-  country: string;
-  brand: string;
-  deliveryTypeId: number;
-  paymentTypeId: number;
-  currencyId: number;
-  certificatePath: string;
-  price: number;
-  amount?: number;
-  costPrice?: number;
+  country?: string;
+  brand?: string;
+  deliveryTypeId?: number;
+  paymentTypeId?: number;
+  currencyId?: number;
+  certificatePath?: string;
   transportExpenses?: number;
   customsExpenses?: number;
+  items: PurchaseItemDto[];
 }
 
 interface ApiResult<T> {

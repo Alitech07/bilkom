@@ -5,116 +5,128 @@
 <mat-dialog-content class="dialog-body">
   <form [formGroup]="form" class="purchase-form">
 
-    <mat-form-field appearance="outline">
-      <mat-label>Yetkazib beruvchi kompaniya</mat-label>
-      <mat-select formControlName="supplierId">
-        <mat-option *ngFor="let s of suppliers" [value]="s.id">{{ s.legalName }}</mat-option>
-      </mat-select>
-      <mat-error *ngIf="form.get('supplierId')?.hasError('required')">Majburiy maydon</mat-error>
-    </mat-form-field>
+    <div class="two-panel">
 
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Mahsulot nomi</mat-label>
-        <mat-select formControlName="productId">
-          <mat-option *ngFor="let p of products" [value]="p.id">{{ p.productName }}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="form.get('productId')?.hasError('required')">Majburiy maydon</mat-error>
-      </mat-form-field>
+      <!-- ── CHAP PANEL: Korxona ── -->
+      <div class="panel panel--left">
+        <div class="panel-header">Korxona</div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Brend</mat-label>
-        <input matInput formControlName="brand" placeholder="Masalan: BASF">
-      </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Korxona nomi</mat-label>
+          <mat-select formControlName="supplierId">
+            <mat-option *ngFor="let s of suppliers" [value]="s.id">{{ s.legalName }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('supplierId')?.hasError('required')">Majburiy maydon</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>To'lov turi</mat-label>
+          <mat-select formControlName="paymentTypeId">
+            <mat-option [value]="null">— Tanlanmagan —</mat-option>
+            <mat-option *ngFor="let t of paymentTypes" [value]="t.id">{{ t.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Logistika nomi</mat-label>
+          <mat-select formControlName="deliveryTypeId">
+            <mat-option [value]="null">— Tanlanmagan —</mat-option>
+            <mat-option *ngFor="let t of deliveryTypes" [value]="t.id">{{ t.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Valyuta</mat-label>
+          <mat-select formControlName="currencyId">
+            <mat-option [value]="null">— Tanlanmagan —</mat-option>
+            <mat-option *ngFor="let c of currencies" [value]="c.id">{{ c.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Transport xarajati</mat-label>
+          <input matInput type="number" formControlName="transportExpenses" placeholder="0.00">
+          <mat-error *ngIf="form.get('transportExpenses')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Bojxona xarajati</mat-label>
+          <input matInput type="number" formControlName="customsExpenses" placeholder="0.00">
+          <mat-error *ngIf="form.get('customsExpenses')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- ── O'NG PANEL: Mahsulotlar ── -->
+      <div class="panel panel--right">
+        <div class="panel-header">
+          Mahsulot
+          <button mat-icon-button type="button" class="add-item-btn" (click)="addItem()" matTooltip="Mahsulot qo'shish">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="items-table">
+          <div class="items-head">
+            <span class="col-product">Mahsulot nomi</span>
+            <span class="col-price">Narxi</span>
+            <span class="col-qty">Miqdori</span>
+            <span class="col-total">Umumiy miqdor</span>
+            <span class="col-del"></span>
+          </div>
+
+          <div formArrayName="items">
+            <div *ngFor="let g of items.controls; let i = index"
+                 [formGroupName]="i"
+                 class="items-row">
+
+              <mat-form-field appearance="outline" class="col-product">
+                <mat-select formControlName="productId" placeholder="Tanlang">
+                  <mat-option *ngFor="let p of products" [value]="p.id">{{ p.productName }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="g.get('productId')?.hasError('required')">Majburiy</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="col-price">
+                <input matInput type="number" formControlName="price" placeholder="0.00">
+                <mat-error *ngIf="g.get('price')?.hasError('required')">Majburiy</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="col-qty">
+                <input matInput type="number" formControlName="amount" placeholder="0">
+              </mat-form-field>
+
+              <div class="col-total total-val">
+                {{ totalAmount(i) | number:'1.0-2' }}
+              </div>
+
+              <button mat-icon-button type="button" class="col-del remove-btn"
+                      (click)="removeItem(i)" [disabled]="items.length === 1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="items-footer">
+            <span class="footer-label">Jami</span>
+            <span class="col-price footer-val">—</span>
+            <span class="col-qty footer-val">{{ grandQty | number:'1.0-3' }}</span>
+            <span class="col-total footer-val">{{ grandTotal | number:'1.0-2' }}</span>
+            <span class="col-del"></span>
+          </div>
+        </div>
+      </div>
+
     </div>
-
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Yetkazib berish turi</mat-label>
-        <mat-select formControlName="deliveryTypeId">
-          <mat-option *ngFor="let t of deliveryTypes" [value]="t.id">{{ t.name }}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="form.get('deliveryTypeId')?.hasError('required')">Majburiy maydon</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>To'lov turi</mat-label>
-        <mat-select formControlName="paymentTypeId">
-          <mat-option *ngFor="let t of paymentTypes" [value]="t.id">{{ t.name }}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="form.get('paymentTypeId')?.hasError('required')">Majburiy maydon</mat-error>
-      </mat-form-field>
-    </div>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Valyuta</mat-label>
-      <mat-select formControlName="currencyId">
-        <mat-option *ngFor="let c of currencies" [value]="c.id">{{ c.name }}</mat-option>
-      </mat-select>
-      <mat-error *ngIf="form.get('currencyId')?.hasError('required')">Majburiy maydon</mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Davlat</mat-label>
-      <input matInput formControlName="country" placeholder="Masalan: Germaniya">
-    </mat-form-field>
-
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Narxi</mat-label>
-        <input matInput type="number" formControlName="price" placeholder="0.00">
-        <mat-error *ngIf="form.get('price')?.hasError('required')">Majburiy maydon</mat-error>
-        <mat-error *ngIf="form.get('price')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Miqdori</mat-label>
-        <input matInput type="number" formControlName="amount" placeholder="0">
-        <mat-error *ngIf="form.get('amount')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
-      </mat-form-field>
-    </div>
-
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>Tannarxi</mat-label>
-        <input matInput type="number" formControlName="costPrice" placeholder="0.00">
-        <mat-error *ngIf="form.get('costPrice')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Transport xarajatlari</mat-label>
-        <input matInput type="number" formControlName="transportExpenses" placeholder="0.00">
-        <mat-error *ngIf="form.get('transportExpenses')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
-      </mat-form-field>
-    </div>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Bojxona xarajatlari</mat-label>
-      <input matInput type="number" formControlName="customsExpenses" placeholder="0.00">
-      <mat-error *ngIf="form.get('customsExpenses')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
-    </mat-form-field>
-
-    <div class="file-field">
-      <span class="file-label">Sertifikat</span>
-      <label class="file-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-          <polyline points="17 8 12 3 7 8"/>
-          <line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
-        Fayl tanlash
-        <input type="file" accept=".pdf,.jpg,.jpeg,.png" (change)="onFileChange($event)" hidden>
-      </label>
-      <span class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</span>
-      <span class="file-uploading" *ngIf="uploading">Yuklanmoqda...</span>
-    </div>
-
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions class="dialog-actions">
   <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
-  <button mat-raised-button color="primary" (click)="submit()" [disabled]="uploading">
+  <button mat-raised-button color="primary" (click)="submit()">
     {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
   </button>
 </mat-dialog-actions>

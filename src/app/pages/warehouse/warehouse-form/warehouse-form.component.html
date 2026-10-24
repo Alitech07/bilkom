@@ -13,15 +13,17 @@
              class="purchase-list-item"
              [class.selected]="selectedPurchase?.id === p.id">
           <div class="purchase-list-info">
-            <div class="purchase-list-name">{{ p.product?.productName }}</div>
+            <div class="purchase-list-name">
+              {{ p.items?.[0]?.product?.productName }}
+              <ng-container *ngIf="(p.items?.length ?? 0) > 1"> (+{{ (p.items?.length ?? 1) - 1 }} ta)</ng-container>
+            </div>
             <div class="purchase-list-meta">
               {{ p.supplier?.legalName }}
               <ng-container *ngIf="p.brand"> &middot; {{ p.brand }}</ng-container>
               <ng-container *ngIf="p.country"> &middot; {{ p.country }}</ng-container>
             </div>
-            <div class="purchase-list-sub" *ngIf="p.amount || p.price">
-              <ng-container *ngIf="p.amount">Miqdori: {{ p.amount }}</ng-container>
-              <ng-container *ngIf="p.price">&nbsp;&middot;&nbsp;Narxi: {{ p.price }}<ng-container *ngIf="p.currency"> {{ p.currency.name }}</ng-container></ng-container>
+            <div class="purchase-list-sub" *ngIf="p.currency">
+              {{ p.currency.name }}
             </div>
           </div>
           <div class="purchase-list-btns">
@@ -46,9 +48,9 @@
       <ng-container *ngIf="selectedPurchase">
 
         <div class="purchase-info">
-          <div class="info-row">
+          <div class="info-row" *ngFor="let item of selectedPurchase.items">
             <span class="info-label">Mahsulot</span>
-            <span class="info-value">{{ selectedPurchase.product?.productName }}</span>
+            <span class="info-value">{{ item.product?.productName }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">Yetkazuvchi</span>
