@@ -28,13 +28,13 @@ export class PurchasesComponent {
   onFilter(): void {}
 
   // ── Tab 2: Korxonalar hisobi ─────────────────────────────
-  readonly companyGridId = 5;
+  readonly companyGridId = 13;
   @ViewChild('companyGrid') companyGrid!: GridComponent;
   companyPageConfig: GridPage | null = null;
   get companyCfgExcel(): boolean { return !!this.companyPageConfig?.gridColumns?.some(c => c.exportable); }
 
   // ── Tab 3: Mahsulotlar hisobi ────────────────────────────
-  readonly productGridId = 10;
+  readonly productGridId = 14;
   @ViewChild('productGrid') productGrid!: GridComponent;
   productPageConfig: GridPage | null = null;
   get productCfgExcel(): boolean { return !!this.productPageConfig?.gridColumns?.some(c => c.exportable); }
