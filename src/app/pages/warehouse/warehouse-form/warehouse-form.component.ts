@@ -1,9 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { GridComponent } from '../../../components/grid/grid.component';
 import { Product, ProductService } from '../../../services/product.service';
-import { Purchase, PurchaseService } from '../../../services/purchase.service';
+import { PurchaseService } from '../../../services/purchase.service';
 import { SettingsItem, SettingsService } from '../../../services/settings.service';
 import { WarehouseDto } from '../../../services/warehouse.service';
 
@@ -22,11 +23,13 @@ export class WarehouseFormComponent implements OnInit {
   isEdit: boolean;
   form: FormGroup;
 
+  readonly purchaseGridId = 15;
+  @ViewChild('purchaseGrid') purchaseGrid?: GridComponent;
+
   products: Product[] = [];
-  purchases: Purchase[] = [];
   currencies: SettingsItem[] = [];
-  selectedPurchase: Purchase | null = null;
-  rejectingId: number | null = null;
+  selectedRow: Record<string, any> | null = null;
+  rejecting = false;
 
   readonly measures = ['kg', 'g', 'tonna', 'litr', 'ml', 'dona', 'm³'];
 
@@ -64,53 +67,39 @@ export class WarehouseFormComponent implements OnInit {
     this.settingsService.getCurrencies().subscribe({
       next: list => this.currencies = list,
     });
-    if (this.purchaseMode) {
-      this.loadPurchases();
-    } else {
+    if (!this.purchaseMode) {
       this.productService.getAll().subscribe({
         next: products => this.products = products,
       });
     }
   }
 
-  loadPurchases(): void {
-    this.purchaseService.getActive().subscribe({
-      next: list => {
-        this.purchases = list;
-        const preselectedId = this.data?.['purchase_id'];
-        if (preselectedId) {
-          this.selectedPurchase = list.find(p => p.id === preselectedId) ?? null;
-        }
-      },
-    });
+  onSelectPurchase(row: Record<string, any>): void {
+    this.selectedRow = row;
+    this.form.get('purchaseId')!.setValue(row['purchase_id']);
   }
 
-  selectPurchase(purchase: Purchase): void {
-    this.selectedPurchase = purchase;
-    this.form.get('purchaseId')!.setValue(purchase.id);
-  }
-
-  reject(purchase: Purchase): void {
-    this.rejectingId = purchase.id;
-    this.purchaseService.reject(purchase.id).subscribe({
+  onRejectPurchase(row: Record<string, any>): void {
+    this.rejecting = true;
+    this.purchaseService.reject(row['purchase_id']).subscribe({
       next: res => {
         this.snack.open(res.message ?? 'Xarid qaytarildi', 'OK', { duration: 3000 });
-        this.rejectingId = null;
-        if (this.selectedPurchase?.id === purchase.id) {
-          this.selectedPurchase = null;
+        this.rejecting = false;
+        if (this.selectedRow?.['purchase_id'] === row['purchase_id']) {
+          this.selectedRow = null;
           this.form.get('purchaseId')!.setValue(null);
         }
-        this.loadPurchases();
+        this.purchaseGrid?.load();
       },
       error: () => {
         this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 });
-        this.rejectingId = null;
+        this.rejecting = false;
       },
     });
   }
 
   submit(): void {
-    if (this.form.invalid || (this.purchaseMode && !this.selectedPurchase)) {
+    if (this.form.invalid || (this.purchaseMode && !this.selectedRow)) {
       this.form.markAllAsTouched();
       return;
     }

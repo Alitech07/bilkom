@@ -8,65 +8,34 @@
     <!-- ── PURCHASE MODE ── -->
     <ng-container *ngIf="purchaseMode">
 
-      <div class="p-table">
-        <div class="p-table-head">
-          <span>Mahsulot nomi</span>
-          <span>Yetkazuvchi</span>
-          <span>Brend</span>
-          <span>Davlat</span>
-          <span>Valyuta</span>
-          <span></span>
-        </div>
+      <app-grid
+        #purchaseGrid
+        [gridId]="purchaseGridId"
+        [showActions]="true"
+        [editLabel]="'Qo\'shish'"
+        [deleteLabel]="'Qaytarish'"
+        (editClick)="onSelectPurchase($event)"
+        (deleteClick)="onRejectPurchase($event)"
+      ></app-grid>
 
-        <div *ngIf="purchases.length === 0" class="p-table-empty">
-          Faol xaridlar topilmadi
-        </div>
-
-        <div *ngFor="let p of purchases"
-             class="p-table-row"
-             [class.selected]="selectedPurchase?.id === p.id">
-          <span class="p-cell p-cell-name">
-            {{ p.items?.[0]?.product?.productName ?? '—' }}
-            <span *ngIf="(p.items?.length ?? 0) > 1" class="p-badge">+{{ (p.items?.length ?? 1) - 1 }}</span>
-          </span>
-          <span class="p-cell">{{ p.supplier?.legalName ?? '—' }}</span>
-          <span class="p-cell p-muted">{{ p.brand ?? '—' }}</span>
-          <span class="p-cell p-muted">{{ p.country ?? '—' }}</span>
-          <span class="p-cell p-muted">{{ p.currency?.name ?? '—' }}</span>
-          <span class="p-cell p-actions">
-            <button mat-stroked-button color="primary" type="button"
-                    (click)="selectPurchase(p)"
-                    [disabled]="rejectingId === p.id">
-              Qo'shish
-            </button>
-            <button mat-stroked-button color="warn" type="button"
-                    (click)="reject(p)"
-                    [disabled]="rejectingId === p.id">
-              <mat-spinner *ngIf="rejectingId === p.id" diameter="14" style="display:inline-block;margin-right:4px"></mat-spinner>
-              Qaytarish
-            </button>
-          </span>
-        </div>
-      </div>
-
-      <ng-container *ngIf="selectedPurchase">
+      <ng-container *ngIf="selectedRow">
 
         <div class="purchase-info">
-          <div class="info-row" *ngFor="let item of selectedPurchase.items">
+          <div class="info-row">
             <span class="info-label">Mahsulot</span>
-            <span class="info-value">{{ item.product?.productName }}</span>
+            <span class="info-value">{{ selectedRow['product_names'] ?? '—' }}</span>
           </div>
           <div class="info-row">
             <span class="info-label">Yetkazuvchi</span>
-            <span class="info-value">{{ selectedPurchase.supplier?.legalName }}</span>
+            <span class="info-value">{{ selectedRow['supplier_name'] ?? '—' }}</span>
           </div>
-          <div class="info-row" *ngIf="selectedPurchase.brand">
+          <div class="info-row" *ngIf="selectedRow['brand']">
             <span class="info-label">Brend</span>
-            <span class="info-value">{{ selectedPurchase.brand }}</span>
+            <span class="info-value">{{ selectedRow['brand'] }}</span>
           </div>
-          <div class="info-row" *ngIf="selectedPurchase.country">
+          <div class="info-row" *ngIf="selectedRow['country']">
             <span class="info-label">Mamlakat</span>
-            <span class="info-value">{{ selectedPurchase.country }}</span>
+            <span class="info-value">{{ selectedRow['country'] }}</span>
           </div>
         </div>
 
@@ -178,7 +147,7 @@
 <mat-dialog-actions class="dialog-actions">
   <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
   <button mat-raised-button color="primary" (click)="submit()"
-          [disabled]="purchaseMode && !selectedPurchase">
+          [disabled]="purchaseMode && !selectedRow">
     {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
   </button>
 </mat-dialog-actions>

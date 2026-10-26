@@ -151,6 +151,7 @@ tr:last-child .grid-td { border-bottom: none; }
 .grid-checkbox     { cursor: pointer; accent-color: #5B7CF6; width: 15px; height: 15px; }
 
 .grid-td--actions { white-space: nowrap; width: 96px; }
+.grid-td--actions:has(.action-btn--label) { width: 200px; }
 
 .action-btn {
   width: 30px !important;
@@ -160,6 +161,14 @@ tr:last-child .grid-td { border-bottom: none; }
   &--file { color: #3B82F6; }
   &--edit { color: #1D9E75; }
   &--del  { color: #EF4444; }
+}
+
+.action-btn--label {
+  font-size: 12px !important;
+  min-width: 0 !important;
+  padding: 0 10px !important;
+  height: 30px !important;
+  line-height: 30px !important;
 }
 
 /* ── Badge ── */

@@ -30,6 +30,8 @@ export class GridComponent implements OnChanges {
   @Input() editPermission?: string;
   @Input() deletePermission?: string;
   @Input() selectable  = false;
+  @Input() editLabel?: string;
+  @Input() deleteLabel?: string;
   @Output() editClick    = new EventEmitter<Record<string, any>>();
   @Output() deleteClick  = new EventEmitter<Record<string, any>>();
   @Output() fileClick    = new EventEmitter<Record<string, any>>();
