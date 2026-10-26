@@ -126,7 +126,7 @@
                 </button>
                 <button *ngIf="canEdit && editLabel" mat-stroked-button color="primary" class="action-btn--label" (click)="editClick.emit(row)">{{ editLabel }}</button>
                 <!-- Delete: icon yoki text button -->
-                <button *ngIf="canDelete && !deleteLabel" mat-icon-button class="action-btn action-btn--del" matTooltip="O'chirish" (click)="deleteClick.emit(row)">
+                <button *ngIf="canDelete && !deleteLabel" mat-icon-button class="action-btn action-btn--del" matTooltip="O'chirish" (click)="onDeleteClick(row)">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"/>
                     <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
@@ -134,7 +134,7 @@
                     <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
                   </svg>
                 </button>
-                <button *ngIf="canDelete && deleteLabel" mat-stroked-button color="warn" class="action-btn--label" (click)="deleteClick.emit(row)">{{ deleteLabel }}</button>
+                <button *ngIf="canDelete && deleteLabel" mat-stroked-button color="warn" class="action-btn--label" (click)="onDeleteClick(row)">{{ deleteLabel }}</button>
               </td>
             </tr>
 

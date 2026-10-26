@@ -1,0 +1,8 @@
+<h2 mat-dialog-title class="confirm-title">{{ title }}</h2>
+<mat-dialog-content class="confirm-body">
+  <p>{{ message }}</p>
+</mat-dialog-content>
+<mat-dialog-actions class="confirm-actions">
+  <button mat-stroked-button (click)="cancel()">Yo'q</button>
+  <button mat-raised-button color="warn" (click)="confirm()">Ha, o'chirish</button>
+</mat-dialog-actions>

@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 import { GridColumn, GridConfig, GridPage, GridService } from '../../services/grid.service';
 import { AuthService } from '../../services/auth.service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 interface HeaderCell {
   isGroup: boolean;
@@ -50,7 +52,21 @@ export class GridComponent implements OnChanges {
   readonly skeletonRows = [1, 2, 3, 4, 5];
   readonly skeletonCols = [1, 2, 3, 4, 5];
 
-  constructor(private gridService: GridService, private auth: AuthService) {}
+  constructor(
+    private gridService: GridService,
+    private auth: AuthService,
+    private dialog: MatDialog,
+  ) {}
+
+  onDeleteClick(row: Record<string, any>): void {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      width: '360px',
+      data: {},
+    });
+    ref.afterClosed().subscribe(confirmed => {
+      if (confirmed) this.deleteClick.emit(row);
+    });
+  }
 
   get canEdit(): boolean {
     if (!this.showActions) return false;

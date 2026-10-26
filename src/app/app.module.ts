@@ -55,6 +55,7 @@ import { ProductFormComponent } from './pages/products/product-form/product-form
 import { FileViewerComponent } from './components/file-viewer/file-viewer.component';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { WarehouseFormComponent } from './pages/warehouse/warehouse-form/warehouse-form.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { EmployeeFormComponent } from './pages/employees/employee-form/employee-form.component';
 import { UserFormComponent } from './pages/employees/user-form/user-form.component';
 import { OrderFormComponent } from './pages/orders/order-form/order-form.component';
@@ -87,7 +88,7 @@ const MATERIAL = [
     SuppliersComponent, SupplierFormComponent, PurchasesComponent, AddEditPurchaseFormComponent,
     RoleFormComponent, PermissionsComponent, CustomerFormComponent, ProductFormComponent,
     FileViewerComponent, SafeUrlPipe,
-    WarehouseFormComponent,
+    WarehouseFormComponent, ConfirmDialogComponent,
     EmployeeFormComponent, UserFormComponent,
     OrderFormComponent, InvoiceDetailComponent,
     CategoriesComponent, CategoryFormComponent,
