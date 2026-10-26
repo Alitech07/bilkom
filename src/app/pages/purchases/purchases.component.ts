@@ -14,9 +14,9 @@ import { FileViewerComponent } from '../../components/file-viewer/file-viewer.co
   styleUrls: ['./purchases.component.scss']
 })
 export class PurchasesComponent {
+  // ── Tab 1: Xaridlar ─────────────────────────────────────
   readonly gridId = 4;
-
-  @ViewChild(GridComponent) grid!: GridComponent;
+  @ViewChild('purchaseGrid') grid!: GridComponent;
   pageConfig: GridPage | null = null;
 
   get cfgSearch(): boolean { return this.pageConfig?.gridConfig.search ?? false; }
@@ -24,15 +24,26 @@ export class PurchasesComponent {
   get cfgExcel(): boolean  { return !!this.pageConfig?.gridColumns?.some(c => c.exportable); }
 
   onSearch(text: string): void { this.grid?.applyFilter(text); }
+  onExcel(): void { this.grid?.exportToExcel(); }
+  onFilter(): void {}
+
+  // ── Tab 2: Korxonalar hisobi ─────────────────────────────
+  readonly companyGridId = 5;
+  @ViewChild('companyGrid') companyGrid!: GridComponent;
+  companyPageConfig: GridPage | null = null;
+  get companyCfgExcel(): boolean { return !!this.companyPageConfig?.gridColumns?.some(c => c.exportable); }
+
+  // ── Tab 3: Mahsulotlar hisobi ────────────────────────────
+  readonly productGridId = 10;
+  @ViewChild('productGrid') productGrid!: GridComponent;
+  productPageConfig: GridPage | null = null;
+  get productCfgExcel(): boolean { return !!this.productPageConfig?.gridColumns?.some(c => c.exportable); }
 
   constructor(
     private dialog: MatDialog,
     private snack: MatSnackBar,
     private purchaseService: PurchaseService,
   ) {}
-
-  onExcel(): void { this.grid?.exportToExcel(); }
-  onFilter(): void {}
 
   openAdd(): void {
     this.dialog.open(AddEditPurchaseFormComponent, {
