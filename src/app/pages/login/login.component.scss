@@ -1,3 +1,58 @@
+/* ── Keyframes ── */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseLogo {
+  0%, 100% { transform: scale(1);   box-shadow: 0 0 0 0 rgba(255,255,255,0.25); }
+  50%       { transform: scale(1.06); box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+}
+
+@keyframes floatDeco {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(6px, -8px) scale(1.04); }
+  66%       { transform: translate(-4px, 5px) scale(0.97); }
+}
+
+@keyframes floatA {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(-18px) rotate(8deg); }
+}
+@keyframes floatB {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(14px) rotate(-6deg); }
+}
+@keyframes floatC {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  40%       { transform: translateY(-10px) rotate(12deg) scale(1.05); }
+  80%       { transform: translateY(8px) rotate(-5deg) scale(0.96); }
+}
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to   { opacity: 0.015; transform: scale(1); }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .login {
   display: flex;
   min-height: 100vh;
@@ -7,7 +62,9 @@
 .login__brand {
   position: relative;
   width: 42%;
-  background: linear-gradient(145deg, #1D9E75 0%, #0e7a5a 55%, #0a5c44 100%);
+  background: linear-gradient(145deg, #1D9E75, #0e7a5a, #0a5c44, #1D9E75);
+  background-size: 300% 300%;
+  animation: gradientShift 8s ease infinite;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,7 +73,10 @@
   @media (max-width: 800px) { display: none; }
 }
 
-.login__brand-content { position: relative; z-index: 2; color: #fff; }
+.login__brand-content {
+  position: relative; z-index: 2; color: #fff;
+  animation: fadeSlideUp 0.6s 0.3s ease both;
+}
 
 .login__brand-logo {
   width: 64px; height: 64px;
@@ -24,10 +84,17 @@
   border-radius: 16px;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 24px;
+  animation: pulseLogo 3s 1s ease-in-out infinite;
 }
 
-.login__brand-name  { font-size: 36px; font-weight: 800; margin-bottom: 12px; }
-.login__brand-tag   { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.78); margin-bottom: 40px; }
+.login__brand-name  {
+  font-size: 36px; font-weight: 800; margin-bottom: 12px;
+  animation: fadeSlideUp 0.6s 0.45s ease both;
+}
+.login__brand-tag   {
+  font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.78); margin-bottom: 40px;
+  animation: fadeSlideUp 0.6s 0.6s ease both;
+}
 
 .login__brand-features {
   list-style: none;
@@ -35,24 +102,62 @@
   li {
     display: flex; align-items: center; gap: 10px;
     font-size: 13.5px; color: rgba(255,255,255,0.85); font-weight: 500;
+    animation: fadeSlideUp 0.5s ease both;
+    &:nth-child(1) { animation-delay: 0.75s; }
+    &:nth-child(2) { animation-delay: 0.9s; }
+    &:nth-child(3) { animation-delay: 1.05s; }
   }
 }
 
 .login__deco {
   position: absolute; border-radius: 50%; background: rgba(255,255,255,0.06); z-index: 1;
-  &--1 { width: 320px; height: 320px; bottom: -80px; right: -80px; }
-  &--2 { width: 200px; height: 200px; top: -60px; left: -60px; background: rgba(255,255,255,0.05); }
-  &--3 { width: 100px; height: 100px; top: 40%; right: 30px; background: rgba(255,255,255,0.08); }
+  &--1 { width: 320px; height: 320px; bottom: -80px; right: -80px; animation: floatDeco 7s 1s ease-in-out infinite; }
+  &--2 { width: 200px; height: 200px; top: -60px; left: -60px; background: rgba(255,255,255,0.05); animation: floatDeco 9s 0.5s ease-in-out infinite reverse; }
+  &--3 { width: 100px; height: 100px; top: 40%; right: 30px; background: rgba(255,255,255,0.08); animation: floatDeco 5s 2s ease-in-out infinite; }
 }
 
 /* ── Right form panel ── */
 .login__form-panel {
   flex: 1;
+  position: relative;
   display: flex; align-items: center; justify-content: center;
   background: #F4F6F9;
   padding: 48px 32px;
+  overflow: hidden;
   @media (max-width: 480px) { padding: 32px 16px; align-items: flex-start; padding-top: 40px; }
 }
+
+/* ── Floating chemical SVGs ── */
+.chem {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+}
+
+.chem--benzol {
+  width: 650px;
+  top: -160px;
+  right: -120px;
+  animation: fadeIn 0.8s 0.3s ease forwards, spinSlow 12s linear infinite;
+}
+
+.chem--molecule {
+  width: 580px;
+  bottom: -160px;
+  right: -100px;
+  animation: fadeIn 0.8s 0.7s ease forwards, spinSlow 10s linear infinite;
+}
+
+.chem--atom {
+  width: 640px;
+  top: calc(50% - 320px);
+  left: -140px;
+  animation: fadeIn 0.8s 0.4s ease forwards, spinSlow 20s linear infinite;
+}
+
+
+
 
 .login__card {
   width: 100%;
