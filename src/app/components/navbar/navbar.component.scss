@@ -262,6 +262,13 @@
   &:hover { opacity: 0.88; }
 }
 
+.navbar__avatar-img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 /* ── Profil panel (mat-menu ichida) ── */
 ::ng-deep .profile-panel {
   min-width: 220px !important;
@@ -288,6 +295,13 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+  }
+
+  &__avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
   }
 
   &__info {

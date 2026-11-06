@@ -1,0 +1,73 @@
+<div class="profile-page">
+
+  <div class="profile-card">
+
+    <!-- Avatar -->
+    <div class="avatar-section">
+      <div class="avatar-wrap">
+        <img *ngIf="avatarPreview" [src]="avatarPreview" class="avatar-img" alt="Avatar">
+        <div *ngIf="!avatarPreview" class="avatar-initials">{{ initials }}</div>
+        <label class="avatar-overlay" [class.loading]="uploadingAvatar">
+          <input type="file" accept="image/*" (change)="onAvatarChange($event)" style="display:none">
+          <svg *ngIf="!uploadingAvatar" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <mat-spinner *ngIf="uploadingAvatar" diameter="20"></mat-spinner>
+        </label>
+      </div>
+      <div class="user-info">
+        <div class="user-name">{{ auth.currentUser?.fullname }}</div>
+        <div class="user-login">@{{ auth.currentUser?.login }}</div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Profil ma'lumotlari -->
+    <div class="section">
+      <div class="section-title">Ma'lumotlarni tahrirlash</div>
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>To'liq ism</mat-label>
+          <input matInput formControlName="fullname">
+          <mat-error *ngIf="profileForm.get('fullname')?.hasError('required')">Majburiy maydon</mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="savingProfile">
+          {{ savingProfile ? 'Saqlanmoqda...' : 'Saqlash' }}
+        </button>
+      </form>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Parol o'zgartirish -->
+    <div class="section">
+      <div class="section-title">Parol o'zgartirish</div>
+      <form [formGroup]="passwordForm" (ngSubmit)="savePassword()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Joriy parol</mat-label>
+          <input matInput type="password" formControlName="oldPassword">
+          <mat-error *ngIf="passwordForm.get('oldPassword')?.hasError('required')">Majburiy maydon</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Yangi parol</mat-label>
+          <input matInput type="password" formControlName="newPassword">
+          <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('required')">Majburiy maydon</mat-error>
+          <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('minlength')">Kamida 4 ta belgi</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Yangi parolni tasdiqlang</mat-label>
+          <input matInput type="password" formControlName="confirmPassword">
+          <mat-error *ngIf="passwordForm.get('confirmPassword')?.hasError('required')">Majburiy maydon</mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="savingPassword">
+          {{ savingPassword ? 'Saqlanmoqda...' : 'Parolni yangilash' }}
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+</div>

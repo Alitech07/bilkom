@@ -13,6 +13,7 @@ export interface LoginResponse {
 export interface CurrentUser {
   login: string;
   fullname: string;
+  avatarPath?: string;
 }
 
 const ACCESS_KEY  = 'blk_access';
@@ -58,14 +59,25 @@ export class AuthService {
 
   loadCurrentUser(): Observable<void> {
     return this.http
-      .get<ApiResult<{ id: number; login: string; fullname: string }>>(`${this.base}/user/me`)
+      .get<ApiResult<{ id: number; login: string; fullname: string; avatarPath?: string }>>(`${this.base}/user/me`)
       .pipe(
         tap(res => {
-          this._currentUser = { login: res.object.login, fullname: res.object.fullname };
+          this._currentUser = {
+            login: res.object.login,
+            fullname: res.object.fullname,
+            avatarPath: res.object.avatarPath ?? undefined,
+          };
           localStorage.setItem(USER_KEY, JSON.stringify(this._currentUser));
         }),
         map(() => void 0)
       );
+  }
+
+  updateCurrentUser(partial: Partial<CurrentUser>): void {
+    if (this._currentUser) {
+      this._currentUser = { ...this._currentUser, ...partial };
+      localStorage.setItem(USER_KEY, JSON.stringify(this._currentUser));
+    }
   }
 
   get currentUser(): CurrentUser | null {

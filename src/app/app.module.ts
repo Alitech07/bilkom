@@ -62,6 +62,7 @@ import { InvoiceDetailComponent } from './pages/invoice/invoice-detail/invoice-d
 import { CategoriesComponent } from './pages/categories/categories.component';
 import { CategoryFormComponent } from './pages/categories/category-form/category-form.component';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 import { HasPermissionDirective } from './directives/has-permission.directive';
 
 const MATERIAL = [
@@ -92,6 +93,7 @@ const MATERIAL = [
     OrderFormComponent, InvoiceDetailComponent,
     CategoriesComponent, CategoryFormComponent,
     SettingsComponent,
+    ProfileComponent,
     HasPermissionDirective,
   ],
   imports: [

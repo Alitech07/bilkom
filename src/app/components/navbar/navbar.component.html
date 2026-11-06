@@ -113,7 +113,8 @@
 
     <!-- Avatar — profil menyusini ochadi -->
     <div class="navbar__avatar" [matMenuTriggerFor]="profileMenu" [matTooltip]="displayName">
-      {{ initials }}
+      <img *ngIf="avatarUrl" [src]="avatarUrl" class="navbar__avatar-img" alt="Avatar">
+      <span *ngIf="!avatarUrl">{{ initials }}</span>
     </div>
 
   </div>
@@ -123,7 +124,10 @@
 <!-- Profil dropdown menyusi -->
 <mat-menu #profileMenu="matMenu" xPosition="before" class="profile-panel">
   <div class="profile-header" (click)="$event.stopPropagation()">
-    <div class="profile-header__avatar">{{ initials }}</div>
+    <div class="profile-header__avatar">
+      <img *ngIf="avatarUrl" [src]="avatarUrl" class="profile-header__avatar-img" alt="Avatar">
+      <span *ngIf="!avatarUrl">{{ initials }}</span>
+    </div>
     <div class="profile-header__info">
       <span class="profile-header__name">{{ displayName }}</span>
       <span class="profile-header__login">@{{ displayLogin }}</span>
@@ -131,6 +135,14 @@
   </div>
 
   <mat-divider></mat-divider>
+
+  <button mat-menu-item (click)="goToProfile()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:10px;flex-shrink:0">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    Profil
+  </button>
 
   <button mat-menu-item (click)="logout()" class="profile-menu-item--logout">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:10px;flex-shrink:0">

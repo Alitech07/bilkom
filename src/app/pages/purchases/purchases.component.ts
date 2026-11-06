@@ -41,7 +41,6 @@ export class PurchasesComponent {
 
   private reload(): void {
     this.grid?.load();
-    this.companyGrid?.load();
     this.productGrid?.load();
   }
 

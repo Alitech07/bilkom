@@ -6,7 +6,7 @@
 <mat-tab-group class="purchases-tabs" animationDuration="200ms">
 
   <!-- ── Tab 1: Xaridlar ─────────────────────────────────── -->
-  <mat-tab label="Xaridlar">
+  <mat-tab label="Korxonalar xisobi">
     <div class="tab-content">
       <app-grid-toolbar
         [showSearch]="cfgSearch"
@@ -35,26 +35,6 @@
         (editClick)="onEdit($event)"
         (deleteClick)="onDelete($event)"
         (fileClick)="onFileClick($event)"
-      ></app-grid>
-    </div>
-  </mat-tab>
-
-  <!-- ── Tab 2: Korxonalar hisobi ────────────────────────── -->
-  <mat-tab label="Korxonalar hisobi">
-    <div class="tab-content">
-      <app-grid-toolbar
-        [showSearch]="true"
-        [showFilter]="false"
-        [showExcel]="companyCfgExcel"
-        (searchChange)="companyGrid?.applyFilter($event)"
-        (excelClick)="companyGrid?.exportToExcel()"
-      ></app-grid-toolbar>
-
-      <app-grid
-        #companyGrid
-        [gridId]="companyGridId"
-        [showActions]="false"
-        (configLoaded)="companyPageConfig = $event"
       ></app-grid>
     </div>
   </mat-tab>

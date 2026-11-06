@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CurrencyRate, CurrencyService } from '../../services/currency.service';
 import { WeatherData, WeatherService } from '../../services/weather.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -18,7 +20,7 @@ export class NavbarComponent {
 
   private _closeTimer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(private auth: AuthService, currency: CurrencyService, weather: WeatherService) {
+  constructor(private auth: AuthService, currency: CurrencyService, weather: WeatherService, private router: Router) {
     this.currencies$ = currency.rates$;
     this.weather$ = weather.weather$;
   }
@@ -50,6 +52,17 @@ export class NavbarComponent {
 
   get displayLogin(): string {
     return this.auth.currentUser?.login ?? '';
+  }
+
+  get avatarUrl(): string | null {
+    const path = this.auth.currentUser?.avatarPath;
+    if (!path) return null;
+    const fileName = path.split('/').pop() ?? '';
+    return `${environment.apiUrl}/user/avatar/${fileName}`;
+  }
+
+  goToProfile(): void {
+    this.router.navigate(['/profile']);
   }
 
   logout(): void {
