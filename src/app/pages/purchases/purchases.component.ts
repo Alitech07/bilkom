@@ -27,12 +27,6 @@ export class PurchasesComponent {
   onExcel(): void { this.grid?.exportToExcel(); }
   onFilter(): void {}
 
-  // ── Tab 2: Korxonalar hisobi ─────────────────────────────
-  readonly companyGridId = 13;
-  @ViewChild('companyGrid') companyGrid!: GridComponent;
-  companyPageConfig: GridPage | null = null;
-  get companyCfgExcel(): boolean { return !!this.companyPageConfig?.gridColumns?.some(c => c.exportable); }
-
   // ── Tab 3: Mahsulotlar hisobi ────────────────────────────
   readonly productGridId = 14;
   @ViewChild('productGrid') productGrid!: GridComponent;
@@ -45,24 +39,40 @@ export class PurchasesComponent {
     private purchaseService: PurchaseService,
   ) {}
 
+  private reload(): void {
+    this.grid?.load();
+    this.companyGrid?.load();
+    this.productGrid?.load();
+  }
+
   openAdd(): void {
     this.dialog.open(AddEditPurchaseFormComponent, {
-      data: null, width: '960px', maxWidth: '98vw', disableClose: true,
+      data: { onSaved: () => this.reload() },
+      width: '960px', maxWidth: '98vw', disableClose: true,
     }).afterClosed().subscribe((result: PurchaseFormResult | undefined) => {
       if (!result) return;
-      this.purchaseService.add(result.dto).subscribe({
-        next: (res) => {
-          this.snack.open(res.message ?? 'Xarid qo\'shildi', 'OK', { duration: 3000 });
-          this.grid?.load();
-        },
-        error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
-      });
+      if (result.alreadySaved && result.id) {
+        // "Saqlash" orqali allaqachon saqlangan — yakuniy holat bilan edit
+        this.purchaseService.edit(result.id, result.dto).subscribe({
+          next: () => this.reload(),
+          error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+        });
+      } else {
+        this.purchaseService.add(result.dto).subscribe({
+          next: (res) => {
+            this.snack.open(res.message ?? 'Xarid qo\'shildi', 'OK', { duration: 3000 });
+            this.reload();
+          },
+          error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+        });
+      }
     });
   }
 
   onEdit(row: Record<string, any>): void {
     this.dialog.open(AddEditPurchaseFormComponent, {
-      data: row, width: '960px', maxWidth: '98vw', disableClose: true,
+      data: { ...row, onSaved: () => this.reload() },
+      width: '960px', maxWidth: '98vw', disableClose: true,
     }).afterClosed().subscribe((result: PurchaseFormResult | undefined) => {
       if (!result) return;
       const id = result.id;
@@ -70,7 +80,7 @@ export class PurchasesComponent {
       this.purchaseService.edit(id, result.dto).subscribe({
         next: (res) => {
           this.snack.open(res.message ?? 'Yangilandi', 'OK', { duration: 3000 });
-          this.grid?.load();
+          this.reload();
         },
         error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
       });

@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SupplierService, Supplier } from '../../../services/supplier.service';
 import { PurchaseService, PurchaseDto } from '../../../services/purchase.service';
 import { ProductService, Product } from '../../../services/product.service';
@@ -9,6 +10,7 @@ import { SettingsItem, SettingsService } from '../../../services/settings.servic
 export interface PurchaseFormResult {
   id?: number;
   dto: PurchaseDto;
+  alreadySaved?: boolean;
 }
 
 @Component({
@@ -26,6 +28,9 @@ export class AddEditPurchaseFormComponent implements OnInit {
   currencies: SettingsItem[] = [];
   selectedFileName = '';
   uploading = false;
+  saving = false;
+  savedId: number | null = null;
+  private onSaved?: () => void;
 
   constructor(
     private fb: FormBuilder,
@@ -33,10 +38,12 @@ export class AddEditPurchaseFormComponent implements OnInit {
     private purchaseService: PurchaseService,
     private productService: ProductService,
     private settingsService: SettingsService,
+    private snack: MatSnackBar,
     private dialogRef: MatDialogRef<AddEditPurchaseFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Record<string, any> | null
   ) {
-    this.isEdit = !!data;
+    this.isEdit = !!(data?.['purchase_id'] ?? data?.['id']);
+    this.onSaved = data?.['onSaved'];
 
     const existingItems: any[] = data?.['items'] ?? [];
 
@@ -116,20 +123,57 @@ export class AddEditPurchaseFormComponent implements OnInit {
 
   cancel(): void { this.dialogRef.close(); }
 
+  private buildDto(): PurchaseDto {
+    const v = this.form.value;
+    return {
+      supplierId:        v.supplierId,
+      deliveryTypeId:    v.deliveryTypeId ?? undefined,
+      paymentTypeId:     v.paymentTypeId ?? undefined,
+      currencyId:        v.currencyId ?? undefined,
+      transportExpenses: v.transportExpenses ?? undefined,
+      customsExpenses:   v.customsExpenses ?? undefined,
+      items:             (v.items as any[]).filter(i => i.productId != null),
+    };
+  }
+
+  saqlash(): void {
+    this.form.get('supplierId')?.markAsTouched();
+    if (this.form.get('supplierId')?.invalid) return;
+
+    this.saving = true;
+    const dto = this.buildDto();
+    const existingId = this.savedId ?? (this.data?.['purchase_id'] ?? this.data?.['id']);
+
+    if (existingId) {
+      this.purchaseService.edit(existingId, dto).subscribe({
+        next: res => {
+          this.saving = false;
+          this.savedId = existingId;
+          this.snack.open(res.message ?? 'Saqlandi', 'OK', { duration: 3000 });
+          this.onSaved?.();
+        },
+        error: () => { this.saving = false; this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }); },
+      });
+    } else {
+      this.purchaseService.add(dto).subscribe({
+        next: res => {
+          this.saving = false;
+          this.savedId = (res as any).object ?? null;
+          this.snack.open(res.message ?? 'Saqlandi', 'OK', { duration: 3000 });
+          this.onSaved?.();
+        },
+        error: () => { this.saving = false; this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }); },
+      });
+    }
+  }
+
   submit(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-    const v = this.form.value;
+    const existingId = this.data?.['purchase_id'] ?? this.data?.['id'];
     const result: PurchaseFormResult = {
-      id: this.data?.['purchase_id'] ?? this.data?.['id'],
-      dto: {
-        supplierId:        v.supplierId,
-        deliveryTypeId:    v.deliveryTypeId ?? undefined,
-        paymentTypeId:     v.paymentTypeId ?? undefined,
-        currencyId:        v.currencyId ?? undefined,
-        transportExpenses: v.transportExpenses ?? undefined,
-        customsExpenses:   v.customsExpenses ?? undefined,
-        items:             v.items,
-      },
+      id: this.savedId ?? existingId,
+      dto: this.buildDto(),
+      alreadySaved: !!this.savedId,
     };
     this.dialogRef.close(result);
   }

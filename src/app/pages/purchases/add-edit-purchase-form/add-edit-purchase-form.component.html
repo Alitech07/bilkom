@@ -54,6 +54,12 @@
           <input matInput type="number" formControlName="customsExpenses" placeholder="0.00">
           <mat-error *ngIf="form.get('customsExpenses')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
         </mat-form-field>
+
+        <button mat-stroked-button color="primary" type="button"
+                style="width:100%;margin-top:4px" [disabled]="saving"
+                (click)="saqlash()">
+          {{ saving ? 'Saqlanmoqda...' : 'Saqlash' }}
+        </button>
       </div>
 
       <!-- ── O'NG PANEL: Mahsulotlar ── -->
