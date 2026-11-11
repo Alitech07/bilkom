@@ -1,70 +1,222 @@
 <div class="profile-page">
 
-  <div class="profile-card">
+  <!-- ═══ LEFT COLUMN ═══════════════════════════════════════ -->
+  <div class="left-col">
 
-    <!-- Avatar -->
-    <div class="avatar-section">
+    <!-- Avatar card -->
+    <div class="card avatar-card">
       <div class="avatar-wrap">
         <img *ngIf="avatarPreview" [src]="avatarPreview" class="avatar-img" alt="Avatar">
         <div *ngIf="!avatarPreview" class="avatar-initials">{{ initials }}</div>
-        <label class="avatar-overlay" [class.loading]="uploadingAvatar">
+        <label class="avatar-overlay" [class.loading]="uploadingAvatar"
+               matTooltip="Rasmni o'zgartirish">
           <input type="file" accept="image/*" (change)="onAvatarChange($event)" style="display:none">
-          <svg *ngIf="!uploadingAvatar" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/>
-            <line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-          <mat-spinner *ngIf="uploadingAvatar" diameter="20"></mat-spinner>
+          <mat-spinner *ngIf="uploadingAvatar" diameter="22"></mat-spinner>
+          <mat-icon *ngIf="!uploadingAvatar">photo_camera</mat-icon>
         </label>
+        <div *ngIf="uploadingAvatar" class="uploading-badge">
+          <span>Yuklanmoqda...</span>
+        </div>
       </div>
-      <div class="user-info">
+
+      <div class="user-meta">
         <div class="user-name">{{ auth.currentUser?.fullname }}</div>
+        <div class="user-position" *ngIf="auth.currentUser?.position">
+          {{ auth.currentUser?.position }}
+        </div>
         <div class="user-login">@{{ auth.currentUser?.login }}</div>
+        <div class="user-roles" *ngIf="roleNames !== '—'">
+          <mat-icon class="role-icon">badge</mat-icon>{{ roleNames }}
+        </div>
       </div>
     </div>
 
-    <mat-divider></mat-divider>
+    <!-- Contact info card -->
+    <div class="card info-card">
+      <div class="card-label">Bog'lanish ma'lumotlari</div>
+      <div class="info-row" *ngIf="auth.currentUser?.phone">
+        <mat-icon class="info-icon">phone</mat-icon>
+        <span>{{ auth.currentUser?.phone }}</span>
+      </div>
+      <div class="info-row" *ngIf="auth.currentUser?.address">
+        <mat-icon class="info-icon">location_on</mat-icon>
+        <span>{{ auth.currentUser?.address }}</span>
+      </div>
+      <div class="info-row empty" *ngIf="!auth.currentUser?.phone && !auth.currentUser?.address">
+        <mat-icon class="info-icon">info_outline</mat-icon>
+        <span>Ma'lumotlar kiritilmagan</span>
+      </div>
+    </div>
 
-    <!-- Profil ma'lumotlari -->
-    <div class="section">
-      <div class="section-title">Ma'lumotlarni tahrirlash</div>
+  </div>
+
+  <!-- ═══ RIGHT COLUMN ══════════════════════════════════════ -->
+  <div class="right-col">
+
+    <!-- Stats row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon orders"><mat-icon>shopping_cart</mat-icon></div>
+        <div class="stat-body">
+          <div class="stat-value">
+            <ng-container *ngIf="!statsLoading">{{ stats?.totalOrders ?? 0 }}</ng-container>
+            <span *ngIf="statsLoading" class="skel-num"></span>
+          </div>
+          <div class="stat-label">Jami buyurtmalar</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon amount"><mat-icon>payments</mat-icon></div>
+        <div class="stat-body">
+          <div class="stat-value small">
+            <ng-container *ngIf="!statsLoading">{{ formatAmount(stats?.totalOrdersAmount) }}</ng-container>
+            <span *ngIf="statsLoading" class="skel-num"></span>
+          </div>
+          <div class="stat-label">Jami summa (so'm)</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon purchases"><mat-icon>inventory_2</mat-icon></div>
+        <div class="stat-body">
+          <div class="stat-value">
+            <ng-container *ngIf="!statsLoading">{{ stats?.totalPurchases ?? 0 }}</ng-container>
+            <span *ngIf="statsLoading" class="skel-num"></span>
+          </div>
+          <div class="stat-label">Jami xaridlar</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly progress card -->
+    <div class="card progress-card">
+      <div class="card-label">Oylik faollik</div>
+      <div class="month-row">
+        <div class="month-block">
+          <div class="month-title">Joriy oy</div>
+          <div class="month-orders">
+            <span class="month-count">{{ stats?.thisMonthOrders ?? 0 }}</span>
+            <span class="month-unit">ta buyurtma</span>
+          </div>
+          <div class="month-amount">{{ formatAmount(stats?.thisMonthOrdersAmount) }} so'm</div>
+        </div>
+        <div class="month-divider"></div>
+        <div class="month-block">
+          <div class="month-title">O'tgan oy</div>
+          <div class="month-orders">
+            <span class="month-count muted">{{ stats?.lastMonthOrders ?? 0 }}</span>
+            <span class="month-unit">ta buyurtma</span>
+          </div>
+          <div class="month-amount muted">{{ formatAmount(stats?.lastMonthOrdersAmount) }} so'm</div>
+        </div>
+      </div>
+
+      <div class="progress-wrap" *ngIf="!statsLoading">
+        <div class="progress-label">
+          <span>Bu oy / O'tgan oy</span>
+          <span class="progress-pct"
+                [class.up]="monthProgress >= 100"
+                [class.down]="monthProgress < 100">
+            {{ monthProgress }}%
+          </span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill"
+               [style.width.%]="monthProgress > 100 ? 100 : monthProgress"
+               [class.full]="monthProgress >= 100"></div>
+        </div>
+        <div class="progress-hint" *ngIf="monthProgress >= 100">
+          <mat-icon class="hint-icon up">trending_up</mat-icon>
+          O'tgan oydan {{ monthProgress - 100 }}% yuqori
+        </div>
+        <div class="progress-hint" *ngIf="monthProgress < 100 && monthProgress > 0">
+          <mat-icon class="hint-icon down">trending_down</mat-icon>
+          O'tgan oydan {{ 100 - monthProgress }}% past
+        </div>
+      </div>
+      <div *ngIf="statsLoading" class="skel-progress"></div>
+    </div>
+
+    <!-- Edit profile card -->
+    <div class="card edit-card">
+      <div class="card-label">Profil ma'lumotlari</div>
       <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>To'liq ism</mat-label>
-          <input matInput formControlName="fullname">
-          <mat-error *ngIf="profileForm.get('fullname')?.hasError('required')">Majburiy maydon</mat-error>
-        </mat-form-field>
-        <button mat-raised-button color="primary" type="submit" [disabled]="savingProfile">
-          {{ savingProfile ? 'Saqlanmoqda...' : 'Saqlash' }}
-        </button>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="f-grow">
+            <mat-label>To'liq ism (FIO)</mat-label>
+            <input matInput formControlName="fullname">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="profileForm.get('fullname')?.hasError('required')">Majburiy maydon</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="f-grow">
+            <mat-label>Lavozimi</mat-label>
+            <input matInput formControlName="position" placeholder="Menejur, Sotuvchi...">
+            <mat-icon matSuffix>work</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="f-grow">
+            <mat-label>Telefon raqam</mat-label>
+            <input matInput formControlName="phone" placeholder="+998 90 000 00 00">
+            <mat-icon matSuffix>phone</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="f-grow">
+            <mat-label>Manzil</mat-label>
+            <input matInput formControlName="address">
+            <mat-icon matSuffix>location_on</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="savingProfile">
+            <mat-icon>save</mat-icon>
+            {{ savingProfile ? 'Saqlanmoqda...' : 'Saqlash' }}
+          </button>
+        </div>
       </form>
     </div>
 
-    <mat-divider></mat-divider>
-
-    <!-- Parol o'zgartirish -->
-    <div class="section">
-      <div class="section-title">Parol o'zgartirish</div>
-      <form [formGroup]="passwordForm" (ngSubmit)="savePassword()">
-        <mat-form-field appearance="outline" class="full-width">
+    <!-- Password card -->
+    <div class="card password-card">
+      <div class="card-label-row">
+        <span class="card-label">Parol o'zgartirish</span>
+        <button mat-icon-button (click)="showPasswordForm = !showPasswordForm"
+                [matTooltip]="showPasswordForm ? 'Yopish' : 'Ochish'">
+          <mat-icon>{{ showPasswordForm ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </div>
+      <form *ngIf="showPasswordForm" [formGroup]="passwordForm" (ngSubmit)="savePassword()">
+        <mat-form-field appearance="outline" class="full-w">
           <mat-label>Joriy parol</mat-label>
           <input matInput type="password" formControlName="oldPassword">
+          <mat-icon matSuffix>lock</mat-icon>
           <mat-error *ngIf="passwordForm.get('oldPassword')?.hasError('required')">Majburiy maydon</mat-error>
         </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Yangi parol</mat-label>
-          <input matInput type="password" formControlName="newPassword">
-          <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('required')">Majburiy maydon</mat-error>
-          <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('minlength')">Kamida 4 ta belgi</mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Yangi parolni tasdiqlang</mat-label>
-          <input matInput type="password" formControlName="confirmPassword">
-          <mat-error *ngIf="passwordForm.get('confirmPassword')?.hasError('required')">Majburiy maydon</mat-error>
-        </mat-form-field>
-        <button mat-raised-button color="primary" type="submit" [disabled]="savingPassword">
-          {{ savingPassword ? 'Saqlanmoqda...' : 'Parolni yangilash' }}
-        </button>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="f-grow">
+            <mat-label>Yangi parol</mat-label>
+            <input matInput type="password" formControlName="newPassword">
+            <mat-icon matSuffix>lock_open</mat-icon>
+            <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('required')">Majburiy maydon</mat-error>
+            <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('minlength')">Kamida 4 ta belgi</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="f-grow">
+            <mat-label>Tasdiqlang</mat-label>
+            <input matInput type="password" formControlName="confirmPassword">
+            <mat-icon matSuffix>lock_open</mat-icon>
+            <mat-error *ngIf="passwordForm.get('confirmPassword')?.hasError('required')">Majburiy maydon</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-actions">
+          <button mat-raised-button color="warn" type="submit" [disabled]="savingPassword">
+            <mat-icon>key</mat-icon>
+            {{ savingPassword ? 'Saqlanmoqda...' : 'Parolni yangilash' }}
+          </button>
+        </div>
       </form>
     </div>
 

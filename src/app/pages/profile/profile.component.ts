@@ -5,6 +5,16 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
 
+export interface UserStats {
+  totalOrders: number;
+  totalOrdersAmount: number;
+  thisMonthOrders: number;
+  thisMonthOrdersAmount: number;
+  lastMonthOrders: number;
+  lastMonthOrdersAmount: number;
+  totalPurchases: number;
+}
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -17,6 +27,9 @@ export class ProfileComponent implements OnInit {
   uploadingAvatar = false;
   savingProfile = false;
   savingPassword = false;
+  stats: UserStats | null = null;
+  statsLoading = true;
+  showPasswordForm = false;
 
   private readonly base = environment.apiUrl;
 
@@ -26,21 +39,25 @@ export class ProfileComponent implements OnInit {
     private http: HttpClient,
     public auth: AuthService,
   ) {
+    const u = auth.currentUser;
     this.profileForm = this.fb.group({
-      fullname: ['', Validators.required],
+      fullname: [u?.fullname ?? '', Validators.required],
+      position: [u?.position ?? ''],
+      phone:    [u?.phone ?? ''],
+      address:  [u?.address ?? ''],
     });
     this.passwordForm = this.fb.group({
-      oldPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(4)]],
+      oldPassword:     ['', Validators.required],
+      newPassword:     ['', [Validators.required, Validators.minLength(4)]],
       confirmPassword: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.profileForm.patchValue({ fullname: this.auth.currentUser?.fullname ?? '' });
     if (this.auth.currentUser?.avatarPath) {
       this.avatarPreview = this.avatarUrl(this.auth.currentUser.avatarPath);
     }
+    this.loadStats();
   }
 
   get initials(): string {
@@ -60,6 +77,7 @@ export class ProfileComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
     const file = input.files[0];
+    input.value = '';
 
     const reader = new FileReader();
     reader.onload = e => { this.avatarPreview = e.target?.result as string; };
@@ -75,22 +93,29 @@ export class ProfileComponent implements OnInit {
           this.auth.updateCurrentUser({ avatarPath: res.object });
           this.toast.success('Avatar saqlandi');
         } else {
+          this.avatarPreview = this.auth.currentUser?.avatarPath
+            ? this.avatarUrl(this.auth.currentUser.avatarPath) : null;
           this.toast.error(res.message ?? 'Xato');
         }
       },
-      error: () => { this.uploadingAvatar = false; this.toast.error('Avatar yuklashda xato'); },
+      error: () => {
+        this.uploadingAvatar = false;
+        this.avatarPreview = this.auth.currentUser?.avatarPath
+          ? this.avatarUrl(this.auth.currentUser.avatarPath) : null;
+        this.toast.error('Avatar yuklashda xato');
+      },
     });
   }
 
   saveProfile(): void {
     if (this.profileForm.invalid) { this.profileForm.markAllAsTouched(); return; }
     this.savingProfile = true;
-    const { fullname } = this.profileForm.value;
-    this.http.put<{ success: boolean; message: string }>(`${this.base}/user/update-profile`, { fullname }).subscribe({
+    const { fullname, position, phone, address } = this.profileForm.value;
+    this.http.put<{ success: boolean; message: string }>(`${this.base}/user/update-profile`, { fullname, position, phone, address }).subscribe({
       next: res => {
         this.savingProfile = false;
         if (res.success) {
-          this.auth.updateCurrentUser({ fullname });
+          this.auth.updateCurrentUser({ fullname, position, phone, address });
           this.toast.success('Profil yangilandi');
         } else {
           this.toast.error(res.message ?? 'Xato');
@@ -113,6 +138,7 @@ export class ProfileComponent implements OnInit {
         this.savingPassword = false;
         if (res.success) {
           this.passwordForm.reset();
+          this.showPasswordForm = false;
           this.toast.success('Parol yangilandi');
         } else {
           this.toast.error(res.message ?? 'Xato');
@@ -121,5 +147,29 @@ export class ProfileComponent implements OnInit {
       error: () => { this.savingPassword = false; this.toast.error('Xato yuz berdi'); },
     });
   }
-}
 
+  loadStats(): void {
+    this.statsLoading = true;
+    this.http.get<{ success: boolean; object: UserStats }>(`${this.base}/user/my-stats`).subscribe({
+      next: res => { this.stats = res.object; this.statsLoading = false; },
+      error: () => { this.statsLoading = false; },
+    });
+  }
+
+  get monthProgress(): number {
+    const last = this.stats?.lastMonthOrdersAmount ?? 0;
+    const cur  = this.stats?.thisMonthOrdersAmount ?? 0;
+    if (last === 0 && cur === 0) return 0;
+    if (last === 0) return 100;
+    return Math.min(Math.round((cur / last) * 100), 999);
+  }
+
+  formatAmount(val: number | undefined): string {
+    if (val == null) return '0';
+    return new Intl.NumberFormat('uz-UZ').format(Math.round(val));
+  }
+
+  get roleNames(): string {
+    return (this.auth.currentUser?.roles ?? []).map((r: any) => r.name).join(', ') || '—';
+  }
+}
