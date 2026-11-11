@@ -1,0 +1,25 @@
+<div class="toast-container">
+  <div
+    *ngFor="let t of toasts"
+    class="toast toast--{{ t.type }}"
+    [class.toast--closing]="t.closing"
+  >
+    <div class="toast__icon">
+      <mat-icon>{{ icon(t.type) }}</mat-icon>
+    </div>
+    <div class="toast__body">
+      <span class="toast__type">{{
+        t.type === 'success' ? 'Muvaffaqiyatli' :
+        t.type === 'error'   ? 'Xato' :
+        t.type === 'warning' ? 'Ogohlantirish' : 'Ma\'lumot'
+      }}</span>
+      <span class="toast__message">{{ t.message }}</span>
+    </div>
+    <button class="toast__close" (click)="close(t.id)" aria-label="Yopish">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div class="toast__progress">
+      <div class="toast__bar" [style.animation-duration.ms]="t.duration"></div>
+    </div>
+  </div>
+</div>

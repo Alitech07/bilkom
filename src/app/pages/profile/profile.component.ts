@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../services/toast.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private snack: MatSnackBar,
+    private toast: ToastService,
     private http: HttpClient,
     public auth: AuthService,
   ) {
@@ -73,12 +73,12 @@ export class ProfileComponent implements OnInit {
         this.uploadingAvatar = false;
         if (res.success) {
           this.auth.updateCurrentUser({ avatarPath: res.object });
-          this.snack.open('Avatar saqlandi', 'OK', { duration: 3000 });
+          this.toast.success('Avatar saqlandi');
         } else {
-          this.snack.open(res.message ?? 'Xato', 'OK', { duration: 3000 });
+          this.toast.error(res.message ?? 'Xato');
         }
       },
-      error: () => { this.uploadingAvatar = false; this.snack.open('Avatar yuklashda xato', 'OK', { duration: 3000 }); },
+      error: () => { this.uploadingAvatar = false; this.toast.error('Avatar yuklashda xato'); },
     });
   }
 
@@ -91,12 +91,12 @@ export class ProfileComponent implements OnInit {
         this.savingProfile = false;
         if (res.success) {
           this.auth.updateCurrentUser({ fullname });
-          this.snack.open('Profil yangilandi', 'OK', { duration: 3000 });
+          this.toast.success('Profil yangilandi');
         } else {
-          this.snack.open(res.message ?? 'Xato', 'OK', { duration: 3000 });
+          this.toast.error(res.message ?? 'Xato');
         }
       },
-      error: () => { this.savingProfile = false; this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }); },
+      error: () => { this.savingProfile = false; this.toast.error('Xato yuz berdi'); },
     });
   }
 
@@ -104,7 +104,7 @@ export class ProfileComponent implements OnInit {
     if (this.passwordForm.invalid) { this.passwordForm.markAllAsTouched(); return; }
     const { oldPassword, newPassword, confirmPassword } = this.passwordForm.value;
     if (newPassword !== confirmPassword) {
-      this.snack.open('Yangi parollar mos kelmaydi', 'OK', { duration: 3000 });
+      this.toast.warning('Yangi parollar mos kelmaydi');
       return;
     }
     this.savingPassword = true;
@@ -113,12 +113,13 @@ export class ProfileComponent implements OnInit {
         this.savingPassword = false;
         if (res.success) {
           this.passwordForm.reset();
-          this.snack.open('Parol yangilandi', 'OK', { duration: 3000 });
+          this.toast.success('Parol yangilandi');
         } else {
-          this.snack.open(res.message ?? 'Xato', 'OK', { duration: 3000 });
+          this.toast.error(res.message ?? 'Xato');
         }
       },
-      error: () => { this.savingPassword = false; this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }); },
+      error: () => { this.savingPassword = false; this.toast.error('Xato yuz berdi'); },
     });
   }
 }
+

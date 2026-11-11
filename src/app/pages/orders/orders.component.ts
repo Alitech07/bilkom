@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../services/toast.service';
 import { GridComponent } from '../../components/grid/grid.component';
 import { GridPage } from '../../services/grid.service';
 import { Order, OrderService } from '../../services/order.service';
@@ -27,7 +27,7 @@ export class OrdersComponent {
 
   constructor(
     private dialog: MatDialog,
-    private snack: MatSnackBar,
+    private toast: ToastService,
     private orderService: OrderService,
     private router: Router,
   ) {}
@@ -44,12 +44,12 @@ export class OrdersComponent {
       : this.orderService.add(result.dto);
     req.subscribe({
       next: (res) => {
-        this.snack.open(res.message ?? 'Saqlandi', 'OK', { duration: 3000 });
+        this.toast.success(res.message ?? 'Saqlandi');
         this.grid?.load();
       },
       error: (err) => {
         const message = err?.error?.message ?? 'Xato yuz berdi';
-        this.snack.open(message, 'OK', { duration: 4000 });
+        this.toast.error(message);
       },
     });
   }
@@ -69,7 +69,7 @@ export class OrdersComponent {
           data: { order }, width: '720px', disableClose: true,
         }).afterClosed().subscribe((result: OrderFormResult | undefined) => this.saveResult(result));
       },
-      error: () => this.snack.open('Buyurtma ma\'lumotlarini yuklashda xato', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Buyurtma ma\'lumotlarini yuklashda xato'),
     });
   }
 
@@ -78,10 +78,11 @@ export class OrdersComponent {
     if (!id) return;
     this.orderService.delete(id).subscribe({
       next: (res) => {
-        this.snack.open(res.message ?? 'O\'chirildi', 'OK', { duration: 3000 });
+        this.toast.success(res.message ?? 'O\'chirildi');
         this.grid?.load();
       },
-      error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+

@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+﻿import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../../services/toast.service';
 import { SupplierService, Supplier } from '../../../services/supplier.service';
 import { PurchaseService, PurchaseDto } from '../../../services/purchase.service';
 import { ProductService, Product } from '../../../services/product.service';
@@ -38,7 +38,7 @@ export class AddEditPurchaseFormComponent implements OnInit {
     private purchaseService: PurchaseService,
     private productService: ProductService,
     private settingsService: SettingsService,
-    private snack: MatSnackBar,
+    private toast: ToastService,
     private dialogRef: MatDialogRef<AddEditPurchaseFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Record<string, any> | null
   ) {
@@ -149,20 +149,20 @@ export class AddEditPurchaseFormComponent implements OnInit {
         next: res => {
           this.saving = false;
           this.savedId = existingId;
-          this.snack.open(res.message ?? 'Saqlandi', 'OK', { duration: 3000 });
+          this.toast.success(res.message ?? 'Saqlandi');
           this.onSaved?.();
         },
-        error: () => { this.saving = false; this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }); },
+        error: () => { this.saving = false; this.toast.error('Xato yuz berdi'); },
       });
     } else {
       this.purchaseService.add(dto).subscribe({
         next: res => {
           this.saving = false;
           this.savedId = (res as any).object ?? null;
-          this.snack.open(res.message ?? 'Saqlandi', 'OK', { duration: 3000 });
+          this.toast.success(res.message ?? 'Saqlandi');
           this.onSaved?.();
         },
-        error: () => { this.saving = false; this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }); },
+        error: () => { this.saving = false; this.toast.error('Xato yuz berdi'); },
       });
     }
   }
@@ -178,3 +178,5 @@ export class AddEditPurchaseFormComponent implements OnInit {
     this.dialogRef.close(result);
   }
 }
+
+

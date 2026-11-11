@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../services/toast.service';
 import { RoleDto, RolesService } from '../../services/roles.service';
 import { GridComponent } from '../../components/grid/grid.component';
 import { GridPage } from '../../services/grid.service';
@@ -27,7 +27,7 @@ export class RolesComponent {
   constructor(
     private rolesService: RolesService,
     private dialog: MatDialog,
-    private snack: MatSnackBar,
+    private toast: ToastService,
   ) {}
 
   onExcel(): void { this.grid?.exportToExcel(); }
@@ -39,10 +39,10 @@ export class RolesComponent {
       if (!dto) return;
       this.rolesService.add(dto).subscribe({
         next: (res) => {
-          this.snack.open(res.message ?? 'Rol qo\'shildi', 'OK', { duration: 3000 });
+          this.toast.success(res.message ?? 'Rol qo\'shildi');
           this.grid.load();
         },
-        error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+        error: () => this.toast.error('Xato yuz berdi'),
       });
     });
   }
@@ -56,24 +56,25 @@ export class RolesComponent {
           if (!dto) return;
           this.rolesService.edit(role.id, dto).subscribe({
             next: (res) => {
-              this.snack.open(res.message ?? 'Rol yangilandi', 'OK', { duration: 3000 });
+              this.toast.success(res.message ?? 'Rol yangilandi');
               this.grid.load();
             },
-            error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+            error: () => this.toast.error('Xato yuz berdi'),
           });
         });
       },
-      error: () => this.snack.open('Rol ma\'lumotlarini yuklashda xato', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Rol ma\'lumotlarini yuklashda xato'),
     });
   }
 
   onDelete(row: Record<string, any>): void {
     this.rolesService.delete(row['id']).subscribe({
       next: (res) => {
-        this.snack.open(res.message ?? 'Rol o\'chirildi', 'OK', { duration: 3000 });
+        this.toast.success(res.message ?? 'Rol o\'chirildi');
         this.grid.load();
       },
-      error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+

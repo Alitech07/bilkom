@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../services/toast.service';
 import { CategoryService } from '../../services/category.service';
 import { GridComponent } from '../../components/grid/grid.component';
 import { GridPage } from '../../services/grid.service';
@@ -27,7 +27,7 @@ export class CategoriesComponent {
   constructor(
     private categoryService: CategoryService,
     private dialog: MatDialog,
-    private snack: MatSnackBar,
+    private toast: ToastService,
   ) {}
 
   openAdd(): void {
@@ -37,10 +37,10 @@ export class CategoriesComponent {
       if (!dto) return;
       this.categoryService.add(dto).subscribe({
         next: (res) => {
-          this.snack.open(res.message ?? 'Qo\'shildi', 'OK', { duration: 3000 });
+          this.toast.success(res.message ?? 'Qo\'shildi');
           this.grid.load();
         },
-        error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+        error: () => this.toast.error('Xato yuz berdi'),
       });
     });
   }
@@ -54,24 +54,25 @@ export class CategoriesComponent {
           if (!dto) return;
           this.categoryService.edit(category.id, dto).subscribe({
             next: (res) => {
-              this.snack.open(res.message ?? 'Yangilandi', 'OK', { duration: 3000 });
+              this.toast.success(res.message ?? 'Yangilandi');
               this.grid.load();
             },
-            error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+            error: () => this.toast.error('Xato yuz berdi'),
           });
         });
       },
-      error: () => this.snack.open('Ma\'lumotlarni yuklashda xato', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Ma\'lumotlarni yuklashda xato'),
     });
   }
 
   onDelete(row: Record<string, any>): void {
     this.categoryService.delete(row['id']).subscribe({
       next: (res) => {
-        this.snack.open(res.message ?? 'O\'chirildi', 'OK', { duration: 3000 });
+        this.toast.success(res.message ?? 'O\'chirildi');
         this.grid.load();
       },
-      error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+

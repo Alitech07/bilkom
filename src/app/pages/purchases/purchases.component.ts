@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../services/toast.service';
 import { GridComponent } from '../../components/grid/grid.component';
 import { GridPage } from '../../services/grid.service';
 import { PurchaseService } from '../../services/purchase.service';
@@ -35,7 +35,7 @@ export class PurchasesComponent {
 
   constructor(
     private dialog: MatDialog,
-    private snack: MatSnackBar,
+    private toast: ToastService,
     private purchaseService: PurchaseService,
   ) {}
 
@@ -54,15 +54,15 @@ export class PurchasesComponent {
         // "Saqlash" orqali allaqachon saqlangan — yakuniy holat bilan edit
         this.purchaseService.edit(result.id, result.dto).subscribe({
           next: () => this.reload(),
-          error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+          error: () => this.toast.error('Xato yuz berdi'),
         });
       } else {
         this.purchaseService.add(result.dto).subscribe({
           next: (res) => {
-            this.snack.open(res.message ?? 'Xarid qo\'shildi', 'OK', { duration: 3000 });
+            this.toast.success(res.message ?? 'Xarid qo\'shildi');
             this.reload();
           },
-          error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+          error: () => this.toast.error('Xato yuz berdi'),
         });
       }
     });
@@ -78,10 +78,10 @@ export class PurchasesComponent {
       if (!id) return;
       this.purchaseService.edit(id, result.dto).subscribe({
         next: (res) => {
-          this.snack.open(res.message ?? 'Yangilandi', 'OK', { duration: 3000 });
+          this.toast.success(res.message ?? 'Yangilandi');
           this.reload();
         },
-        error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+        error: () => this.toast.error('Xato yuz berdi'),
       });
     });
   }
@@ -89,7 +89,7 @@ export class PurchasesComponent {
   onFileClick(row: Record<string, any>): void {
     const path: string = row['certificate_path'] ?? row['certificatePath'] ?? '';
     if (!path) {
-      this.snack.open('Fayl mavjud emas', 'OK', { duration: 3000 });
+      this.toast.success('Fayl mavjud emas');
       return;
     }
     const fileName = path.split('/').pop() ?? '';
@@ -108,10 +108,11 @@ export class PurchasesComponent {
     if (!id) return;
     this.purchaseService.delete(id).subscribe({
       next: (res) => {
-        this.snack.open(res.message ?? 'O\'chirildi', 'OK', { duration: 3000 });
+        this.toast.success(res.message ?? 'O\'chirildi');
         this.grid?.load();
       },
-      error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+

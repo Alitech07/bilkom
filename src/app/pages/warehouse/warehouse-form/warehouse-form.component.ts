@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+﻿import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../../services/toast.service';
 import { GridComponent } from '../../../components/grid/grid.component';
 import { Product, ProductService } from '../../../services/product.service';
 import { PurchaseService } from '../../../services/purchase.service';
@@ -41,7 +41,7 @@ export class WarehouseFormComponent implements OnInit {
     private productService: ProductService,
     private purchaseService: PurchaseService,
     private settingsService: SettingsService,
-    private snack: MatSnackBar,
+    private toast: ToastService,
     private dialogRef: MatDialogRef<WarehouseFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Record<string, any> | null,
   ) {
@@ -96,7 +96,7 @@ export class WarehouseFormComponent implements OnInit {
     this.rejecting = true;
     this.purchaseService.reject(row['purchase_id']).subscribe({
       next: res => {
-        this.snack.open(res.message ?? 'Xarid qaytarildi', 'OK', { duration: 3000 });
+        this.toast.success(res.message ?? 'Xarid qaytarildi');
         this.rejecting = false;
         if (this.selectedRow?.['purchase_id'] === row['purchase_id']) {
           this.selectedRow = null;
@@ -105,7 +105,7 @@ export class WarehouseFormComponent implements OnInit {
         this.purchaseGrid?.load();
       },
       error: () => {
-        this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 });
+        this.toast.error('Xato yuz berdi');
         this.rejecting = false;
       },
     });
@@ -139,3 +139,5 @@ export class WarehouseFormComponent implements OnInit {
     this.dialogRef.close();
   }
 }
+
+

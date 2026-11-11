@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../services/toast.service';
 import { ClientDto, CustomerService } from '../../services/customer.service';
 import { GridComponent } from '../../components/grid/grid.component';
 import { GridPage } from '../../services/grid.service';
@@ -27,7 +27,7 @@ export class CustomersComponent {
   constructor(
     private customerService: CustomerService,
     private dialog: MatDialog,
-    private snack: MatSnackBar,
+    private toast: ToastService,
   ) {}
 
   onExcel(): void { this.grid?.exportToExcel(); }
@@ -39,10 +39,10 @@ export class CustomersComponent {
       if (!dto) return;
       this.customerService.add(dto).subscribe({
         next: (res) => {
-          this.snack.open(res.message ?? 'Mijoz qo\'shildi', 'OK', { duration: 3000 });
+          this.toast.success(res.message ?? 'Mijoz qo\'shildi');
           this.grid.load();
         },
-        error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+        error: () => this.toast.error('Xato yuz berdi'),
       });
     });
   }
@@ -56,24 +56,25 @@ export class CustomersComponent {
           if (!dto) return;
           this.customerService.edit(client.id, dto).subscribe({
             next: (res) => {
-              this.snack.open(res.message ?? 'Mijoz yangilandi', 'OK', { duration: 3000 });
+              this.toast.success(res.message ?? 'Mijoz yangilandi');
               this.grid.load();
             },
-            error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+            error: () => this.toast.error('Xato yuz berdi'),
           });
         });
       },
-      error: () => this.snack.open('Mijoz ma\'lumotlarini yuklashda xato', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Mijoz ma\'lumotlarini yuklashda xato'),
     });
   }
 
   onDelete(row: Record<string, any>): void {
     this.customerService.delete(row['id']).subscribe({
       next: (res) => {
-        this.snack.open(res.message ?? 'Mijoz o\'chirildi', 'OK', { duration: 3000 });
+        this.toast.success(res.message ?? 'Mijoz o\'chirildi');
         this.grid.load();
       },
-      error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+

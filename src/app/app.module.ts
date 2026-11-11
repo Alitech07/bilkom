@@ -64,6 +64,7 @@ import { CategoryFormComponent } from './pages/categories/category-form/category
 import { SettingsComponent } from './pages/settings/settings.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { HasPermissionDirective } from './directives/has-permission.directive';
+import { ToastComponent } from './components/toast/toast.component';
 
 const MATERIAL = [
   MatToolbarModule, MatButtonModule, MatIconModule, MatBadgeModule,
@@ -95,6 +96,7 @@ const MATERIAL = [
     SettingsComponent,
     ProfileComponent,
     HasPermissionDirective,
+    ToastComponent,
   ],
   imports: [
     BrowserModule, BrowserAnimationsModule,

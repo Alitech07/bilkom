@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+﻿import { Component, OnInit } from '@angular/core';
+import { ToastService } from '../../services/toast.service';
 import { forkJoin } from 'rxjs';
 import { Permission, PermissionService } from '../../services/permission.service';
 import { Role, RolesService } from '../../services/roles.service';
@@ -29,7 +29,7 @@ export class ModulesComponent implements OnInit {
   constructor(
     private permissionService: PermissionService,
     private rolesService: RolesService,
-    private snack: MatSnackBar,
+    private toast: ToastService,
   ) {}
 
   ngOnInit() {
@@ -46,7 +46,7 @@ export class ModulesComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
-        this.snack.open('Yuklab bo\'lmadi', 'OK', { duration: 3000 });
+        this.toast.error('Yuklab bo\'lmadi');
       },
     });
   }
@@ -109,7 +109,7 @@ export class ModulesComponent implements OnInit {
     }).subscribe({
       next: (res) => {
         this.saving = false;
-        this.snack.open(res.message ?? 'Saqlandi', 'OK', { duration: 3000 });
+        this.toast.success(res.message ?? 'Saqlandi');
         this.roles = this.roles.map(r =>
           r.id === this.selectedRole!.id
             ? { ...r, permissions: this.allPermissions.filter(p => permissionIds.includes(p.id)) }
@@ -119,8 +119,10 @@ export class ModulesComponent implements OnInit {
       },
       error: () => {
         this.saving = false;
-        this.snack.open('Saqlashda xato', 'OK', { duration: 3000 });
+        this.toast.success('Saqlashda xato');
       },
     });
   }
 }
+
+

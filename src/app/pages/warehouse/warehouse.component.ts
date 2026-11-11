@@ -1,6 +1,6 @@
-import { Component, QueryList, ViewChildren } from '@angular/core';
+﻿import { Component, QueryList, ViewChildren } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../services/toast.service';
 import { GridComponent } from '../../components/grid/grid.component';
 import { GridPage } from '../../services/grid.service';
 import { WarehouseService } from '../../services/warehouse.service';
@@ -28,7 +28,7 @@ export class WarehouseComponent {
 
   constructor(
     private dialog: MatDialog,
-    private snack: MatSnackBar,
+    private toast: ToastService,
     private warehouseService: WarehouseService,
   ) {}
 
@@ -42,10 +42,10 @@ export class WarehouseComponent {
         : this.warehouseService.add(result.dto);
       req.subscribe({
         next: res => {
-          this.snack.open(res.message ?? 'Saqlandi', 'OK', { duration: 3000 });
+          this.toast.success(res.message ?? 'Saqlandi');
           this.grids[0]?.load();
         },
-        error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+        error: () => this.toast.error('Xato yuz berdi'),
       });
     });
   }
@@ -62,10 +62,11 @@ export class WarehouseComponent {
     if (!id) return;
     this.warehouseService.delete(id).subscribe({
       next: res => {
-        this.snack.open(res.message ?? 'O\'chirildi', 'OK', { duration: 3000 });
+        this.toast.success(res.message ?? 'O\'chirildi');
         this.grids[0]?.load();
       },
-      error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+

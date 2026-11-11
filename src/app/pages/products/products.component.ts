@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastService } from '../../services/toast.service';
 import { ProductDto, ProductService } from '../../services/product.service';
 import { GridComponent } from '../../components/grid/grid.component';
 import { GridPage } from '../../services/grid.service';
@@ -27,7 +27,7 @@ export class ProductsComponent {
   constructor(
     private productService: ProductService,
     private dialog: MatDialog,
-    private snack: MatSnackBar,
+    private toast: ToastService,
   ) {}
 
   onExcel(): void { this.grid?.exportToExcel(); }
@@ -39,10 +39,10 @@ export class ProductsComponent {
       if (!dto) return;
       this.productService.add(dto).subscribe({
         next: (res) => {
-          this.snack.open(res.message ?? 'Mahsulot qo\'shildi', 'OK', { duration: 3000 });
+          this.toast.success(res.message ?? 'Mahsulot qo\'shildi');
           this.grid.load();
         },
-        error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+        error: () => this.toast.error('Xato yuz berdi'),
       });
     });
   }
@@ -50,7 +50,7 @@ export class ProductsComponent {
   onEdit(row: Record<string, any>): void {
     const id = Number(row['id'] ?? row['product_id']);
     if (!id) {
-      this.snack.open('Mahsulot ID topilmadi — view\'da "id" ustuni bo\'lishi kerak', 'OK', { duration: 4000 });
+      this.toast.success('Mahsulot ID topilmadi — view\'da "id" ustuni bo\'lishi kerak');
       return;
     }
     this.productService.getById(id).subscribe({
@@ -61,14 +61,14 @@ export class ProductsComponent {
           if (!dto) return;
           this.productService.edit(id, dto).subscribe({
             next: (res) => {
-              this.snack.open(res.message ?? 'Mahsulot yangilandi', 'OK', { duration: 3000 });
+              this.toast.success(res.message ?? 'Mahsulot yangilandi');
               this.grid.load();
             },
-            error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+            error: () => this.toast.error('Xato yuz berdi'),
           });
         });
       },
-      error: () => this.snack.open('Mahsulot ma\'lumotlarini yuklashda xato', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Mahsulot ma\'lumotlarini yuklashda xato'),
     });
   }
 
@@ -77,10 +77,11 @@ export class ProductsComponent {
     if (!id) return;
     this.productService.delete(id).subscribe({
       next: (res) => {
-        this.snack.open(res.message ?? 'Mahsulot o\'chirildi', 'OK', { duration: 3000 });
+        this.toast.success(res.message ?? 'Mahsulot o\'chirildi');
         this.grid.load();
       },
-      error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
+      error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+
