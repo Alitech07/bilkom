@@ -32,6 +32,43 @@
     </mat-card>
   </div>
 
+  <!-- Charts -->
+  <div class="charts-grid" *ngIf="chartsReady">
+
+    <!-- Donut: Mahsulot ulushi -->
+    <mat-card class="chart-card">
+      <div class="chart-card__header">
+        <span class="chart-card__title">Mahsulot ulushi</span>
+        <span class="chart-card__sub">Xarididagi mahsulotlar bo'yicha</span>
+      </div>
+      <div #donutChart></div>
+    </mat-card>
+
+    <!-- Bar: Yetkazib beruvchilar -->
+    <mat-card class="chart-card">
+      <div class="chart-card__header">
+        <span class="chart-card__title">Yetkazib beruvchilar</span>
+        <span class="chart-card__sub">Xaridlar soni bo'yicha</span>
+      </div>
+      <div #supplierChart></div>
+    </mat-card>
+
+    <!-- Bar: Buyurtmalar statusi -->
+    <mat-card class="chart-card chart-card--wide">
+      <div class="chart-card__header">
+        <span class="chart-card__title">Buyurtmalar statusi</span>
+        <span class="chart-card__sub">Joriy holat bo'yicha taqsimot</span>
+      </div>
+      <div #orderChart></div>
+    </mat-card>
+
+  </div>
+
+  <!-- Charts skeleton -->
+  <div class="charts-grid" *ngIf="!chartsReady">
+    <div class="chart-skeleton" *ngFor="let i of [1,2,3]"></div>
+  </div>
+
   <!-- Recent purchases grid -->
   <p class="section-title">So'nggi xaridlar</p>
   <app-grid [gridId]="gridId" [showActions]="false"></app-grid>

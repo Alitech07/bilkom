@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, QueryList, ViewChildren } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GridComponent } from '../../components/grid/grid.component';
@@ -12,23 +12,25 @@ import { WarehouseFormComponent, WarehouseFormResult } from './warehouse-form/wa
   styleUrls: ['./warehouse.component.scss']
 })
 export class WarehouseComponent {
-  readonly gridId = 3;
+  // gridId 3 = Ombor; 14,16,17,18 = qolgan tablar (DB da sozlanadi)
+  readonly tabGridIds = [3, 16, 17, 18, 19];
 
-  @ViewChild(GridComponent) grid!: GridComponent;
-  pageConfig: GridPage | null = null;
+  activeTab = 0;
 
-  get cfgSearch(): boolean { return this.pageConfig?.gridConfig.search ?? false; }
-  get cfgFilter(): boolean { return this.pageConfig?.gridConfig.filter ?? false; }
-  get cfgExcel(): boolean  { return !!this.pageConfig?.gridColumns?.some(c => c.exportable); }
+  @ViewChildren('g') gridList!: QueryList<GridComponent>;
+  get grids(): GridComponent[] { return this.gridList?.toArray() ?? []; }
+
+  pageConfigs: (GridPage | null)[] = [null, null, null, null, null];
+
+  cfgSearch(i: number): boolean { return this.pageConfigs[i]?.gridConfig.search ?? false; }
+  cfgFilter(i: number): boolean { return this.pageConfigs[i]?.gridConfig.filter ?? false; }
+  cfgExcel(i: number):  boolean { return !!this.pageConfigs[i]?.gridColumns?.some(c => c.exportable); }
 
   constructor(
     private dialog: MatDialog,
     private snack: MatSnackBar,
     private warehouseService: WarehouseService,
   ) {}
-
-  onSearch(text: string): void { this.grid?.applyFilter(text); }
-  onExcel(): void { this.grid?.exportToExcel(); }
 
   private openForm(data: Record<string, any> | null, width = '560px'): void {
     this.dialog.open(WarehouseFormComponent, {
@@ -41,27 +43,18 @@ export class WarehouseComponent {
       req.subscribe({
         next: res => {
           this.snack.open(res.message ?? 'Saqlandi', 'OK', { duration: 3000 });
-          this.grid.load();
+          this.grids[0]?.load();
         },
         error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
       });
     });
   }
 
-  openAdd(): void {
-    this.openForm({ purchaseMode: true }, '900px');
-  }
-
-  openAddNew(): void {
-    this.openForm(null);
-  }
+  openAdd(): void    { this.openForm({ purchaseMode: true }, '900px'); }
+  openAddNew(): void { this.openForm(null); }
 
   onEdit(row: Record<string, any>): void {
-    const isPurchaseRow = !!row['purchase_id'];
-    this.openForm({
-      ...row,
-      purchaseMode: isPurchaseRow,
-    });
+    this.openForm({ ...row, purchaseMode: !!row['purchase_id'] });
   }
 
   onDelete(row: Record<string, any>): void {
@@ -70,7 +63,7 @@ export class WarehouseComponent {
     this.warehouseService.delete(id).subscribe({
       next: res => {
         this.snack.open(res.message ?? 'O\'chirildi', 'OK', { duration: 3000 });
-        this.grid.load();
+        this.grids[0]?.load();
       },
       error: () => this.snack.open('Xato yuz berdi', 'OK', { duration: 3000 }),
     });

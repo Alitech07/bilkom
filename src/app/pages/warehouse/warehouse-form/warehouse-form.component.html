@@ -20,62 +20,16 @@
 
       <ng-container *ngIf="selectedRow">
 
-        <div class="purchase-info">
-          <div class="info-row">
-            <span class="info-label">Mahsulot</span>
-            <span class="info-value">{{ selectedRow['product_names'] ?? '—' }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Yetkazuvchi</span>
-            <span class="info-value">{{ selectedRow['supplier_name'] ?? '—' }}</span>
-          </div>
-          <div class="info-row" *ngIf="selectedRow['brand']">
-            <span class="info-label">Brend</span>
-            <span class="info-value">{{ selectedRow['brand'] }}</span>
-          </div>
-          <div class="info-row" *ngIf="selectedRow['country']">
-            <span class="info-label">Mamlakat</span>
-            <span class="info-value">{{ selectedRow['country'] }}</span>
-          </div>
-        </div>
+        <app-grid
+          #itemsGrid
+          [gridId]="itemsGridId"
+          [showActions]="true"
+          [editLabel]="'Tanlash'"
+          [deleteLabel]="''"
+          (editClick)="onSelectItem($event)"
+        ></app-grid>
 
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>Qoldiq miqdori</mat-label>
-            <input matInput type="number" formControlName="residual" placeholder="0">
-            <mat-error *ngIf="form.get('residual')?.hasError('required')">Majburiy maydon</mat-error>
-            <mat-error *ngIf="form.get('residual')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>O'lchov birligi</mat-label>
-            <mat-select formControlName="measure">
-              <mat-option *ngFor="let m of measures" [value]="m">{{ m }}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="form.get('measure')?.hasError('required')">Majburiy maydon</mat-error>
-          </mat-form-field>
-        </div>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Narxi</mat-label>
-          <input matInput type="number" formControlName="price" placeholder="0.00">
-          <mat-error *ngIf="form.get('price')?.hasError('min')">0 dan kichik bo'lmaydi</mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Valyuta</mat-label>
-          <mat-select formControlName="currencyId">
-            <mat-option [value]="null">— Tanlanmagan —</mat-option>
-            <mat-option *ngFor="let c of currencies" [value]="c.id">{{ c.name }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Saqlash joyi</mat-label>
-          <input matInput formControlName="storageSpace" placeholder="Masalan: A-1 sektor, 3-qator">
-        </mat-form-field>
-
-        <div class="toggle-field">
+        <div class="toggle-field" *ngIf="selectedItem">
           <span class="toggle-label">Holat</span>
           <mat-slide-toggle formControlName="state" color="primary">
             {{ form.get('state')?.value ? 'Faol' : 'Nofaol' }}
@@ -147,7 +101,7 @@
 <mat-dialog-actions class="dialog-actions">
   <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
   <button mat-raised-button color="primary" (click)="submit()"
-          [disabled]="purchaseMode && !selectedRow">
+          [disabled]="purchaseMode && !selectedItem">
     {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
   </button>
 </mat-dialog-actions>

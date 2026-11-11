@@ -3,33 +3,124 @@
   <p class="page-subtitle">Ombordagi mahsulotlar va qoldiqlar</p>
 </div>
 
-<app-grid-toolbar
-  [showSearch]="cfgSearch"
-  [showFilter]="cfgFilter"
-  [showExcel]="cfgExcel"
-  (searchChange)="onSearch($event)"
-  (excelClick)="onExcel()"
->
-  <button *appHasPermission="'WAREHOUSE_CREATE'" mat-raised-button color="primary" (click)="openAdd()">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px">
-      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-    </svg>
-    Qo'shish
-  </button>
-  <button *appHasPermission="'WAREHOUSE_CREATE'" mat-stroked-button color="primary" (click)="openAddNew()" style="margin-left:8px">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px">
-      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><line x1="17.5" y1="14" x2="17.5" y2="21"/><line x1="14" y1="17.5" x2="21" y2="17.5"/>
-    </svg>
-    Yangi mahsulot
-  </button>
-</app-grid-toolbar>
+<mat-tab-group [(selectedIndex)]="activeTab" animationDuration="200ms" class="warehouse-tabs">
 
-<app-grid
-  [gridId]="gridId"
-  [showActions]="true"
-  [editPermission]="'WAREHOUSE_EDIT'"
-  [deletePermission]="'WAREHOUSE_DELETE'"
-  (configLoaded)="pageConfig = $event"
-  (editClick)="onEdit($event)"
-  (deleteClick)="onDelete($event)"
-></app-grid>
+  <!-- ── 1. Ombor ── -->
+  <mat-tab label="Ombor">
+    <ng-template matTabContent>
+      <div class="tab-content">
+        <app-grid-toolbar
+          [showSearch]="cfgSearch(0)"
+          [showFilter]="cfgFilter(0)"
+          [showExcel]="cfgExcel(0)"
+          (searchChange)="grids[0]?.applyFilter($event)"
+          (excelClick)="grids[0]?.exportToExcel()"
+        >
+          <button *appHasPermission="'WAREHOUSE_CREATE'" mat-raised-button color="primary" (click)="openAdd()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Qo'shish
+          </button>
+          <button *appHasPermission="'WAREHOUSE_CREATE'" mat-stroked-button color="primary" (click)="openAddNew()" style="margin-left:8px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px">
+              <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><line x1="17.5" y1="14" x2="17.5" y2="21"/><line x1="14" y1="17.5" x2="21" y2="17.5"/>
+            </svg>
+            Yangi mahsulot
+          </button>
+        </app-grid-toolbar>
+
+        <app-grid #g
+          [gridId]="tabGridIds[0]"
+          [showActions]="true"
+          [editPermission]="'WAREHOUSE_EDIT'"
+          [deletePermission]="'WAREHOUSE_DELETE'"
+          (configLoaded)="pageConfigs[0] = $event"
+          (editClick)="onEdit($event)"
+          (deleteClick)="onDelete($event)"
+        ></app-grid>
+      </div>
+    </ng-template>
+  </mat-tab>
+
+  <!-- ── 2. Joriy qoldiq ── -->
+  <mat-tab label="Joriy qoldiq">
+    <ng-template matTabContent>
+      <div class="tab-content">
+        <app-grid-toolbar
+          [showSearch]="cfgSearch(1)"
+          [showFilter]="cfgFilter(1)"
+          [showExcel]="cfgExcel(1)"
+          (searchChange)="grids[1]?.applyFilter($event)"
+          (excelClick)="grids[1]?.exportToExcel()"
+        ></app-grid-toolbar>
+
+        <app-grid #g
+          [gridId]="tabGridIds[1]"
+          (configLoaded)="pageConfigs[1] = $event"
+        ></app-grid>
+      </div>
+    </ng-template>
+  </mat-tab>
+
+  <!-- ── 3. Kirim ── -->
+  <mat-tab label="Kirim">
+    <ng-template matTabContent>
+      <div class="tab-content">
+        <app-grid-toolbar
+          [showSearch]="cfgSearch(2)"
+          [showFilter]="cfgFilter(2)"
+          [showExcel]="cfgExcel(2)"
+          (searchChange)="grids[2]?.applyFilter($event)"
+          (excelClick)="grids[2]?.exportToExcel()"
+        ></app-grid-toolbar>
+
+        <app-grid #g
+          [gridId]="tabGridIds[2]"
+          (configLoaded)="pageConfigs[2] = $event"
+        ></app-grid>
+      </div>
+    </ng-template>
+  </mat-tab>
+
+  <!-- ── 4. Chiqim ── -->
+  <mat-tab label="Chiqim">
+    <ng-template matTabContent>
+      <div class="tab-content">
+        <app-grid-toolbar
+          [showSearch]="cfgSearch(3)"
+          [showFilter]="cfgFilter(3)"
+          [showExcel]="cfgExcel(3)"
+          (searchChange)="grids[3]?.applyFilter($event)"
+          (excelClick)="grids[3]?.exportToExcel()"
+        ></app-grid-toolbar>
+
+        <app-grid #g
+          [gridId]="tabGridIds[3]"
+          (configLoaded)="pageConfigs[3] = $event"
+        ></app-grid>
+      </div>
+    </ng-template>
+  </mat-tab>
+
+  <!-- ── 5. Qaytarilgan ── -->
+  <mat-tab label="Qaytarilgan">
+    <ng-template matTabContent>
+      <div class="tab-content">
+        <app-grid-toolbar
+          [showSearch]="cfgSearch(4)"
+          [showFilter]="cfgFilter(4)"
+          [showExcel]="cfgExcel(4)"
+          (searchChange)="grids[4]?.applyFilter($event)"
+          (excelClick)="grids[4]?.exportToExcel()"
+        ></app-grid-toolbar>
+
+        <app-grid #g
+          [gridId]="tabGridIds[4]"
+          (configLoaded)="pageConfigs[4] = $event"
+        ></app-grid>
+      </div>
+    </ng-template>
+  </mat-tab>
+
+</mat-tab-group>

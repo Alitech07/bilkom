@@ -24,11 +24,14 @@ export class WarehouseFormComponent implements OnInit {
   form: FormGroup;
 
   readonly purchaseGridId = 15;
+  readonly itemsGridId    = 13;
   @ViewChild('purchaseGrid') purchaseGrid?: GridComponent;
+  @ViewChild('itemsGrid')    itemsGrid?:    GridComponent;
 
   products: Product[] = [];
   currencies: SettingsItem[] = [];
-  selectedRow: Record<string, any> | null = null;
+  selectedRow:  Record<string, any> | null = null;
+  selectedItem: Record<string, any> | null = null;
   rejecting = false;
 
   readonly measures = ['kg', 'g', 'tonna', 'litr', 'ml', 'dona', 'm³'];
@@ -75,8 +78,18 @@ export class WarehouseFormComponent implements OnInit {
   }
 
   onSelectPurchase(row: Record<string, any>): void {
-    this.selectedRow = row;
+    this.selectedRow  = row;
+    this.selectedItem = null;
     this.form.get('purchaseId')!.setValue(row['purchase_id']);
+  }
+
+  onSelectItem(row: Record<string, any>): void {
+    this.selectedItem = row;
+    this.form.patchValue({
+      residual:  row['quantity'] ?? null,
+      price:     row['price']    ?? null,
+      measure:   row['measure']  ?? 'kg',
+    });
   }
 
   onRejectPurchase(row: Record<string, any>): void {
@@ -99,7 +112,8 @@ export class WarehouseFormComponent implements OnInit {
   }
 
   submit(): void {
-    if (this.form.invalid || (this.purchaseMode && !this.selectedRow)) {
+    if (this.purchaseMode && !this.selectedItem) return;
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }

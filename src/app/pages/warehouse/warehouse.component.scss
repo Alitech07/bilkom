@@ -1,0 +1,17 @@
+.warehouse-tabs {
+  margin-top: 4px;
+
+  ::ng-deep .mat-tab-label {
+    font-weight: 500;
+    font-size: 13.5px;
+    min-width: 100px;
+  }
+
+  ::ng-deep .mat-tab-body-content {
+    overflow: visible;
+  }
+}
+
+.tab-content {
+  padding-top: 16px;
+}
