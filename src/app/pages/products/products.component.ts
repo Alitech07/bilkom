@@ -39,8 +39,8 @@ export class ProductsComponent {
       if (!dto) return;
       this.productService.add(dto).subscribe({
         next: (res) => {
-          this.toast.success(res.message ?? 'Mahsulot qo\'shildi');
-          this.grid.load();
+          this.toast.showResult(res);
+          if (res.success) this.grid.load();
         },
         error: () => this.toast.error('Xato yuz berdi'),
       });
@@ -50,7 +50,7 @@ export class ProductsComponent {
   onEdit(row: Record<string, any>): void {
     const id = Number(row['id'] ?? row['product_id']);
     if (!id) {
-      this.toast.success('Mahsulot ID topilmadi — view\'da "id" ustuni bo\'lishi kerak');
+      this.toast.warning('Mahsulot ID topilmadi — view\'da "id" ustuni bo\'lishi kerak');
       return;
     }
     this.productService.getById(id).subscribe({
@@ -61,8 +61,8 @@ export class ProductsComponent {
           if (!dto) return;
           this.productService.edit(id, dto).subscribe({
             next: (res) => {
-              this.toast.success(res.message ?? 'Mahsulot yangilandi');
-              this.grid.load();
+              this.toast.showResult(res);
+              if (res.success) this.grid.load();
             },
             error: () => this.toast.error('Xato yuz berdi'),
           });
@@ -77,11 +77,13 @@ export class ProductsComponent {
     if (!id) return;
     this.productService.delete(id).subscribe({
       next: (res) => {
-        this.toast.success(res.message ?? 'Mahsulot o\'chirildi');
-        this.grid.load();
+        this.toast.showResult(res);
+        if (res.success) this.grid.load();
       },
       error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+
+
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -25,6 +25,7 @@ interface ApiResult<T> {
   success: boolean;
   message: string;
   object: T;
+  warning?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -58,3 +59,4 @@ export class PermissionService {
     return action.toLowerCase();
   }
 }
+

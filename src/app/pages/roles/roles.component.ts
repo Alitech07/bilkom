@@ -39,8 +39,8 @@ export class RolesComponent {
       if (!dto) return;
       this.rolesService.add(dto).subscribe({
         next: (res) => {
-          this.toast.success(res.message ?? 'Rol qo\'shildi');
-          this.grid.load();
+          this.toast.showResult(res);
+          if (res.success) this.grid.load();
         },
         error: () => this.toast.error('Xato yuz berdi'),
       });
@@ -56,8 +56,8 @@ export class RolesComponent {
           if (!dto) return;
           this.rolesService.edit(role.id, dto).subscribe({
             next: (res) => {
-              this.toast.success(res.message ?? 'Rol yangilandi');
-              this.grid.load();
+              this.toast.showResult(res);
+              if (res.success) this.grid.load();
             },
             error: () => this.toast.error('Xato yuz berdi'),
           });
@@ -70,11 +70,13 @@ export class RolesComponent {
   onDelete(row: Record<string, any>): void {
     this.rolesService.delete(row['id']).subscribe({
       next: (res) => {
-        this.toast.success(res.message ?? 'Rol o\'chirildi');
-        this.grid.load();
+        this.toast.showResult(res);
+        if (res.success) this.grid.load();
       },
       error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+
+
 

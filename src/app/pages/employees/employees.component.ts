@@ -55,8 +55,8 @@ export class EmployeesComponent implements OnInit {
       if (!dto) return;
       this.employeeService.add(dto).subscribe({
         next: res => {
-          this.toast.success(res.message ?? 'Xodim qo\'shildi');
-          this.empGrid?.load();
+          this.toast.showResult(res);
+          if (res.success) this.empGrid?.load();
         },
         error: () => this.toast.error('Xato yuz berdi'),
       });
@@ -74,8 +74,8 @@ export class EmployeesComponent implements OnInit {
           if (!dto) return;
           this.employeeService.edit(id, dto).subscribe({
             next: res => {
-              this.toast.success(res.message ?? 'Yangilandi');
-              this.empGrid?.load();
+              this.toast.showResult(res);
+              if (res.success) this.empGrid?.load();
             },
             error: () => this.toast.error('Xato yuz berdi'),
           });
@@ -90,8 +90,8 @@ export class EmployeesComponent implements OnInit {
     if (!id) return;
     this.employeeService.delete(id).subscribe({
       next: res => {
-        this.toast.success(res.message ?? 'Xodim o\'chirildi');
-        this.empGrid?.load();
+        this.toast.showResult(res);
+        if (res.success) this.empGrid?.load();
       },
       error: () => this.toast.error('Xato yuz berdi'),
     });
@@ -139,8 +139,8 @@ export class EmployeesComponent implements OnInit {
       if (!dto) return;
       this.userService.add(dto).subscribe({
         next: res => {
-          this.toast.success(res.message ?? 'Foydalanuvchi qo\'shildi');
-          this.loadUsers();
+          this.toast.showResult(res);
+          if (res.success) this.loadUsers();
         },
         error: () => this.toast.error('Xato yuz berdi'),
       });
@@ -156,8 +156,8 @@ export class EmployeesComponent implements OnInit {
       if (!dto) return;
       this.userService.edit(user.id, dto).subscribe({
         next: res => {
-          this.toast.success(res.message ?? 'Yangilandi');
-          this.loadUsers();
+          this.toast.showResult(res);
+          if (res.success) this.loadUsers();
         },
         error: () => this.toast.error('Xato yuz berdi'),
       });
@@ -169,11 +169,14 @@ export class EmployeesComponent implements OnInit {
     if (!id) return;
     this.userService.delete(id).subscribe({
       next: res => {
-        this.toast.success(res.message ?? 'Foydalanuvchi o\'chirildi');
-        this.loadUsers();
+        this.toast.showResult(res);
+        if (res.success) this.loadUsers();
       },
       error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+
+
+
 

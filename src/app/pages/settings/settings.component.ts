@@ -57,7 +57,7 @@ export class SettingsComponent implements OnInit {
     if (!name) return;
     this.settingsService.addPaymentType(name).subscribe({
       next: res => {
-        this.toast.success(res.message);
+        this.toast.showResult(res);
         this.newPaymentName = '';
         this.loadPaymentTypes();
       },
@@ -69,8 +69,8 @@ export class SettingsComponent implements OnInit {
     if (!name) return;
     this.settingsService.editPaymentType(item.id, name).subscribe({
       next: res => {
-        this.toast.success(res.message);
-        this.loadPaymentTypes();
+        this.toast.showResult(res);
+        if (res.success) this.loadPaymentTypes();
       },
     });
   }
@@ -78,8 +78,8 @@ export class SettingsComponent implements OnInit {
   deletePaymentType(id: number): void {
     this.settingsService.deletePaymentType(id).subscribe({
       next: res => {
-        this.toast.success(res.message);
-        this.loadPaymentTypes();
+        this.toast.showResult(res);
+        if (res.success) this.loadPaymentTypes();
       },
     });
   }
@@ -95,7 +95,7 @@ export class SettingsComponent implements OnInit {
     if (!name) return;
     this.settingsService.addDeliveryType(name).subscribe({
       next: res => {
-        this.toast.success(res.message);
+        this.toast.showResult(res);
         this.newDeliveryName = '';
         this.loadDeliveryTypes();
       },
@@ -107,8 +107,8 @@ export class SettingsComponent implements OnInit {
     if (!name) return;
     this.settingsService.editDeliveryType(item.id, name).subscribe({
       next: res => {
-        this.toast.success(res.message);
-        this.loadDeliveryTypes();
+        this.toast.showResult(res);
+        if (res.success) this.loadDeliveryTypes();
       },
     });
   }
@@ -116,8 +116,8 @@ export class SettingsComponent implements OnInit {
   deleteDeliveryType(id: number): void {
     this.settingsService.deleteDeliveryType(id).subscribe({
       next: res => {
-        this.toast.success(res.message);
-        this.loadDeliveryTypes();
+        this.toast.showResult(res);
+        if (res.success) this.loadDeliveryTypes();
       },
     });
   }
@@ -133,7 +133,7 @@ export class SettingsComponent implements OnInit {
     if (!name) return;
     this.settingsService.addCurrency(name).subscribe({
       next: res => {
-        this.toast.success(res.message);
+        this.toast.showResult(res);
         this.newCurrencyName = '';
         this.loadCurrencies();
       },
@@ -145,8 +145,8 @@ export class SettingsComponent implements OnInit {
     if (!name) return;
     this.settingsService.editCurrency(item.id, name).subscribe({
       next: res => {
-        this.toast.success(res.message);
-        this.loadCurrencies();
+        this.toast.showResult(res);
+        if (res.success) this.loadCurrencies();
       },
     });
   }
@@ -154,10 +154,12 @@ export class SettingsComponent implements OnInit {
   deleteCurrency(id: number): void {
     this.settingsService.deleteCurrency(id).subscribe({
       next: res => {
-        this.toast.success(res.message);
-        this.loadCurrencies();
+        this.toast.showResult(res);
+        if (res.success) this.loadCurrencies();
       },
     });
   }
 }
+
+
 

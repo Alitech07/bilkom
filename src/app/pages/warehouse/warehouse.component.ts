@@ -42,8 +42,8 @@ export class WarehouseComponent {
         : this.warehouseService.add(result.dto);
       req.subscribe({
         next: res => {
-          this.toast.success(res.message ?? 'Saqlandi');
-          this.grids[0]?.load();
+          this.toast.showResult(res, 'Saqlandi');
+          if (res.success) this.grids[0]?.load();
         },
         error: () => this.toast.error('Xato yuz berdi'),
       });
@@ -62,8 +62,8 @@ export class WarehouseComponent {
     if (!id) return;
     this.warehouseService.delete(id).subscribe({
       next: res => {
-        this.toast.success(res.message ?? 'O\'chirildi');
-        this.grids[0]?.load();
+        this.toast.showResult(res, 'O\'chirildi');
+        if (res.success) this.grids[0]?.load();
       },
       error: () => this.toast.error('Xato yuz berdi'),
     });

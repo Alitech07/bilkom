@@ -39,8 +39,8 @@ export class SuppliersComponent {
       if (!dto) return;
       this.supplierService.add(dto).subscribe({
         next: (res) => {
-          this.toast.success(res.message ?? 'Qo\'shildi');
-          this.grid.load();
+          this.toast.showResult(res);
+          if (res.success) this.grid.load();
         },
         error: () => this.toast.error('Xato yuz berdi'),
       });
@@ -56,8 +56,8 @@ export class SuppliersComponent {
           if (!dto) return;
           this.supplierService.edit(supplier.id, dto).subscribe({
             next: (res) => {
-              this.toast.success(res.message ?? 'Yangilandi');
-              this.grid.load();
+              this.toast.showResult(res);
+              if (res.success) this.grid.load();
             },
             error: () => this.toast.error('Xato yuz berdi'),
           });
@@ -70,11 +70,13 @@ export class SuppliersComponent {
   onDelete(row: Record<string, any>): void {
     this.supplierService.delete(row['id']).subscribe({
       next: (res) => {
-        this.toast.success(res.message ?? 'O\'chirildi');
-        this.grid.load();
+        this.toast.showResult(res);
+        if (res.success) this.grid.load();
       },
       error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+
+
 

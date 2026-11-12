@@ -37,7 +37,7 @@ export class PermissionsComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
-        this.toast.success('Ma\'lumotlarni yuklashda xato');
+        this.toast.error('Ma\'lumotlarni yuklashda xato');
       },
     });
   }
@@ -67,7 +67,7 @@ export class PermissionsComponent implements OnInit {
     }).subscribe({
       next: (res) => {
         this.saving = false;
-        this.toast.success(res.message ?? 'Saqlandi');
+        this.toast.showResult(res);
         this.roles = this.roles.map(r =>
           r.id === this.selectedRole!.id
             ? { ...r, permissions: this.moduleGroups.flatMap(g => g.rows).filter(row => row.checked).map(row => row.permission) }
@@ -77,9 +77,10 @@ export class PermissionsComponent implements OnInit {
       },
       error: () => {
         this.saving = false;
-        this.toast.success('Saqlashda xato');
+        this.toast.error('Saqlashda xato');
       },
     });
   }
 }
+
 

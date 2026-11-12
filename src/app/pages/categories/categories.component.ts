@@ -37,8 +37,8 @@ export class CategoriesComponent {
       if (!dto) return;
       this.categoryService.add(dto).subscribe({
         next: (res) => {
-          this.toast.success(res.message ?? 'Qo\'shildi');
-          this.grid.load();
+          this.toast.showResult(res);
+          if (res.success) this.grid.load();
         },
         error: () => this.toast.error('Xato yuz berdi'),
       });
@@ -54,8 +54,8 @@ export class CategoriesComponent {
           if (!dto) return;
           this.categoryService.edit(category.id, dto).subscribe({
             next: (res) => {
-              this.toast.success(res.message ?? 'Yangilandi');
-              this.grid.load();
+              this.toast.showResult(res);
+              if (res.success) this.grid.load();
             },
             error: () => this.toast.error('Xato yuz berdi'),
           });
@@ -68,11 +68,13 @@ export class CategoriesComponent {
   onDelete(row: Record<string, any>): void {
     this.categoryService.delete(row['id']).subscribe({
       next: (res) => {
-        this.toast.success(res.message ?? 'O\'chirildi');
-        this.grid.load();
+        this.toast.showResult(res);
+        if (res.success) this.grid.load();
       },
       error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+
+
 

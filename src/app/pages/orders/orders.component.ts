@@ -44,8 +44,8 @@ export class OrdersComponent {
       : this.orderService.add(result.dto);
     req.subscribe({
       next: (res) => {
-        this.toast.success(res.message ?? 'Saqlandi');
-        this.grid?.load();
+        this.toast.showResult(res);
+        if (res.success) this.grid?.load();
       },
       error: (err) => {
         const message = err?.error?.message ?? 'Xato yuz berdi';
@@ -78,11 +78,12 @@ export class OrdersComponent {
     if (!id) return;
     this.orderService.delete(id).subscribe({
       next: (res) => {
-        this.toast.success(res.message ?? 'O\'chirildi');
-        this.grid?.load();
+        this.toast.showResult(res);
+        if (res.success) this.grid?.load();
       },
       error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+
 

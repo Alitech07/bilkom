@@ -114,11 +114,9 @@ export class ProfileComponent implements OnInit {
     this.http.put<{ success: boolean; message: string }>(`${this.base}/user/update-profile`, { fullname, position, phone, address }).subscribe({
       next: res => {
         this.savingProfile = false;
+        this.toast.showResult(res, 'Profil yangilandi');
         if (res.success) {
           this.auth.updateCurrentUser({ fullname, position, phone, address });
-          this.toast.success('Profil yangilandi');
-        } else {
-          this.toast.error(res.message ?? 'Xato');
         }
       },
       error: () => { this.savingProfile = false; this.toast.error('Xato yuz berdi'); },
@@ -136,12 +134,10 @@ export class ProfileComponent implements OnInit {
     this.http.put<{ success: boolean; message: string }>(`${this.base}/user/update-profile`, { oldPassword, newPassword }).subscribe({
       next: res => {
         this.savingPassword = false;
+        this.toast.showResult(res, 'Parol yangilandi');
         if (res.success) {
           this.passwordForm.reset();
           this.showPasswordForm = false;
-          this.toast.success('Parol yangilandi');
-        } else {
-          this.toast.error(res.message ?? 'Xato');
         }
       },
       error: () => { this.savingPassword = false; this.toast.error('Xato yuz berdi'); },

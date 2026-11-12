@@ -109,7 +109,7 @@ export class ModulesComponent implements OnInit {
     }).subscribe({
       next: (res) => {
         this.saving = false;
-        this.toast.success(res.message ?? 'Saqlandi');
+        this.toast.showResult(res);
         this.roles = this.roles.map(r =>
           r.id === this.selectedRole!.id
             ? { ...r, permissions: this.allPermissions.filter(p => permissionIds.includes(p.id)) }
@@ -119,10 +119,11 @@ export class ModulesComponent implements OnInit {
       },
       error: () => {
         this.saving = false;
-        this.toast.success('Saqlashda xato');
+        this.toast.error('Saqlashda xato');
       },
     });
   }
 }
+
 
 

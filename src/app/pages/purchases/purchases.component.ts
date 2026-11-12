@@ -59,7 +59,7 @@ export class PurchasesComponent {
       } else {
         this.purchaseService.add(result.dto).subscribe({
           next: (res) => {
-            this.toast.success(res.message ?? 'Xarid qo\'shildi');
+            this.toast.showResult(res);
             this.reload();
           },
           error: () => this.toast.error('Xato yuz berdi'),
@@ -78,7 +78,7 @@ export class PurchasesComponent {
       if (!id) return;
       this.purchaseService.edit(id, result.dto).subscribe({
         next: (res) => {
-          this.toast.success(res.message ?? 'Yangilandi');
+          this.toast.showResult(res);
           this.reload();
         },
         error: () => this.toast.error('Xato yuz berdi'),
@@ -89,7 +89,7 @@ export class PurchasesComponent {
   onFileClick(row: Record<string, any>): void {
     const path: string = row['certificate_path'] ?? row['certificatePath'] ?? '';
     if (!path) {
-      this.toast.success('Fayl mavjud emas');
+      this.toast.warning('Fayl biriktirilmagan');
       return;
     }
     const fileName = path.split('/').pop() ?? '';
@@ -108,11 +108,13 @@ export class PurchasesComponent {
     if (!id) return;
     this.purchaseService.delete(id).subscribe({
       next: (res) => {
-        this.toast.success(res.message ?? 'O\'chirildi');
-        this.grid?.load();
+        this.toast.showResult(res);
+        if (res.success) this.grid?.load();
       },
       error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+
+
 

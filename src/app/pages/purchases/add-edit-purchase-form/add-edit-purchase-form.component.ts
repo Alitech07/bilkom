@@ -149,7 +149,7 @@ export class AddEditPurchaseFormComponent implements OnInit {
         next: res => {
           this.saving = false;
           this.savedId = existingId;
-          this.toast.success(res.message ?? 'Saqlandi');
+          this.toast.showResult(res);
           this.onSaved?.();
         },
         error: () => { this.saving = false; this.toast.error('Xato yuz berdi'); },
@@ -159,7 +159,7 @@ export class AddEditPurchaseFormComponent implements OnInit {
         next: res => {
           this.saving = false;
           this.savedId = (res as any).object ?? null;
-          this.toast.success(res.message ?? 'Saqlandi');
+          this.toast.showResult(res);
           this.onSaved?.();
         },
         error: () => { this.saving = false; this.toast.error('Xato yuz berdi'); },
@@ -178,5 +178,6 @@ export class AddEditPurchaseFormComponent implements OnInit {
     this.dialogRef.close(result);
   }
 }
+
 
 

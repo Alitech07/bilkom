@@ -89,12 +89,10 @@ export class WarehouseFormComponent implements OnInit {
     this.warehouseService.addFromPurchase(purchaseId).subscribe({
       next: res => {
         this.addingPurchase = false;
+        this.toast.showResult(res);
         if (res.success) {
-          this.toast.success(res.message ?? 'Xarid omborga qo\'shildi');
           this.selectedRow = null;
           this.purchaseGrid?.load();
-        } else {
-          this.toast.error(res.message ?? 'Xato');
         }
       },
       error: () => {
@@ -108,7 +106,7 @@ export class WarehouseFormComponent implements OnInit {
     this.rejecting = true;
     this.purchaseService.reject(row['purchase_id']).subscribe({
       next: res => {
-        this.toast.success(res.message ?? 'Xarid qaytarildi');
+        this.toast.showResult(res);
         this.rejecting = false;
         if (this.selectedRow?.['purchase_id'] === row['purchase_id']) {
           this.selectedRow = null;
@@ -150,5 +148,6 @@ export class WarehouseFormComponent implements OnInit {
     this.dialogRef.close();
   }
 }
+
 
 

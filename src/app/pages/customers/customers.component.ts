@@ -39,8 +39,8 @@ export class CustomersComponent {
       if (!dto) return;
       this.customerService.add(dto).subscribe({
         next: (res) => {
-          this.toast.success(res.message ?? 'Mijoz qo\'shildi');
-          this.grid.load();
+          this.toast.showResult(res);
+          if (res.success) this.grid.load();
         },
         error: () => this.toast.error('Xato yuz berdi'),
       });
@@ -56,8 +56,8 @@ export class CustomersComponent {
           if (!dto) return;
           this.customerService.edit(client.id, dto).subscribe({
             next: (res) => {
-              this.toast.success(res.message ?? 'Mijoz yangilandi');
-              this.grid.load();
+              this.toast.showResult(res);
+              if (res.success) this.grid.load();
             },
             error: () => this.toast.error('Xato yuz berdi'),
           });
@@ -70,11 +70,13 @@ export class CustomersComponent {
   onDelete(row: Record<string, any>): void {
     this.customerService.delete(row['id']).subscribe({
       next: (res) => {
-        this.toast.success(res.message ?? 'Mijoz o\'chirildi');
-        this.grid.load();
+        this.toast.showResult(res);
+        if (res.success) this.grid.load();
       },
       error: () => this.toast.error('Xato yuz berdi'),
     });
   }
 }
+
+
 
