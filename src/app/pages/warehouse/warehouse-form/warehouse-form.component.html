@@ -14,7 +14,8 @@
         [showActions]="true"
         [editLabel]="'Qo\'shish'"
         [deleteLabel]="'Qaytarish'"
-        (editClick)="onSelectPurchase($event)"
+        (rowClick)="onSelectPurchase($event)"
+        (editClick)="onAddPurchase($event)"
         (deleteClick)="onRejectPurchase($event)"
       ></app-grid>
 
@@ -23,18 +24,8 @@
         <app-grid
           #itemsGrid
           [gridId]="itemsGridId"
-          [showActions]="true"
-          [editLabel]="'Tanlash'"
-          [deleteLabel]="''"
-          (editClick)="onSelectItem($event)"
+          [showActions]="false"
         ></app-grid>
-
-        <div class="toggle-field" *ngIf="selectedItem">
-          <span class="toggle-label">Holat</span>
-          <mat-slide-toggle formControlName="state" color="primary">
-            {{ form.get('state')?.value ? 'Faol' : 'Nofaol' }}
-          </mat-slide-toggle>
-        </div>
 
       </ng-container>
     </ng-container>
@@ -100,8 +91,7 @@
 
 <mat-dialog-actions class="dialog-actions">
   <button mat-stroked-button (click)="cancel()">Bekor qilish</button>
-  <button mat-raised-button color="primary" (click)="submit()"
-          [disabled]="purchaseMode && !selectedItem">
+  <button *ngIf="!purchaseMode" mat-raised-button color="primary" (click)="submit()">
     {{ isEdit ? 'Saqlash' : 'Qo\'shish' }}
   </button>
 </mat-dialog-actions>

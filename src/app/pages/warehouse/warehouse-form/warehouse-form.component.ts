@@ -6,7 +6,7 @@ import { GridComponent } from '../../../components/grid/grid.component';
 import { Product, ProductService } from '../../../services/product.service';
 import { PurchaseService } from '../../../services/purchase.service';
 import { SettingsItem, SettingsService } from '../../../services/settings.service';
-import { WarehouseDto } from '../../../services/warehouse.service';
+import { WarehouseDto, WarehouseService } from '../../../services/warehouse.service';
 
 export interface WarehouseFormResult {
   id?: number;
@@ -31,8 +31,8 @@ export class WarehouseFormComponent implements OnInit {
   products: Product[] = [];
   currencies: SettingsItem[] = [];
   selectedRow:  Record<string, any> | null = null;
-  selectedItem: Record<string, any> | null = null;
   rejecting = false;
+  addingPurchase = false;
 
   readonly measures = ['kg', 'g', 'tonna', 'litr', 'ml', 'dona', 'm³'];
 
@@ -41,6 +41,7 @@ export class WarehouseFormComponent implements OnInit {
     private productService: ProductService,
     private purchaseService: PurchaseService,
     private settingsService: SettingsService,
+    private warehouseService: WarehouseService,
     private toast: ToastService,
     private dialogRef: MatDialogRef<WarehouseFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Record<string, any> | null,
@@ -78,17 +79,28 @@ export class WarehouseFormComponent implements OnInit {
   }
 
   onSelectPurchase(row: Record<string, any>): void {
-    this.selectedRow  = row;
-    this.selectedItem = null;
-    this.form.get('purchaseId')!.setValue(row['purchase_id']);
+    this.selectedRow = row;
   }
 
-  onSelectItem(row: Record<string, any>): void {
-    this.selectedItem = row;
-    this.form.patchValue({
-      residual:  row['quantity'] ?? null,
-      price:     row['price']    ?? null,
-      measure:   row['measure']  ?? 'kg',
+  onAddPurchase(row: Record<string, any>): void {
+    const purchaseId = row['purchase_id'];
+    if (!purchaseId) { this.toast.error('Xarid ID topilmadi'); return; }
+    this.addingPurchase = true;
+    this.warehouseService.addFromPurchase(purchaseId).subscribe({
+      next: res => {
+        this.addingPurchase = false;
+        if (res.success) {
+          this.toast.success(res.message ?? 'Xarid omborga qo\'shildi');
+          this.selectedRow = null;
+          this.purchaseGrid?.load();
+        } else {
+          this.toast.error(res.message ?? 'Xato');
+        }
+      },
+      error: () => {
+        this.addingPurchase = false;
+        this.toast.error('Xato yuz berdi');
+      },
     });
   }
 
@@ -112,7 +124,6 @@ export class WarehouseFormComponent implements OnInit {
   }
 
   submit(): void {
-    if (this.purchaseMode && !this.selectedItem) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

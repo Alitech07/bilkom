@@ -79,6 +79,10 @@ export class WarehouseService {
     return this.http.post<ApiResult<null>>(`${this.base}/add`, dto);
   }
 
+  addFromPurchase(purchaseId: number): Observable<ApiResult<null>> {
+    return this.http.post<ApiResult<null>>(`${this.base}/add-from-purchase/${purchaseId}`, {});
+  }
+
   edit(id: number, dto: WarehouseDto): Observable<ApiResult<null>> {
     return this.http.put<ApiResult<null>>(`${this.base}/edit/${id}`, dto);
   }
