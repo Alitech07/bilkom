@@ -87,9 +87,23 @@
 
   <mat-divider vertical class="navbar__divider" *ngIf="weather$ | async"></mat-divider>
 
+  <!-- Tizim kurslari (qo'lda kiritilgan) -->
+  <ng-container *ngIf="systemRates$ | async as sys">
+    <div class="navbar__currencies" *ngIf="sys.length">
+      <span class="currency-group-label currency-group-label--system">Tizim</span>
+      <div class="currency-chip currency-chip--system" *ngFor="let r of sys"
+           [matTooltip]="'Tizim kursi · ' + (r.rateDate | date:'dd.MM.yyyy HH:mm')">
+        <span class="currency-chip__code">{{ r.currency.name }}</span>
+        <span class="currency-chip__rate">{{ r.rate | number:'1.0-2' }}</span>
+      </div>
+    </div>
+    <mat-divider vertical class="navbar__divider" *ngIf="sys.length"></mat-divider>
+  </ng-container>
+
   <!-- Valyuta kurslari (CBU) -->
   <div class="navbar__currencies" *ngIf="currencies$ | async as rates">
-    <div class="currency-chip" *ngFor="let r of rates" [matTooltip]="r.CcyNm_UZ + ' · ' + r.Date">
+    <span class="currency-group-label">MB</span>
+    <div class="currency-chip" *ngFor="let r of rates" [matTooltip]="'Markaziy bank · ' + r.CcyNm_UZ + ' · ' + r.Date">
       <span class="currency-chip__code">{{ r.Ccy }}</span>
       <span class="currency-chip__rate">{{ r.Rate | number:'1.0-2' }}</span>
       <span class="currency-chip__diff"

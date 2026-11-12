@@ -1,28 +1,49 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Observable, Subscription, timer } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CurrencyRate, CurrencyService } from '../../services/currency.service';
+import { CurrencyRate as SystemRate, SettingsService } from '../../services/settings.service';
 import { WeatherData, WeatherService } from '../../services/weather.service';
 import { environment } from '../../../environments/environment';
+
+const SYSTEM_RATES_REFRESH_MS = 5 * 60 * 1000;
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
   @Output() menuToggle = new EventEmitter<void>();
 
   readonly currencies$: Observable<CurrencyRate[]>;
+  readonly systemRates$: Observable<SystemRate[]>;
   readonly weather$: Observable<WeatherData | null>;
   showWeatherPanel = false;
 
   private _closeTimer: ReturnType<typeof setTimeout> | null = null;
+  private _ratesSub?: Subscription;
 
-  constructor(private auth: AuthService, currency: CurrencyService, weather: WeatherService, private router: Router) {
+  constructor(
+    private auth: AuthService,
+    currency: CurrencyService,
+    private settings: SettingsService,
+    weather: WeatherService,
+    private router: Router,
+  ) {
     this.currencies$ = currency.rates$;
+    this.systemRates$ = settings.currentRates$;
     this.weather$ = weather.weather$;
+  }
+
+  ngOnInit(): void {
+    this._ratesSub = timer(0, SYSTEM_RATES_REFRESH_MS).subscribe(() => this.settings.refreshRates());
+  }
+
+  ngOnDestroy(): void {
+    this._ratesSub?.unsubscribe();
+    if (this._closeTimer) clearTimeout(this._closeTimer);
   }
 
   onWeatherEnter(): void {

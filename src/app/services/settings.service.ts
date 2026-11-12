@@ -1,11 +1,29 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface SettingsItem {
   id: number;
   name: string;
+}
+
+export interface CurrencyRate {
+  id: number;
+  currency: SettingsItem;
+  rate: number;
+  rateDate: string;
+}
+
+export interface CurrencyRateDto {
+  currencyId: number;
+  rate: number;
+  rateDate: string;
+}
+
+export function isSomCurrency(name: string): boolean {
+  const n = (name ?? '').toLowerCase().replace(/['`ʻʼ‘’\s]/g, '');
+  return n === 'uzs' || n === 'som' || n === 'sum';
 }
 
 interface ApiResult<T> {
@@ -18,8 +36,21 @@ interface ApiResult<T> {
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
   private readonly base = `${environment.apiUrl}/settings`;
+  private readonly rates$ = new BehaviorSubject<CurrencyRate[]>([]);
+
+  /** Latest manually entered rate per currency (list is sorted newest first by the API). */
+  readonly currentRates$: Observable<CurrencyRate[]> = this.rates$.pipe(
+    map(list => {
+      const seen = new Set<number>();
+      return list.filter(r => !seen.has(r.currency.id) && !!seen.add(r.currency.id));
+    })
+  );
 
   constructor(private http: HttpClient) {}
+
+  refreshRates(): void {
+    this.getCurrencyRates().subscribe({ error: () => {} });
+  }
 
   getPaymentTypes(): Observable<SettingsItem[]> {
     return this.http.get<ApiResult<SettingsItem[]>>(`${this.base}/payment-types/list`).pipe(
@@ -73,6 +104,21 @@ export class SettingsService {
 
   deleteCurrency(id: number): Observable<ApiResult<null>> {
     return this.http.delete<ApiResult<null>>(`${this.base}/currencies/delete/${id}`);
+  }
+
+  getCurrencyRates(): Observable<CurrencyRate[]> {
+    return this.http.get<ApiResult<CurrencyRate[]>>(`${this.base}/currency-rates/list`).pipe(
+      map(res => res.object ?? []),
+      tap(list => this.rates$.next(list))
+    );
+  }
+
+  addCurrencyRate(dto: CurrencyRateDto): Observable<ApiResult<null>> {
+    return this.http.post<ApiResult<null>>(`${this.base}/currency-rates/add`, dto);
+  }
+
+  deleteCurrencyRate(id: number): Observable<ApiResult<null>> {
+    return this.http.delete<ApiResult<null>>(`${this.base}/currency-rates/delete/${id}`);
   }
 }
 

@@ -1,6 +1,6 @@
 <div class="page-header">
   <h1 class="page-title">Sozlamalar</h1>
-  <p class="page-subtitle">To'lov va yetkazib berish turlarini boshqaring</p>
+  <p class="page-subtitle">To'lov, yetkazib berish turlari, valyutalar va kurslarni boshqaring</p>
 </div>
 
 <div class="settings-grid">
@@ -159,6 +159,52 @@
     <div *appHasPermission="'SETTINGS_CREATE'" class="add-row">
       <input class="add-input" [(ngModel)]="newCurrencyName" placeholder="Yangi valyuta... (USD, EUR, UZS)" (keyup.enter)="addCurrency()">
       <button class="btn-add" (click)="addCurrency()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Qo'shish
+      </button>
+    </div>
+  </div>
+
+  <div class="settings-card">
+    <div class="card-header">
+      <h2 class="card-title">Valyuta kurslari</h2>
+      <p class="card-hint">1 birlik valyuta necha so'mga tengligi</p>
+    </div>
+
+    <ul class="items-list rates-list">
+      <li *ngFor="let r of rates" class="item-row">
+        <div class="rate-main">
+          <span class="rate-code">{{ r.currency.name }}</span>
+          <span class="rate-value">1 {{ r.currency.name }} = <b>{{ formatRate(r.rate) }}</b> so'm</span>
+        </div>
+        <span class="rate-date">{{ r.rateDate | date:'dd.MM.yyyy HH:mm' }}</span>
+        <span class="rate-badge" *ngIf="isCurrent(r)">Joriy</span>
+        <div class="item-actions">
+          <ng-container *appHasPermission="'SETTINGS_DELETE'">
+            <button class="btn-icon btn-danger" (click)="deleteRate(r.id)" title="O'chirish">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                <path d="M10 11v6"/><path d="M14 11v6"/>
+              </svg>
+            </button>
+          </ng-container>
+        </div>
+      </li>
+
+      <li *ngIf="rates.length === 0" class="empty-row">Hozircha kurs kiritilmagan</li>
+    </ul>
+
+    <div *appHasPermission="'SETTINGS_CREATE'" class="add-row rate-add-row">
+      <select class="add-input rate-select" [(ngModel)]="newRateCurrencyId">
+        <option [ngValue]="null" disabled>Valyuta</option>
+        <option *ngFor="let c of foreignCurrencies" [ngValue]="c.id">{{ c.name }}</option>
+      </select>
+      <input class="add-input" type="number" min="0" step="0.01" [(ngModel)]="newRateValue"
+             placeholder="Kurs (so'm)" (keyup.enter)="addRate()">
+      <input class="add-input rate-date-input" type="datetime-local" [(ngModel)]="newRateDate">
+      <button class="btn-add" (click)="addRate()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
