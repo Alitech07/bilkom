@@ -32,6 +32,8 @@ export class GridComponent implements OnChanges {
   @Input() selectable  = false;
   @Input() editLabel?: string;
   @Input() deleteLabel?: string;
+  @Input() filter: Record<string, string | number> | null = null;
+  @Input() clickableRows = false;
   @Output() editClick    = new EventEmitter<Record<string, any>>();
   @Output() deleteClick  = new EventEmitter<Record<string, any>>();
   @Output() fileClick    = new EventEmitter<Record<string, any>>();
@@ -39,6 +41,7 @@ export class GridComponent implements OnChanges {
   @Output() configLoaded = new EventEmitter<GridPage>();
 
   gridPage: GridPage | null = null;
+  activeRow: Record<string, any> | null = null;
   loading = false;
   error = '';
   filterText = '';
@@ -71,20 +74,27 @@ export class GridComponent implements OnChanges {
       this.loading = false;
       this.error = '';
     }
-    if (changes['gridId'] && this.gridId != null) {
+    if ((changes['gridId'] || changes['filter']) && this.gridId != null) {
       this.currentPage = 0;
       this.load();
     }
+  }
+
+  onRowClick(row: Record<string, any>): void {
+    if (!this.clickableRows) return;
+    this.activeRow = row;
+    this.rowClick.emit(row);
   }
 
   load(): void {
     this.loading = true;
     this.error = '';
     this.gridPage = null;
+    this.activeRow = null;
     this.sortKey = null;
     this.filterText = '';
 
-    this.gridService.getGrid(this.gridId!, this.currentPage).subscribe({
+    this.gridService.getGrid(this.gridId!, this.currentPage, this.filter).subscribe({
       next: (page) => { this.gridPage = page; this.loading = false; this.configLoaded.emit(page); },
       error: (err: Error) => { this.error = err.message; this.loading = false; },
     });

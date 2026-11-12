@@ -98,7 +98,11 @@
           </thead>
 
           <tbody>
-            <tr *ngFor="let row of sortedData; let odd = odd" [class.grid-row--odd]="odd">
+            <tr *ngFor="let row of sortedData; let odd = odd"
+                [class.grid-row--odd]="odd"
+                [class.grid-row--clickable]="clickableRows"
+                [class.grid-row--active]="clickableRows && row === activeRow"
+                (click)="onRowClick(row)">
               <td *ngIf="showCheckbox" class="grid-td grid-td--checkbox">
                 <input type="checkbox" class="grid-checkbox">
               </td>
@@ -110,7 +114,7 @@
               </td>
 
               <!-- Actions -->
-              <td *ngIf="showActionsColumn" class="grid-td grid-td--actions">
+              <td *ngIf="showActionsColumn" class="grid-td grid-td--actions" (click)="$event.stopPropagation()">
                 <button *ngIf="showFileBtnColumn" mat-icon-button class="action-btn action-btn--file" matTooltip="Faylni ko'rish" (click)="fileClick.emit(row)">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>

@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -61,10 +61,17 @@ export class GridService {
 
   constructor(private http: HttpClient) {}
 
-  getGrid(gridId: number, page: number = 0): Observable<GridPage> {
+  getGrid(gridId: number, page: number = 0, filter: Record<string, string | number> | null = null): Observable<GridPage> {
+    let params = new HttpParams().set('page', page);
+    for (const [key, value] of Object.entries(filter ?? {})) {
+      if (value != null) params = params.set(key, String(value));
+    }
     return this.http
-      .get<ApiResult<GridPage>>(`${this.base}/${gridId}?page=${page}`)
-      .pipe(map(res => res.object));
+      .get<ApiResult<GridPage>>(`${this.base}/${gridId}`, { params })
+      .pipe(map(res => {
+        if (!res.success) throw new Error(res.message);
+        return res.object;
+      }));
   }
 }
 

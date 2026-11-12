@@ -14,6 +14,7 @@
         [showActions]="true"
         [editLabel]="'Qo\'shish'"
         [deleteLabel]="'Qaytarish'"
+        [clickableRows]="true"
         (rowClick)="onSelectPurchase($event)"
         (editClick)="onAddPurchase($event)"
         (deleteClick)="onRejectPurchase($event)"
@@ -24,6 +25,7 @@
         <app-grid
           #itemsGrid
           [gridId]="itemsGridId"
+          [filter]="itemsFilter"
           [showActions]="false"
         ></app-grid>
 

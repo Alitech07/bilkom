@@ -31,6 +31,7 @@ export class WarehouseFormComponent implements OnInit {
   products: Product[] = [];
   currencies: SettingsItem[] = [];
   selectedRow:  Record<string, any> | null = null;
+  itemsFilter:  Record<string, number> | null = null;
   rejecting = false;
   addingPurchase = false;
 
@@ -79,7 +80,9 @@ export class WarehouseFormComponent implements OnInit {
   }
 
   onSelectPurchase(row: Record<string, any>): void {
+    if (this.selectedRow?.['purchase_id'] === row['purchase_id']) return;
     this.selectedRow = row;
+    this.itemsFilter = { purchase_id: row['purchase_id'] };
   }
 
   onAddPurchase(row: Record<string, any>): void {
@@ -92,6 +95,7 @@ export class WarehouseFormComponent implements OnInit {
         this.toast.showResult(res);
         if (res.success) {
           this.selectedRow = null;
+          this.itemsFilter = null;
           this.purchaseGrid?.load();
         }
       },
@@ -110,6 +114,7 @@ export class WarehouseFormComponent implements OnInit {
         this.rejecting = false;
         if (this.selectedRow?.['purchase_id'] === row['purchase_id']) {
           this.selectedRow = null;
+          this.itemsFilter = null;
           this.form.get('purchaseId')!.setValue(null);
         }
         this.purchaseGrid?.load();

@@ -96,6 +96,10 @@
 
 .grid-row--odd td { background: #FAFBFC; }
 tr:hover .grid-td { background: #F4F9F7; }
+.grid-row--clickable { cursor: pointer; }
+.grid-row--active td,
+.grid-row--active:hover td { background: #E1F5EE; }
+.grid-row--active td:first-child { box-shadow: inset 3px 0 0 #1D9E75; }
 tr:last-child .grid-td { border-bottom: none; }
 .grid-empty-cell { border-bottom: none !important; }
 
